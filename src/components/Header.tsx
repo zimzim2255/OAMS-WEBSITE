@@ -13,22 +13,26 @@ export default function Header() {
       </div>
 
       {/* Navigation Bar */}
-      <div className="bg-white flex justify-between items-center px-10 py-4 border-b border-black">
-        {/* Left: Catalog Button */}
-        <button className="flex items-center gap-3 border border-black px-6 py-3 text-sm font-bold uppercase tracking-wide hover:bg-black hover:text-white transition-colors">
-          <span className="text-lg">☰</span>
-          <span>CATALOG</span>
-        </button>
+      <div className="bg-black flex items-stretch px-10 pt-1 pb-3 gap-1">
+        {/* Left: Catalog Card - own border, wider on left side */}
+        <div className="flex items-center pl-16 pr-10 py-3 border border-white rounded bg-white">
+          <button className="flex items-center gap-3 text-sm font-bold uppercase tracking-wide hover:opacity-60 transition-opacity">
+            <span className="text-lg">☰</span>
+            <span>CATALOG</span>
+          </button>
+        </div>
 
-        {/* Center: Logo */}
-        <div className="absolute left-1/2 -translate-x-1/2">
+        {/* Center: Logo Section - own border */}
+        <div className="flex-1 flex items-center justify-center px-6 py-3 border border-white rounded bg-white">
           <span className="font-['Impact','Anton',sans-serif] text-2xl font-bold tracking-tight uppercase">
             VLOM.CUST
           </span>
         </div>
 
-        {/* Right: Spacer for balance */}
-        <div className="w-[130px]" />
+        {/* Right: Empty card - own border, wider on right side */}
+        <div className="w-[200px] flex items-center justify-center py-3 pr-6 border border-white rounded bg-white">
+          <span className="text-xs text-gray-400 uppercase tracking-widest">Cart</span>
+        </div>
       </div>
     </header>
   );
