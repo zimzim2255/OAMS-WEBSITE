@@ -1,5 +1,6 @@
 import Header from "@/components/Header";
 import Marquee from "@/components/Marquee";
+import ZoomSection from "@/components/ZoomSection";
 import Footer from "@/components/Footer";
 
 export default function Home() {
@@ -29,12 +30,11 @@ export default function Home() {
 
         {/* Model Image - centered, on top of text */}
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className="relative w-auto h-[600px]">
+          <div className="relative w-auto h-[850px]">
             <img
-              src="https://picsum.photos/seed/model1/500/700"
+              src="/imgs/hero.png"
               alt="Streetwear model"
               className="h-full w-auto object-contain relative z-10"
-              style={{ filter: "grayscale(100%) contrast(1.1)" }}
             />
           </div>
         </div>
@@ -51,62 +51,8 @@ export default function Home() {
       {/* ===== 4. Scrolling Text Banner (Marquee) ===== */}
       <Marquee text="ABOUT THE BRAND" />
 
-      {/* ===== 5. Brand Story Section ===== */}
-      <section className="relative w-full min-h-[800px] bg-black text-white overflow-hidden">
-        {/* Background atmosphere */}
-        <div className="absolute inset-0 bg-gradient-to-b from-gray-900 to-black" />
-        <div
-          className="absolute inset-0 opacity-20"
-          style={{
-            backgroundImage: "url('https://picsum.photos/seed/brandbg/1920/1080')",
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-        />
-
-        {/* Top Left: About label */}
-        <div className="absolute top-12 left-10 z-10">
-          <p className="text-sm font-bold uppercase tracking-wider text-white">ABOUT THE BRAND</p>
-        </div>
-
-        {/* Top Left: Description */}
-        <div className="absolute top-24 left-10 z-10 max-w-[300px]">
-          <p className="text-[12px] text-white leading-relaxed">
-            VLOM.CUST is a clothing brand that creates unique look. It involves clothes. We make a design in the form customized made shades of darkness allocated in oil, since 2018.
-          </p>
-        </div>
-
-        {/* Massive "VLOM.CUST" text */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
-          <span
-            className="font-['Impact','Anton',sans-serif] text-[clamp(60px,12vw,150px)] font-bold text-white leading-none tracking-tight opacity-90"
-          >
-            VLOM.CUST
-          </span>
-        </div>
-
-        {/* Product Display Image - centered */}
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="relative w-[600px] max-w-[80vw]">
-            <img
-              src="https://picsum.photos/seed/blacktshirt/600/700"
-              alt="Black t-shirt on hanger"
-              className="w-full h-auto object-contain relative z-10"
-              style={{ filter: "grayscale(100%) contrast(1.2)" }}
-            />
-          </div>
-        </div>
-
-        {/* Right Side Text */}
-        <div className="absolute bottom-16 right-10 z-10 max-w-[250px] text-right">
-          <p className="text-[11px] text-white leading-relaxed">
-            Each piece is hand-operated by our artisans, which guarantees the absence of faults absolutely identical products. In this approach you can choose among several elements to create your own clothes.
-          </p>
-          <p className="text-base font-bold uppercase text-white mt-4">
-            create your own unique look
-          </p>
-        </div>
-      </section>
+      {/* ===== 5. Brand Story Section with Zoom Animation ===== */}
+      <ZoomSection />
 
       {/* ===== 6. Second Scrolling Banner ===== */}
       <Marquee text="BESTSELLER" />
