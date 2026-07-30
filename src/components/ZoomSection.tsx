@@ -13,13 +13,14 @@ const leftProducts = [
 ];
 
 const rightProducts = [
-  { seed: 'cardholder', title: 'CARDHOLDER VLOM.CUST', subtitle: 'Black', price: '$39' },
-  { seed: 'leatherjacket', title: 'LEATHER JACKET VLOM.CUST', subtitle: 'Vintage grey', price: '$299' },
-  { seed: 'watch', title: 'WATCH VLOM.CUST', subtitle: 'Black steel', price: '$199', oldPrice: '$249' },
-  { seed: 'hoodie', title: 'HOODIE VLOM.CUST', subtitle: 'Oversized black', price: '$89', oldPrice: '$109' },
-  { seed: 'belt', title: 'BELT VLOM.CUST', subtitle: 'Black leather', price: '$59', oldPrice: '$79' },
-  { seed: 'gloves', title: 'GLOVES VLOM.CUST', subtitle: 'Black knit', price: '$34', oldPrice: '$44' },
   { seed: 'wallet', title: 'WALLET VLOM.CUST', subtitle: 'Black leather', price: '$89' },
+  { seed: 'gloves', title: 'GLOVES VLOM.CUST', subtitle: 'Black knit', price: '$34', oldPrice: '$44' },
+  { seed: 'scarf', title: 'SCARF VLOM.CUST', subtitle: 'Black wool', price: '$69' },
+  { seed: 'belt', title: 'BELT VLOM.CUST', subtitle: 'Black leather', price: '$59', oldPrice: '$79' },
+  { seed: 'hoodie', title: 'HOODIE VLOM.CUST', subtitle: 'Oversized black', price: '$89', oldPrice: '$109' },
+  { seed: 'watch', title: 'WATCH VLOM.CUST', subtitle: 'Black steel', price: '$199', oldPrice: '$249' },
+  { seed: 'leatherjacket', title: 'LEATHER JACKET VLOM.CUST', subtitle: 'Vintage grey', price: '$299' },
+  { seed: 'cardholder', title: 'CARDHOLDER VLOM.CUST', subtitle: 'Black', price: '$39' },
 ];
 
 export default function ZoomSection() {
@@ -27,46 +28,7 @@ export default function ZoomSection() {
   const [phase, setPhase] = useState<'idle' | 'opening' | 'scrolling'>('idle');
   const [progress, setProgress] = useState(0);
 
-  // IntersectionObserver — triggers opening animation when section enters viewport
   useEffect(() => {
-    if (phase !== 'idle') return;
-
-    const wrapper = wrapperRef.current;
-    if (!wrapper) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && entry.intersectionRatio > 0.15) {
-          setPhase('opening');
-          document.body.style.overflow = 'hidden';
-        }
-      },
-      { threshold: 0.15 }
-    );
-
-    observer.observe(wrapper);
-    return () => observer.disconnect();
-  }, [phase]);
-
-  // After opening animation completes → release scroll
-  useEffect(() => {
-    if (phase !== 'opening') return;
-
-    const timer = setTimeout(() => {
-      setPhase('scrolling');
-      document.body.style.overflow = '';
-    }, 1600);
-
-    return () => {
-      clearTimeout(timer);
-      document.body.style.overflow = '';
-    };
-  }, [phase]);
-
-  // Scroll-driven progress (only after opened)
-  useEffect(() => {
-    if (phase !== 'scrolling') return;
-
     const wrapper = wrapperRef.current;
     if (!wrapper) return;
 
@@ -75,11 +37,27 @@ export default function ZoomSection() {
     const handleScroll = () => {
       if (!ticking) {
         requestAnimationFrame(() => {
+          const rect = wrapper.getBoundingClientRect();
           const start = wrapper.offsetTop;
           const end = start + wrapper.offsetHeight - window.innerHeight;
           const scrollY = window.scrollY;
-          const newProgress = Math.max(0, Math.min(1, (scrollY - start) / (end - start)));
-          setProgress(newProgress);
+
+          if (rect.top <= 0 && rect.bottom > 0 && phase === 'idle') {
+            setPhase('opening');
+            document.body.style.overflow = 'hidden';
+          }
+
+          if (rect.top > window.innerHeight && phase !== 'idle') {
+            setPhase('idle');
+            setProgress(0);
+            document.body.style.overflow = '';
+          }
+
+          if (phase === 'scrolling') {
+            const newProgress = Math.max(0, Math.min(1, (scrollY - start) / (end - start)));
+            setProgress(newProgress);
+          }
+
           ticking = false;
         });
         ticking = true;
@@ -91,25 +69,34 @@ export default function ZoomSection() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [phase]);
 
-  // ===== Calculate display values =====
-  const contentHeight = 400;
+  useEffect(() => {
+    if (phase !== 'opening') return;
+    const timer = setTimeout(() => {
+      setPhase('scrolling');
+      document.body.style.overflow = '';
+    }, 1600);
+    return () => { clearTimeout(timer); document.body.style.overflow = ''; };
+  }, [phase]);
+
+  const contentHeight = 800;
   const scrollableContent = contentHeight - 100;
+  const scrollT = phase === 'scrolling' ? Math.max(0, Math.min(1, (progress - 0.05) / 0.9)) : 0;
 
   let displayScale: number;
   let displayTranslateY: number;
-  let displayBgOpacity: number;
+  let borderWidth: number;
   let transitionStyle: string;
 
   if (phase === 'idle') {
-    displayScale = 0.35;
+    displayScale = 0.25;
     displayTranslateY = 0;
-    displayBgOpacity = 0;
+    borderWidth = 40;
     transitionStyle = 'none';
   } else if (phase === 'opening') {
     displayScale = 1.0;
     displayTranslateY = 0;
-    displayBgOpacity = 1;
-    transitionStyle = 'transform 1.5s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.8s ease';
+    borderWidth = 40;
+    transitionStyle = 'transform 1.5s cubic-bezier(0.22, 1, 0.36, 1)';
   } else {
     if (progress < 0.05) {
       const t = progress / 0.05;
@@ -124,14 +111,7 @@ export default function ZoomSection() {
       displayScale = 1.0 - t * 0.15;
       displayTranslateY = -scrollableContent;
     }
-
-    if (progress < 0.05) {
-      displayBgOpacity = progress / 0.05;
-    } else if (progress < 0.95) {
-      displayBgOpacity = 1;
-    } else {
-      displayBgOpacity = 1 - (progress - 0.95) / 0.05;
-    }
+    borderWidth = scrollT < 0.15 ? 40 - scrollT * 266 : 0;
     transitionStyle = 'none';
   }
 
@@ -139,32 +119,27 @@ export default function ZoomSection() {
 
   return (
     <>
-      <div
-        className="fixed inset-0 z-0 bg-black pointer-events-none"
-        style={{ opacity: displayBgOpacity, transition: 'opacity 0.8s ease' }}
-      >
-        <img src="/imgs/aboutus.png" alt="" className="w-full h-full object-cover" style={{ filter: "grayscale(100%) contrast(1.2)" }} />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/80" />
-      </div>
+      <div ref={wrapperRef} className="relative h-[840vh]">
+        <section className="sticky top-0 h-screen w-full overflow-hidden bg-black flex items-center justify-center">
+          {/* Everything scales together as one unit */}
+          <div className="w-full h-full will-change-transform" style={{ transform: `scale(${displayScale})`, transformOrigin: 'center center', transition: transitionStyle }}>
+            
+            {/* Background image */}
+            <div className="absolute inset-0">
+              <img src="/imgs/aboutus.png" alt="" className="w-full h-full object-cover" style={{ filter: "grayscale(100%) contrast(1.2)" }} />
+              <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/80" />
+            </div>
 
-      <div ref={wrapperRef} className="relative h-[440vh]">
-        <section className="sticky top-0 h-screen w-full overflow-hidden flex items-center justify-center">
-          <div
-            className="w-full h-full will-change-transform"
-            style={{
-              transform: `scale(${displayScale})`,
-              transformOrigin: 'center center',
-              transition: transitionStyle,
-            }}
-          >
-            <div className="relative w-full h-[400vh] text-white">
+            {/* White border */}
+            <div className="absolute inset-0 z-20 pointer-events-none" style={{ border: `${borderWidth}px solid white`, transition: phase === 'opening' ? 'none' : 'border-width 0.4s ease-out' }} />
+
+            {/* Cards content */}
+            <div className="relative w-full h-[800vh] text-white z-10">
               <h2 className="text-3xl md:text-5xl font-bold uppercase font-['Impact','Anton',sans-serif] tracking-tight text-center pt-8 pb-4">
                 Our Collection
               </h2>
 
-              {/* Two columns: left moves down, right moves up */}
-              <div className="flex justify-center gap-16">
-                {/* Left column — scrolls down slowly */}
+              <div className="flex justify-center gap-16 mt-[160vh]">
                 <div className="flex flex-col items-center gap-6" style={{ transform: `translateY(${phase === 'scrolling' ? displayTranslateY * 0.35 : 0}vh)`, transition: 'transform 0.2s ease-out' }}>
                   {leftProducts.map((p, idx) => (
                     <div key={idx} className={cardBase}>
@@ -189,8 +164,7 @@ export default function ZoomSection() {
                   </div>
                 </div>
 
-                {/* Right column — comes from the top and slides down smoothly */}
-                <div className="flex flex-col items-center gap-6" style={{ transform: `translateY(${phase === 'scrolling' ? -80 * (1 - Math.max(0, Math.min(1, (progress - 0.05) / 0.9))) : 0}vh)`, transition: 'transform 0.3s ease-out' }}>
+                <div className="flex flex-col items-center gap-6" style={{ transform: `translateY(${phase === 'scrolling' ? -240 + scrollT * 160 : -240}vh)`, transition: 'transform 0.3s ease-out' }}>
                   {rightProducts.map((p, idx) => (
                     <div key={idx} className={cardBase}>
                       <div className="h-48 overflow-hidden">
