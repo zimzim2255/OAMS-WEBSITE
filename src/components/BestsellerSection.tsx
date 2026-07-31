@@ -48,31 +48,57 @@ export default function BestsellerSection() {
     };
   }, []);
 
-  // Expansion completes by the end of the pinned phase
-  const expandT = clamp(progress / 0.85, 0, 1);
+  // Easing for smoother scroll-driven motion
+  const easeInOut = (t: number) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
+
+  // Expansion — slowed down over the first 65% of the pinned phase
+  const expandT = easeInOut(clamp(progress / 0.65, 0, 1));
+
+  // After full display, letters split: 20% left/right + 70% scale — slowed over the last 35%
+  const letterT = easeInOut(clamp((progress - 0.65) / 0.35, 0, 1));
+
+  // Alternate directions for each letter of OAMS
+  const letterDirs = [1, -1, 1, -1];
 
   const sidebarWidth = viewportW ? 200 + expandT * (viewportW - 200) : 200;
   const gridOpacity = 1 - expandT;
   const gridScale = 1 - 0.12 * expandT;
+  const letterOffset = letterT * viewportW * 0.2;
+  const letterGap = letterT * 60;
+  const letterScale = 1 + 0.7 * letterT;
 
   return (
     <>
       {/* ===== Pinned expansion phase: BESTSELLER grows to full display ===== */}
-      <div ref={wrapperRef} className="relative bg-black" style={{ height: '200vh' }}>
+      <div ref={wrapperRef} className="relative bg-black" style={{ height: '320vh' }}>
         <section className="sticky top-0 h-screen w-full overflow-hidden bg-black select-none">
           <div className="flex items-stretch gap-1 w-full h-full p-3">
             {/* BESTSELLER card — expands to full display, text stays visible */}
             <div className="flex-shrink-0 h-full z-20" style={{ width: `${sidebarWidth}px` }}>
               <div className="relative border border-black bg-white w-full h-full overflow-hidden">
-                <span
-                  className="vertical-text font-['Impact','Anton',sans-serif] text-[clamp(50px,8vh,90px)] font-bold text-black leading-none tracking-tight whitespace-nowrap absolute left-1/2 top-1/2 z-30 pointer-events-none"
+                <div
+                  className="absolute left-1/2 top-1/2 z-30 pointer-events-none flex flex-col items-center"
                   style={{
-                    transform: 'translate(-50%, -50%) rotate(180deg)',
-                    opacity: 1,
+                    transform: 'translate(-50%, -50%)',
+                    gap: `${letterGap}px`,
+                    willChange: 'gap',
                   }}
                 >
-                  OAMS
-                </span>
+                  {'OAMS'.split('').map((letter, i) => (
+                    <span
+                      key={i}
+                      className="vertical-text font-['Impact','Anton',sans-serif] text-[clamp(50px,8vh,90px)] font-bold text-black leading-none tracking-tight whitespace-nowrap"
+                      style={{
+                        transform: `rotate(180deg) translateX(${
+                          letterDirs[i] * letterOffset
+                        }px) scale(${letterScale})`,
+                        willChange: 'transform',
+                      }}
+                    >
+                      {letter}
+                    </span>
+                  ))}
+                </div>
               </div>
             </div>
 
@@ -128,35 +154,37 @@ export default function BestsellerSection() {
       </div>
 
       {/* ===== After full display: THE PICKS — normal flow section ===== */}
-      <section className="w-full bg-black p-3">
-        <div className="bg-white rounded p-6 md:p-16">
-          <h3 className="font-['Impact','Anton',sans-serif] text-3xl md:text-5xl font-bold uppercase text-black tracking-tight mb-10">
-            THE PICKS
-          </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {products.map((p) => (
-              <div
-                key={p.seed}
-                className="border border-black rounded p-5 flex flex-col items-center justify-between bg-white"
-              >
-                <div className="flex-1 flex items-center justify-center">
-                  <img
-                    src={`https://picsum.photos/seed/${p.seed}/300/250`}
-                    alt={p.title}
-                    className="max-h-[160px] w-auto object-contain"
-                    style={{ filter: 'grayscale(100%)' }}
-                  />
+      <section className="w-full bg-black p-1">
+        <div className="bg-black rounded p-4 md:p-8">
+          <div className="bg-white px-6 md:px-12 py-8 md:py-12 rounded">
+            <h3 className="font-['Impact','Anton',sans-serif] text-3xl md:text-5xl font-bold uppercase text-black tracking-tight mb-8">
+              THE PICKS
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1">
+              {products.map((p) => (
+                <div
+                  key={p.seed}
+                  className="border border-black rounded p-5 flex flex-col items-center justify-between bg-white"
+                >
+                  <div className="flex-1 flex items-center justify-center">
+                    <img
+                      src={`https://picsum.photos/seed/${p.seed}/400/320`}
+                      alt={p.title}
+                      className="max-h-[260px] w-auto object-contain"
+                      style={{ filter: 'grayscale(100%)' }}
+                    />
+                  </div>
+                  <div className="w-full text-center mt-4">
+                    <p className="text-sm font-bold uppercase text-black">{p.title}</p>
+                    <p className="text-[12px] text-gray-500">{p.subtitle}</p>
+                    <p className="text-sm font-bold text-black mt-1">
+                      {p.oldPrice && <span className="line-through text-gray-400 mr-2">{p.oldPrice}</span>}
+                      <span>{p.price}</span>
+                    </p>
+                  </div>
                 </div>
-                <div className="w-full text-center mt-4">
-                  <p className="text-sm font-bold uppercase text-black">{p.title}</p>
-                  <p className="text-[12px] text-gray-500">{p.subtitle}</p>
-                  <p className="text-sm font-bold text-black mt-1">
-                    {p.oldPrice && <span className="line-through text-gray-400 mr-2">{p.oldPrice}</span>}
-                    <span>{p.price}</span>
-                  </p>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </section>
