@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import ExpandableCTASection from './ExpandableCTASection';
 
 const products = [
   { seed: 'graffititshirt', title: 'T-SHIRT VLOM.CUST', subtitle: 'Vintage black', price: '$39', oldPrice: '$49', tag: '20% OFF' },
@@ -216,21 +217,8 @@ export default function BestsellerSection() {
         </div>
       </section>
 
-      {/* ===== Final CTA banner ===== */}
-      <section className="w-full bg-black p-3">
-        <div className="bg-black border border-white rounded flex flex-col items-center justify-center px-6 py-24">
-          <h3 className="font-['Impact','Anton',sans-serif] text-[clamp(40px,8vw,110px)] font-bold uppercase text-white leading-none tracking-tight text-center">
-            SHOP THE ICONS
-          </h3>
-          <p className="mt-6 text-xs md:text-sm uppercase tracking-widest text-white/60 text-center">
-            Limited stock — restocked weekly
-          </p>
-          <div className="mt-10 bg-white text-black flex items-center justify-between px-8 py-4 cursor-pointer">
-            <span className="text-sm font-bold uppercase tracking-wider">VIEW ALL BESTSELLERS</span>
-            <span className="text-lg ml-6">→</span>
-          </div>
-        </div>
-      </section>
+      {/* ===== Final CTA banner — expands to full screen on scroll ===== */}
+      <ExpandableCTASection />
     </>
   );
 }
