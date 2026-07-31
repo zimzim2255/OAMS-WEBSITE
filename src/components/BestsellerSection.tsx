@@ -190,29 +190,40 @@ export default function BestsellerSection() {
         </div>
       </section>
 
-      {/* ===== Editorial story split ===== */}
+      {/* ===== Editorial story — single bg image with paragraphs in the corners ===== */}
       <section className="w-full bg-black p-3">
-        <div className="bg-white rounded p-6 md:p-16 flex flex-col md:flex-row items-center justify-center gap-10">
-          <div className="w-full md:w-1/2 h-[240px] md:h-[420px] border border-black rounded overflow-hidden flex items-center justify-center bg-gray-100">
-            <img
-              src="https://picsum.photos/seed/bestsellerstory/600/600"
-              alt="Bestseller story"
-              className="w-full h-full object-cover"
-              style={{ filter: 'grayscale(100%)' }}
-            />
-          </div>
-          <div className="w-full md:w-1/2">
-            <h3 className="font-['Impact','Anton',sans-serif] text-3xl md:text-5xl font-bold uppercase text-black tracking-tight">
-              BUILT TO LAST
-            </h3>
-            <p className="mt-6 text-sm md:text-base text-gray-600 leading-relaxed max-w-md">
+        <div className="relative w-full h-[560px] md:h-[760px] border border-black rounded overflow-hidden">
+          {/* Full background image with dark overlay for readability */}
+          <img
+            src="https://picsum.photos/seed/bestsellerstory/1600/1100"
+            alt="Bestseller story"
+            className="absolute inset-0 w-full h-full object-cover"
+            style={{ filter: 'grayscale(100%)' }}
+          />
+          <div className="absolute inset-0 bg-black/30" />
+
+          {/* Paragraph + heading — top-left corner */}
+          <div className="absolute top-8 left-8 md:top-12 md:left-12 max-w-sm">
+            <p className="text-sm md:text-base text-white/90 leading-relaxed">
               Every bestseller goes through the same journey — designed in-house,
               tested on the streets, and refined until it earns its place in the
-              permanent collection. No seasonal gimmicks. Just pieces that perform.
+              permanent collection. No seasonal gimmicks.
             </p>
-            <div className="mt-8 inline-block border-2 border-black px-8 py-3 text-sm font-bold uppercase tracking-wider text-black cursor-pointer">
-              READ THE STORY
-            </div>
+            <h3 className="mt-6 font-['Impact','Anton',sans-serif] text-4xl md:text-6xl font-bold uppercase text-white leading-none tracking-tight">
+              BUILT TO LAST
+            </h3>
+          </div>
+
+          {/* Paragraph + heading — bottom-right corner */}
+          <div className="absolute bottom-8 right-8 md:bottom-12 md:right-12 max-w-sm text-right">
+            <p className="text-sm md:text-base text-white/90 leading-relaxed">
+              Six years of streetwear research, three collaborations and one
+              permanent collection later — every piece carries the same hand-drawn
+              signature, stitched and printed in-house.
+            </p>
+            <h3 className="mt-6 font-['Impact','Anton',sans-serif] text-3xl md:text-5xl font-bold uppercase text-white leading-none tracking-tight">
+              FOR THE STREETS
+            </h3>
           </div>
         </div>
       </section>
