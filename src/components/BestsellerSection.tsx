@@ -4,11 +4,14 @@ import { useEffect, useRef, useState } from 'react';
 
 const products = [
   { seed: 'graffititshirt', title: 'T-SHIRT VLOM.CUST', subtitle: 'Vintage black', price: '$39', oldPrice: '$49', tag: '20% OFF' },
-  { seed: 'cardholder', title: 'CARDHOLDER VLOM.CUST', subtitle: 'Black', price: '$39', tall: true },
+  { seed: 'cardholder', title: 'CARDHOLDER VLOM.CUST', subtitle: 'Black', price: '$39' },
   { seed: 'backpack', title: 'CALLIGRAPHY BACKPACK', subtitle: 'Black', price: '$79', oldPrice: '$99', tag: '20% OFF' },
   { seed: 'leatherjacket', title: 'LEATHER JACKET VLOM.CUST', subtitle: 'Vintage grey', price: '$299' },
   { seed: 'sneakers', title: 'SNEAKERS VLOM.CUST', subtitle: 'Black & white', price: '$95', oldPrice: '$119', tag: '15% OFF' },
+  { seed: 'hat', title: 'CAP VLOM.CUST', subtitle: 'Black', price: '$29' },
 ];
+
+const clamp = (v: number, min: number, max: number) => Math.max(min, Math.min(max, v));
 
 export default function BestsellerSection() {
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -26,7 +29,7 @@ export default function BestsellerSection() {
           const rect = wrapper.getBoundingClientRect();
           const total = wrapper.offsetHeight - window.innerHeight;
           const raw = -rect.top / total;
-          setProgress(Math.max(0, Math.min(1, raw)));
+          setProgress(clamp(raw, 0, 1));
           ticking = false;
         });
         ticking = true;
@@ -45,61 +48,102 @@ export default function BestsellerSection() {
     };
   }, []);
 
-  // Expansion starts partway through the pinned scroll and completes at the end
-  const expandT = Math.max(0, Math.min(1, (progress - 0.4) / 0.6));
+  // Expansion completes by the end of the pinned phase
+  const expandT = clamp(progress / 0.85, 0, 1);
 
-  // BESTSELLER sidebar grows from 200px to full viewport width
   const sidebarWidth = viewportW ? 200 + expandT * (viewportW - 200) : 200;
-
-  // Product grid gets squeezed out
   const gridOpacity = 1 - expandT;
   const gridScale = 1 - 0.12 * expandT;
-  const cardRadius = 0.25 * (1 - expandT);
 
   return (
-    <div ref={wrapperRef} className="relative bg-black" style={{ height: '280vh' }}>
-      <section className="sticky top-0 h-screen w-full overflow-hidden bg-black select-none">
-        <div className="flex items-stretch gap-1 w-full h-full p-3">
-          {/* BESTSELLER sidebar card — expands to full display on scroll */}
-          <div className="flex-shrink-0 h-full z-20" style={{ width: `${sidebarWidth}px` }}>
+    <>
+      {/* ===== Pinned expansion phase: BESTSELLER grows to full display ===== */}
+      <div ref={wrapperRef} className="relative bg-black" style={{ height: '200vh' }}>
+        <section className="sticky top-0 h-screen w-full overflow-hidden bg-black select-none">
+          <div className="flex items-stretch gap-1 w-full h-full p-3">
+            {/* BESTSELLER card — expands to full display, text stays visible */}
+            <div className="flex-shrink-0 h-full z-20" style={{ width: `${sidebarWidth}px` }}>
+              <div className="relative border border-black bg-white w-full h-full overflow-hidden">
+                <span
+                  className="vertical-text font-['Impact','Anton',sans-serif] text-[clamp(50px,8vh,90px)] font-bold text-black leading-none tracking-tight whitespace-nowrap absolute left-1/2 top-1/2 z-30 pointer-events-none"
+                  style={{
+                    transform: 'translate(-50%, -50%) rotate(180deg)',
+                    opacity: 1,
+                  }}
+                >
+                  OAMS
+                </span>
+              </div>
+            </div>
+
+            {/* Product grid — squeezed out as BESTSELLER expands */}
             <div
-              className="border border-black bg-white w-full h-full flex items-center justify-center"
+              className="flex-1 min-w-0 h-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1 auto-rows-fr overflow-hidden"
               style={{
-                borderRadius: `${cardRadius}rem`,
-                willChange: 'width, border-radius',
+                transform: `scale(${gridScale})`,
+                transformOrigin: 'center center',
+                opacity: gridOpacity,
+                willChange: 'transform, opacity',
               }}
             >
-              <span className="vertical-text font-['Impact','Anton',sans-serif] text-[clamp(50px,8vh,90px)] font-bold text-black leading-none tracking-tight whitespace-nowrap">
-                BESTSELLER
-              </span>
+              {products.slice(0, 5).map((p) => (
+                <div
+                  key={p.seed}
+                  className={`border border-black rounded p-6 flex flex-col items-center justify-between bg-white overflow-hidden ${
+                    p.seed === 'cardholder' ? 'row-span-2' : ''
+                  }`}
+                >
+                  {p.tag && (
+                    <div className="flex justify-between w-full">
+                      <span className="text-[10px] font-bold text-black uppercase">{p.tag}</span>
+                    </div>
+                  )}
+                  <div className="flex-1 flex items-center justify-center">
+                    <img
+                      src={`https://picsum.photos/seed/${p.seed}/300/250`}
+                      alt={p.title}
+                      className="max-h-[220px] w-auto object-contain"
+                      style={{ filter: 'grayscale(100%)' }}
+                    />
+                  </div>
+                  <div className="w-full text-center mt-4">
+                    <p className="text-sm font-bold uppercase text-black">{p.title}</p>
+                    <p className="text-[12px] text-gray-500">{p.subtitle}</p>
+                    <p className="text-sm font-bold text-black mt-1">
+                      {p.oldPrice && <span className="line-through text-gray-400 mr-2">{p.oldPrice}</span>}
+                      <span>{p.price}</span>
+                    </p>
+                  </div>
+                </div>
+              ))}
+
+              {/* VIEW MORE card */}
+              <div className="border border-black rounded p-6 flex flex-col items-center justify-center bg-white text-black cursor-pointer overflow-hidden">
+                <p className="text-sm font-bold uppercase tracking-wider">VIEW MORE</p>
+                <span className="text-2xl mt-2">→</span>
+              </div>
             </div>
           </div>
+        </section>
+      </div>
 
-          {/* Product grid — squeezed out as the sidebar expands */}
-          <div
-            className="flex-1 min-w-0 h-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1 auto-rows-fr overflow-hidden"
-            style={{
-              transform: `scale(${gridScale})`,
-              transformOrigin: 'center center',
-              opacity: gridOpacity,
-              willChange: 'transform, opacity',
-            }}
-          >
+      {/* ===== After full display: THE PICKS — normal flow section ===== */}
+      <section className="w-full bg-black p-3">
+        <div className="bg-white rounded p-6 md:p-16">
+          <h3 className="font-['Impact','Anton',sans-serif] text-3xl md:text-5xl font-bold uppercase text-black tracking-tight mb-10">
+            THE PICKS
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {products.map((p) => (
               <div
                 key={p.seed}
-                className={`border border-black rounded p-6 flex flex-col items-center justify-between bg-white overflow-hidden ${p.tall ? 'row-span-2' : ''}`}
+                className="border border-black rounded p-5 flex flex-col items-center justify-between bg-white"
               >
-                {p.tag && (
-                  <div className="flex justify-between w-full">
-                    <span className="text-[10px] font-bold text-black uppercase">{p.tag}</span>
-                  </div>
-                )}
                 <div className="flex-1 flex items-center justify-center">
                   <img
                     src={`https://picsum.photos/seed/${p.seed}/300/250`}
                     alt={p.title}
-                    className="max-h-[220px] w-auto object-contain"
+                    className="max-h-[160px] w-auto object-contain"
                     style={{ filter: 'grayscale(100%)' }}
                   />
                 </div>
@@ -113,15 +157,52 @@ export default function BestsellerSection() {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
 
-            {/* VIEW MORE card */}
-            <div className="border border-black rounded p-6 flex flex-col items-center justify-center bg-white text-black cursor-pointer overflow-hidden">
-              <p className="text-sm font-bold uppercase tracking-wider">VIEW MORE</p>
-              <span className="text-2xl mt-2">→</span>
+      {/* ===== Editorial story split ===== */}
+      <section className="w-full bg-black p-3">
+        <div className="bg-white rounded p-6 md:p-16 flex flex-col md:flex-row items-center justify-center gap-10">
+          <div className="w-full md:w-1/2 h-[240px] md:h-[420px] border border-black rounded overflow-hidden flex items-center justify-center bg-gray-100">
+            <img
+              src="https://picsum.photos/seed/bestsellerstory/600/600"
+              alt="Bestseller story"
+              className="w-full h-full object-cover"
+              style={{ filter: 'grayscale(100%)' }}
+            />
+          </div>
+          <div className="w-full md:w-1/2">
+            <h3 className="font-['Impact','Anton',sans-serif] text-3xl md:text-5xl font-bold uppercase text-black tracking-tight">
+              BUILT TO LAST
+            </h3>
+            <p className="mt-6 text-sm md:text-base text-gray-600 leading-relaxed max-w-md">
+              Every bestseller goes through the same journey — designed in-house,
+              tested on the streets, and refined until it earns its place in the
+              permanent collection. No seasonal gimmicks. Just pieces that perform.
+            </p>
+            <div className="mt-8 inline-block border-2 border-black px-8 py-3 text-sm font-bold uppercase tracking-wider text-black cursor-pointer">
+              READ THE STORY
             </div>
           </div>
         </div>
       </section>
-    </div>
+
+      {/* ===== Final CTA banner ===== */}
+      <section className="w-full bg-black p-3">
+        <div className="bg-black border border-white rounded flex flex-col items-center justify-center px-6 py-24">
+          <h3 className="font-['Impact','Anton',sans-serif] text-[clamp(40px,8vw,110px)] font-bold uppercase text-white leading-none tracking-tight text-center">
+            SHOP THE ICONS
+          </h3>
+          <p className="mt-6 text-xs md:text-sm uppercase tracking-widest text-white/60 text-center">
+            Limited stock — restocked weekly
+          </p>
+          <div className="mt-10 bg-white text-black flex items-center justify-between px-8 py-4 cursor-pointer">
+            <span className="text-sm font-bold uppercase tracking-wider">VIEW ALL BESTSELLERS</span>
+            <span className="text-lg ml-6">→</span>
+          </div>
+        </div>
+      </section>
+    </>
   );
 }
