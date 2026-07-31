@@ -60,17 +60,19 @@ export default function Home() {
       {/* ===== 7. Product Grid Section ===== */}
       <section className="bg-white px-10 py-16">
         <div className="flex gap-10">
-          {/* Left Sidebar - Vertical Text */}
+          {/* Left Sidebar - Vertical Text in a card */}
           <div className="w-[200px] flex-shrink-0 hidden lg:flex items-center justify-center">
-            <span className="vertical-text font-['Impact','Anton',sans-serif] text-[80px] font-bold text-black leading-none tracking-tight select-none">
-              BESTSELLER
-            </span>
+            <div className="border border-black rounded p-6 bg-white w-full h-full flex items-center justify-center">
+              <span className="vertical-text font-['Impact','Anton',sans-serif] text-[80px] font-bold text-black leading-none tracking-tight select-none">
+                BESTSELLER
+              </span>
+            </div>
           </div>
 
           {/* Product Grid */}
           <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-[400px]">
             {/* Card 1: T-Shirt */}
-            <div className="border border-black p-6 flex flex-col items-center justify-between bg-white">
+            <div className="border border-black rounded p-6 flex flex-col items-center justify-between bg-white transition-transform duration-500 hover:scale-[1.15] z-10 hover:z-20 hover:shadow-2xl">
               <div className="flex justify-between w-full">
                 <span className="text-[10px] font-bold text-black uppercase">20% OFF</span>
               </div>
@@ -93,7 +95,7 @@ export default function Home() {
             </div>
 
             {/* Card 2: Cardholder (Double Height) */}
-            <div className="border border-black p-6 flex flex-col items-center justify-between bg-white row-span-2">
+            <div className="border border-black rounded p-6 flex flex-col items-center justify-between bg-white row-span-2 transition-transform duration-500 hover:scale-[1.15] z-10 hover:z-20 hover:shadow-2xl">
               <div className="flex-1 flex items-center justify-center">
                 <img
                   src="https://picsum.photos/seed/cardholder/300/450"
@@ -110,7 +112,7 @@ export default function Home() {
             </div>
 
             {/* Card 3: Backpack */}
-            <div className="border border-black p-6 flex flex-col items-center justify-between bg-white">
+            <div className="border border-black rounded p-6 flex flex-col items-center justify-between bg-white transition-transform duration-500 hover:scale-[1.15] z-10 hover:z-20 hover:shadow-2xl">
               <div className="flex justify-between w-full">
                 <span className="text-[10px] font-bold text-black uppercase">20% OFF</span>
               </div>
@@ -133,7 +135,7 @@ export default function Home() {
             </div>
 
             {/* Card 4: Leather Jacket */}
-            <div className="border border-black p-6 flex flex-col items-center justify-between bg-white">
+            <div className="border border-black rounded p-6 flex flex-col items-center justify-between bg-white transition-transform duration-500 hover:scale-[1.15] z-10 hover:z-20 hover:shadow-2xl">
               <div className="flex-1 flex items-center justify-center">
                 <img
                   src="https://picsum.photos/seed/leatherjacket/300/250"
@@ -150,7 +152,7 @@ export default function Home() {
             </div>
 
             {/* Card 5: Sneakers */}
-            <div className="border border-black p-6 flex flex-col items-center justify-between bg-white">
+            <div className="border border-black rounded p-6 flex flex-col items-center justify-between bg-white transition-transform duration-500 hover:scale-[1.15] z-10 hover:z-20 hover:shadow-2xl">
               <div className="flex justify-between w-full">
                 <span className="text-[10px] font-bold text-black uppercase">15% OFF</span>
               </div>
@@ -173,7 +175,7 @@ export default function Home() {
             </div>
 
             {/* Card 6: View More */}
-            <div className="border border-black p-6 flex flex-col items-center justify-center bg-black text-white cursor-pointer hover:bg-gray-900 transition-colors">
+            <div className="border border-black rounded p-6 flex flex-col items-center justify-center bg-black text-white cursor-pointer hover:bg-gray-900 transition-colors">
               <p className="text-sm font-bold uppercase tracking-wider">VIEW MORE</p>
               <span className="text-2xl mt-2">→</span>
             </div>
