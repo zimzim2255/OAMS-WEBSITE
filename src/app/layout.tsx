@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Anton } from "next/font/google";
 import "./globals.css";
 import { CartProvider } from "@/context/CartContext";
+import TargetCursor from "@/components/TargetCursor";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -30,6 +31,14 @@ export default function RootLayout({
       className={`${inter.variable} ${anton.variable} h-full`}
     >
       <body className="min-h-full flex flex-col bg-white font-sans antialiased">
+        <TargetCursor
+          spinDuration={2}
+          hideDefaultCursor
+          parallaxOn
+          hoverDuration={0.2}
+          cursorColor="#ffffff"
+          cursorColorOnTarget="#B497CF"
+        />
         <CartProvider>
           {children}
         </CartProvider>

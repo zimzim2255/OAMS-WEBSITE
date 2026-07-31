@@ -16,7 +16,7 @@ export default function Header() {
       <div className="bg-black flex items-stretch px-10 pt-1 pb-3 gap-1">
         {/* Left: Catalog Card - own border, wider on left side */}
         <div className="flex items-center pl-16 pr-10 py-3 border border-white rounded bg-white">
-          <button className="flex items-center gap-3 text-sm font-bold uppercase tracking-wide hover:opacity-60 transition-opacity">
+          <button className="cursor-target flex items-center gap-3 text-sm font-bold uppercase tracking-wide hover:opacity-60 transition-opacity">
             <span className="text-lg">☰</span>
             <span>CATALOG</span>
           </button>
@@ -30,7 +30,7 @@ export default function Header() {
         </div>
 
         {/* Right: Empty card - own border, wider on right side */}
-        <div className="w-[200px] flex items-center justify-center py-3 pr-6 border border-white rounded bg-white">
+        <div className="cursor-target w-[200px] flex items-center justify-center py-3 pr-6 border border-white rounded bg-white">
           <span className="text-xs text-gray-400 uppercase tracking-widest">Cart</span>
         </div>
       </div>

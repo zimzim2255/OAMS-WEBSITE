@@ -88,7 +88,7 @@ export default function ExpandableCTASection() {
           <p className="mt-6 text-xs md:text-sm uppercase tracking-widest text-white/60 text-center">
             Limited stock — restocked weekly
           </p>
-          <div className="mt-10 bg-white text-black flex items-center justify-between px-8 py-4 cursor-pointer">
+          <div className="cursor-target mt-10 bg-white text-black flex items-center justify-between px-8 py-4 cursor-pointer">
             <span className="text-sm font-bold uppercase tracking-wider">VIEW ALL BESTSELLERS</span>
             <span className="text-lg ml-6">→</span>
           </div>

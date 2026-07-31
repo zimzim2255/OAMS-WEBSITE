@@ -10,7 +10,7 @@ interface ProductCardProps {
 
 export default function ProductCard({ product }: ProductCardProps) {
   return (
-    <Link href={`/products/${product.id}`} className="group">
+    <Link href={`/products/${product.id}`} className="cursor-target group">
       <div className="relative aspect-[3/4] bg-gray-50 rounded-xl overflow-hidden mb-3">
         <Image
           src={product.image}

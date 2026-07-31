@@ -116,7 +116,7 @@ export default function BestsellerSection() {
               {products.slice(0, 5).map((p) => (
                 <div
                   key={p.seed}
-                  className={`border border-black rounded p-6 flex flex-col items-center justify-between bg-white overflow-hidden ${
+                  className={`cursor-target border border-black rounded p-6 flex flex-col items-center justify-between bg-white overflow-hidden ${
                     p.seed === 'cardholder' ? 'row-span-2' : ''
                   }`}
                 >
@@ -145,7 +145,7 @@ export default function BestsellerSection() {
               ))}
 
               {/* VIEW MORE card */}
-              <div className="border border-black rounded p-6 flex flex-col items-center justify-center bg-white text-black cursor-pointer overflow-hidden">
+              <div className="cursor-target border border-black rounded p-6 flex flex-col items-center justify-center bg-white text-black cursor-pointer overflow-hidden">
                 <p className="text-sm font-bold uppercase tracking-wider">VIEW MORE</p>
                 <span className="text-2xl mt-2">→</span>
               </div>
@@ -165,7 +165,7 @@ export default function BestsellerSection() {
               {products.map((p) => (
                 <div
                   key={p.seed}
-                  className="border border-black rounded p-5 flex flex-col items-center justify-between bg-white"
+                  className="cursor-target border border-black rounded p-5 flex flex-col items-center justify-between bg-white"
                 >
                   <div className="flex-1 flex items-center justify-center">
                     <img

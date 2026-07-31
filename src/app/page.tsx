@@ -42,7 +42,7 @@ export default function Home() {
 
         {/* CTA Bar - bottom center */}
         <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-20">
-          <div className="bg-black text-white flex items-center justify-between w-[400px] max-w-[90vw] px-10 py-5">
+          <div className="cursor-target bg-black text-white flex items-center justify-between w-[400px] max-w-[90vw] px-10 py-5">
             <span className="text-sm font-bold uppercase tracking-wider">SHOP NOW</span>
             <span className="text-lg">→</span>
           </div>
