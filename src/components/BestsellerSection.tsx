@@ -1,15 +1,16 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
 import ExpandableCTASection from './ExpandableCTASection';
 
 const products = [
-  { seed: 'graffititshirt', title: 'T-SHIRT VLOM.CUST', subtitle: 'Vintage black', price: '$39', oldPrice: '$49', tag: '20% OFF' },
-  { seed: 'cardholder', title: 'CARDHOLDER VLOM.CUST', subtitle: 'Black', price: '$39' },
-  { seed: 'backpack', title: 'CALLIGRAPHY BACKPACK', subtitle: 'Black', price: '$79', oldPrice: '$99', tag: '20% OFF' },
-  { seed: 'leatherjacket', title: 'LEATHER JACKET VLOM.CUST', subtitle: 'Vintage grey', price: '$299' },
-  { seed: 'sneakers', title: 'SNEAKERS VLOM.CUST', subtitle: 'Black & white', price: '$95', oldPrice: '$119', tag: '15% OFF' },
-  { seed: 'hat', title: 'CAP VLOM.CUST', subtitle: 'Black', price: '$29' },
+  { id: 1, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846845/blackshort_casse28pcs_grayclair40pcs_grayfonce116pcs_vert_36_noir186pcs-prix80dh_xnlqg7.png', title: 'BLACK SHORT', subtitle: 'Premium quality' },
+  { id: 2, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846844/nikeshort_reed36_green_28_mint_11_marron_40pcs_grayclair_32_bleu39pcs_grayfance71pcs_noir120pcs-prix65dh_rzwyiq.png', title: 'NIKE SHORT', subtitle: 'Premium quality' },
+  { id: 3, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846842/50pcsinblue_green_brown_prix70dh_ac5pvh.png', title: 'SWD SHIRT', subtitle: 'Blue, green, brown' },
+  { id: 4, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846823/swdpentes_black60pcs_grayclair60pcs_vert24pcs_marron30pcs_grayfance30pcs_prix80dh_jummmi.png', title: 'SWD PANTS', subtitle: 'Premium quality' },
+  { id: 5, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846788/greenshort_in_stock_36pcs_reed28pcs_grayfonce144pcs_casse40pcs_noir116pcs80dh_ufcu5l.png', title: 'GREEN SHORT', subtitle: 'In stock' },
+  { id: 6, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846787/ensombleswdbrand_noir30pcs_grayfoncee30pcs_graydh4pcs-125dh_dskvgv.png', title: 'ENSEMBLE SWD', subtitle: 'Brand set' },
 ];
 
 const clamp = (v: number, min: number, max: number) => Math.max(min, Math.min(max, v));
@@ -113,42 +114,37 @@ export default function BestsellerSection() {
                 willChange: 'transform, opacity',
               }}
             >
-              {products.slice(0, 5).map((p) => (
-                <div
-                  key={p.seed}
-                  className={`cursor-target border border-black rounded p-6 flex flex-col items-center justify-between bg-white overflow-hidden ${
-                    p.seed === 'cardholder' ? 'row-span-2' : ''
+              {products.slice(0, 5).map((p, i) => (
+                <Link
+                  key={p.title}
+                  href={`/products/${p.id}`}
+                  className={`cursor-pointer border border-black rounded p-2 flex flex-col items-center justify-between bg-white overflow-hidden ${
+                    i === 1 ? 'row-span-2' : ''
                   }`}
                 >
-                  {p.tag && (
-                    <div className="flex justify-between w-full">
-                      <span className="text-[10px] font-bold text-black uppercase">{p.tag}</span>
-                    </div>
-                  )}
-                  <div className="flex-1 flex items-center justify-center">
+                  <div className="flex-1 flex items-center justify-center w-full min-h-0">
                     <img
-                      src={`https://picsum.photos/seed/${p.seed}/300/250`}
+                      src={p.image}
                       alt={p.title}
-                      className="max-h-[220px] w-auto object-contain"
+                      className="w-full h-full max-h-[600px] object-contain"
                       style={{ filter: 'grayscale(100%)' }}
                     />
                   </div>
-                  <div className="w-full text-center mt-4">
+                  <div className="w-full text-center mt-2">
                     <p className="text-sm font-bold uppercase text-black">{p.title}</p>
                     <p className="text-[12px] text-gray-500">{p.subtitle}</p>
-                    <p className="text-sm font-bold text-black mt-1">
-                      {p.oldPrice && <span className="line-through text-gray-400 mr-2">{p.oldPrice}</span>}
-                      <span>{p.price}</span>
-                    </p>
                   </div>
-                </div>
+                </Link>
               ))}
 
               {/* VIEW MORE card */}
-              <div className="cursor-target border border-black rounded p-6 flex flex-col items-center justify-center bg-white text-black cursor-pointer overflow-hidden">
+              <Link
+                href="/products"
+                className="cursor-pointer border border-black rounded p-6 flex flex-col items-center justify-center bg-white text-black overflow-hidden hover:bg-gray-50 transition-colors"
+              >
                 <p className="text-sm font-bold uppercase tracking-wider">VIEW MORE</p>
                 <span className="text-2xl mt-2">→</span>
-              </div>
+              </Link>
             </div>
           </div>
         </section>
@@ -163,13 +159,14 @@ export default function BestsellerSection() {
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1">
               {products.map((p) => (
-                <div
-                  key={p.seed}
-                  className="cursor-target border border-black rounded p-5 flex flex-col items-center justify-between bg-white"
+                <Link
+                  key={p.title}
+                  href={`/products/${p.id}`}
+                  className="block"
                 >
                   <div className="flex-1 flex items-center justify-center">
                     <img
-                      src={`https://picsum.photos/seed/${p.seed}/400/320`}
+                      src={p.image}
                       alt={p.title}
                       className="max-h-[260px] w-auto object-contain"
                       style={{ filter: 'grayscale(100%)' }}
@@ -178,12 +175,8 @@ export default function BestsellerSection() {
                   <div className="w-full text-center mt-4">
                     <p className="text-sm font-bold uppercase text-black">{p.title}</p>
                     <p className="text-[12px] text-gray-500">{p.subtitle}</p>
-                    <p className="text-sm font-bold text-black mt-1">
-                      {p.oldPrice && <span className="line-through text-gray-400 mr-2">{p.oldPrice}</span>}
-                      <span>{p.price}</span>
-                    </p>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           </div>

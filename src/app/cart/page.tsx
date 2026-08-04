@@ -1,11 +1,20 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useCart } from "@/context/CartContext";
 
+const SHIPPING_COSTS = {
+  casablanca: 20,
+  outside: 40,
+} as const;
+
+type ShippingZone = keyof typeof SHIPPING_COSTS;
+
 export default function CartPage() {
-  const { items, removeItem, updateQuantity, getTotalPrice, clearCart } = useCart();
+  const { items, removeItem, updateQuantity, clearCart } = useCart();
+  const [shippingZone, setShippingZone] = useState<ShippingZone>("casablanca");
 
   if (items.length === 0) {
     return (
@@ -27,9 +36,9 @@ export default function CartPage() {
     );
   }
 
-  const subtotal = getTotalPrice();
-  const shipping = subtotal >= 50 ? 0 : 9.99;
-  const total = subtotal + shipping;
+  const subtotal = items.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
+  const shippingCost = SHIPPING_COSTS[shippingZone];
+  const total = subtotal + shippingCost;
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
@@ -72,8 +81,8 @@ export default function CartPage() {
                     <p className="text-xs sm:text-sm text-gray-500 mt-1">
                       {item.size} / {item.color}
                     </p>
-                    <p className="text-sm sm:text-base font-semibold text-gray-900 mt-1">
-                      ${item.product.price.toFixed(2)}
+                    <p className="text-sm font-semibold text-gray-900 mt-2">
+                      {item.product.price} DH
                     </p>
                   </div>
                   <button
@@ -86,7 +95,7 @@ export default function CartPage() {
                     </svg>
                   </button>
                 </div>
-                <div className="flex items-center gap-3 mt-3">
+                <div className="flex items-center justify-between gap-3 mt-3">
                   <div className="flex items-center border border-gray-200 rounded-full">
                     <button
                       onClick={() => updateQuantity(item.product.id, item.size, item.color, item.quantity - 1)}
@@ -102,9 +111,9 @@ export default function CartPage() {
                       +
                     </button>
                   </div>
-                  <p className="text-sm font-semibold text-gray-900">
-                    ${(item.product.price * item.quantity).toFixed(2)}
-                  </p>
+                  <span className="text-sm font-semibold text-gray-900">
+                    {item.product.price * item.quantity} DH
+                  </span>
                 </div>
               </div>
             </div>
@@ -136,20 +145,57 @@ export default function CartPage() {
             <div className="space-y-3 text-sm">
               <div className="flex justify-between text-gray-600">
                 <span>Subtotal</span>
-                <span>${subtotal.toFixed(2)}</span>
+                <span className="font-medium text-gray-900">{subtotal} DH</span>
               </div>
-              <div className="flex justify-between text-gray-600">
+
+              {/* Shipping selection */}
+              <div className="pt-2">
+                <h3 className="text-sm font-semibold text-gray-900 mb-2">Shipping</h3>
+                <div className="space-y-2">
+                  <label className={`flex items-center justify-between p-3 rounded-xl border cursor-pointer transition-colors ${
+                    shippingZone === "casablanca"
+                      ? "border-gray-900 bg-white"
+                      : "border-gray-200 hover:border-gray-400"
+                  }`}>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        name="shipping"
+                        checked={shippingZone === "casablanca"}
+                        onChange={() => setShippingZone("casablanca")}
+                        className="accent-gray-900"
+                      />
+                      <span className="text-sm text-gray-700">Casablanca</span>
+                    </div>
+                    <span className="text-sm font-medium text-gray-900">20 DH</span>
+                  </label>
+                  <label className={`flex items-center justify-between p-3 rounded-xl border cursor-pointer transition-colors ${
+                    shippingZone === "outside"
+                      ? "border-gray-900 bg-white"
+                      : "border-gray-200 hover:border-gray-400"
+                  }`}>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        name="shipping"
+                        checked={shippingZone === "outside"}
+                        onChange={() => setShippingZone("outside")}
+                        className="accent-gray-900"
+                      />
+                      <span className="text-sm text-gray-700">Outside Casablanca</span>
+                    </div>
+                    <span className="text-sm font-medium text-gray-900">40 DH</span>
+                  </label>
+                </div>
+              </div>
+
+              <div className="border-t border-gray-200 pt-3 flex justify-between">
                 <span>Shipping</span>
-                <span>{shipping === 0 ? "Free" : `$${shipping.toFixed(2)}`}</span>
+                <span className="font-medium text-gray-900">{shippingCost} DH</span>
               </div>
-              {shipping > 0 && (
-                <p className="text-xs text-gray-400">
-                  Free shipping on orders over $50.00
-                </p>
-              )}
               <div className="border-t border-gray-200 pt-3 flex justify-between font-semibold text-gray-900 text-base">
                 <span>Total</span>
-                <span>${total.toFixed(2)}</span>
+                <span>{total} DH</span>
               </div>
             </div>
             <button
@@ -158,7 +204,7 @@ export default function CartPage() {
               Proceed to Checkout
             </button>
             <p className="text-xs text-gray-400 text-center mt-3">
-              Secure checkout with SSL encryption
+              Delivery in Casablanca: 20 DH • Outside Casablanca: 40 DH
             </p>
           </div>
         </div>

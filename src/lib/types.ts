@@ -9,6 +9,7 @@ export interface Product {
   images: string[];
   sizes: string[];
   colors: string[];
+  stock: Record<string, number>;
   isNew: boolean;
   isSale: boolean;
   rating: number;

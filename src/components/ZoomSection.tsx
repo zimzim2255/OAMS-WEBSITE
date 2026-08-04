@@ -1,26 +1,27 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
 
 const leftProducts = [
-  { seed: 'graffititshirt', title: 'T-SHIRT VLOM.CUST', subtitle: 'Vintage black', price: '$39', oldPrice: '$49' },
-  { seed: 'backpack', title: 'CALLIGRAPHY BACKPACK', subtitle: 'Black', price: '$79', oldPrice: '$99' },
-  { seed: 'sneakers', title: 'SNEAKERS VLOM.CUST', subtitle: 'Black & white', price: '$95', oldPrice: '$119' },
-  { seed: 'hat', title: 'CAP VLOM.CUST', subtitle: 'Black', price: '$29' },
-  { seed: 'bag', title: 'SHOPPER BAG VLOM.CUST', subtitle: 'Canvas black', price: '$49' },
-  { seed: 'scarf', title: 'SCARF VLOM.CUST', subtitle: 'Black wool', price: '$69' },
-  { seed: 'socks', title: 'SOCKS VLOM.CUST', subtitle: 'Black cotton', price: '$19', oldPrice: '$29' },
+  { id: 1, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846845/blackshort_casse28pcs_grayclair40pcs_grayfonce116pcs_vert_36_noir186pcs-prix80dh_xnlqg7.png' },
+  { id: 2, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846844/nikeshort_reed36_green_28_mint_11_marron_40pcs_grayclair_32_bleu39pcs_grayfance71pcs_noir120pcs-prix65dh_rzwyiq.png' },
+  { id: 3, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846842/50pcsinblue_green_brown_prix70dh_ac5pvh.png' },
+  { id: 4, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846823/swdpentes_black60pcs_grayclair60pcs_vert24pcs_marron30pcs_grayfance30pcs_prix80dh_jummmi.png' },
+  { id: 5, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846788/greenshort_in_stock_36pcs_reed28pcs_grayfonce144pcs_casse40pcs_noir116pcs80dh_ufcu5l.png' },
+  { id: 6, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846787/ensombleswdbrand_noir30pcs_grayfoncee30pcs_graydh4pcs-125dh_dskvgv.png' },
+  { id: 1, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846845/blackshort_casse28pcs_grayclair40pcs_grayfonce116pcs_vert_36_noir186pcs-prix80dh_xnlqg7.png' },
 ];
 
 const rightProducts = [
-  { seed: 'wallet', title: 'WALLET VLOM.CUST', subtitle: 'Black leather', price: '$89' },
-  { seed: 'gloves', title: 'GLOVES VLOM.CUST', subtitle: 'Black knit', price: '$34', oldPrice: '$44' },
-  { seed: 'scarf', title: 'SCARF VLOM.CUST', subtitle: 'Black wool', price: '$69' },
-  { seed: 'belt', title: 'BELT VLOM.CUST', subtitle: 'Black leather', price: '$59', oldPrice: '$79' },
-  { seed: 'hoodie', title: 'HOODIE VLOM.CUST', subtitle: 'Oversized black', price: '$89', oldPrice: '$109' },
-  { seed: 'watch', title: 'WATCH VLOM.CUST', subtitle: 'Black steel', price: '$199', oldPrice: '$249' },
-  { seed: 'leatherjacket', title: 'LEATHER JACKET VLOM.CUST', subtitle: 'Vintage grey', price: '$299' },
-  { seed: 'cardholder', title: 'CARDHOLDER VLOM.CUST', subtitle: 'Black', price: '$39' },
+  { id: 2, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846844/nikeshort_reed36_green_28_mint_11_marron_40pcs_grayclair_32_bleu39pcs_grayfance71pcs_noir120pcs-prix65dh_rzwyiq.png' },
+  { id: 3, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846842/50pcsinblue_green_brown_prix70dh_ac5pvh.png' },
+  { id: 4, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846823/swdpentes_black60pcs_grayclair60pcs_vert24pcs_marron30pcs_grayfance30pcs_prix80dh_jummmi.png' },
+  { id: 5, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846788/greenshort_in_stock_36pcs_reed28pcs_grayfonce144pcs_casse40pcs_noir116pcs80dh_ufcu5l.png' },
+  { id: 6, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846787/ensombleswdbrand_noir30pcs_grayfoncee30pcs_graydh4pcs-125dh_dskvgv.png' },
+  { id: 1, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846845/blackshort_casse28pcs_grayclair40pcs_grayfonce116pcs_vert_36_noir186pcs-prix80dh_xnlqg7.png' },
+  { id: 2, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846844/nikeshort_reed36_green_28_mint_11_marron_40pcs_grayclair_32_bleu39pcs_grayfance71pcs_noir120pcs-prix65dh_rzwyiq.png' },
+  { id: 3, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846842/50pcsinblue_green_brown_prix70dh_ac5pvh.png' },
 ];
 
 export default function ZoomSection() {
@@ -115,7 +116,7 @@ export default function ZoomSection() {
     transitionStyle = 'none';
   }
 
-  const cardBase = "bg-white/10 backdrop-blur-md border border-white/20 rounded-xl overflow-hidden group hover:bg-white/20 transition-all duration-500 w-[280px] max-w-[38vw]";
+  const cardBase = "bg-white/10 backdrop-blur-md border border-white/20 rounded-[4px] overflow-hidden group hover:bg-white/20 transition-all duration-500 w-[340px] max-w-[42vw]";
 
   return (
     <>
@@ -134,57 +135,35 @@ export default function ZoomSection() {
             <div className="absolute inset-0 z-20 pointer-events-none" style={{ border: `${borderWidth}px solid white`, transition: phase === 'opening' ? 'none' : 'border-width 0.4s ease-out' }} />
 
             {/* Cards content */}
-            <div className="relative w-full h-[800vh] text-white z-10">
-              <h2 className="text-3xl md:text-5xl font-bold uppercase font-['Impact','Anton',sans-serif] tracking-tight text-center pt-8 pb-4">
-                Our Collection
-              </h2>
-
+            <div className="relative w-full h-[800vh] z-10">
               <div className="flex justify-center gap-16 mt-[160vh]">
                 <div className="flex flex-col items-center gap-6" style={{ transform: `translateY(${phase === 'scrolling' ? displayTranslateY * 0.35 : 0}vh)`, transition: 'transform 0.2s ease-out' }}>
                   {leftProducts.map((p, idx) => (
-                    <div key={idx} className={cardBase}>
-                      <div className="h-48 overflow-hidden">
-                        <img src={`https://picsum.photos/seed/${p.seed}/300/250`} alt={p.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" style={{ filter: "grayscale(100%)" }} />
+                    <Link key={idx} href={`/products/${p.id}`}>
+                      <div className={`${cardBase} cursor-pointer`}>
+                        <div className="h-[420px] overflow-hidden">
+                          <img src={p.image} alt="" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" style={{ filter: "grayscale(100%)" }} />
+                        </div>
                       </div>
-                      <div className="p-3 border-t border-white/10">
-                        <h3 className="text-sm font-bold uppercase">{p.title}</h3>
-                        <p className="text-[11px] text-white/60">{p.subtitle}</p>
-                        <p className="text-sm font-bold mt-1">
-                          {p.oldPrice && <span className="line-through text-white/40 mr-2">{p.oldPrice}</span>}
-                          <span>{p.price}</span>
-                        </p>
-                      </div>
-                    </div>
+                    </Link>
                   ))}
                   <div className={`${cardBase} flex items-center justify-center cursor-pointer min-h-[100px]`}>
-                    <div className="text-center p-4">
-                      <p className="text-sm font-bold uppercase tracking-wider">VIEW MORE</p>
-                      <span className="text-xl mt-1 block transition-transform duration-500 group-hover:translate-x-2">→</span>
-                    </div>
+                    <span className="text-3xl transition-transform duration-500 group-hover:translate-x-2">→</span>
                   </div>
                 </div>
 
                 <div className="flex flex-col items-center gap-6" style={{ transform: `translateY(${phase === 'scrolling' ? -240 + scrollT * 160 : -240}vh)`, transition: 'transform 0.3s ease-out' }}>
                   {rightProducts.map((p, idx) => (
-                    <div key={idx} className={cardBase}>
-                      <div className="h-48 overflow-hidden">
-                        <img src={`https://picsum.photos/seed/${p.seed}/300/250`} alt={p.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" style={{ filter: "grayscale(100%)" }} />
+                    <Link key={idx} href={`/products/${p.id}`}>
+                      <div className={`${cardBase} cursor-pointer`}>
+                        <div className="h-[420px] overflow-hidden">
+                          <img src={p.image} alt="" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" style={{ filter: "grayscale(100%)" }} />
+                        </div>
                       </div>
-                      <div className="p-3 border-t border-white/10">
-                        <h3 className="text-sm font-bold uppercase">{p.title}</h3>
-                        <p className="text-[11px] text-white/60">{p.subtitle}</p>
-                        <p className="text-sm font-bold mt-1">
-                          {p.oldPrice && <span className="line-through text-white/40 mr-2">{p.oldPrice}</span>}
-                          <span>{p.price}</span>
-                        </p>
-                      </div>
-                    </div>
+                    </Link>
                   ))}
                   <div className={`${cardBase} flex items-center justify-center cursor-pointer min-h-[100px]`}>
-                    <div className="text-center p-4">
-                      <p className="text-sm font-bold uppercase tracking-wider">VIEW MORE</p>
-                      <span className="text-xl mt-1 block transition-transform duration-500 group-hover:translate-x-2">→</span>
-                    </div>
+                    <span className="text-3xl transition-transform duration-500 group-hover:translate-x-2">→</span>
                   </div>
                 </div>
               </div>

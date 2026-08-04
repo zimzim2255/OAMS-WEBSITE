@@ -7,17 +7,17 @@ interface ProductsPageProps {
 
 const categories = [
   { id: "all", label: "All" },
-  { id: "men", label: "Men" },
-  { id: "women", label: "Women" },
-  { id: "kids", label: "Kids" },
-  { id: "new", label: "New" },
+  { id: "shorts", label: "Shorts" },
+  { id: "shirts", label: "Shirts" },
+  { id: "pants", label: "Pants" },
+  { id: "ensemble", label: "Ensemble" },
 ];
 
 export default async function ProductsPage({ searchParams }: ProductsPageProps) {
   const params = await searchParams;
   const category = params.category || "all";
 
-  const filtered = category === "all" || category === "new"
+  const filtered = category === "all"
     ? flashDesigns
     : flashDesigns.filter((p) => p.category === category);
 
@@ -91,11 +91,15 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
               <p className="text-xs md:text-sm text-gray-400 mt-1 leading-relaxed line-clamp-2">
                 {product.description}
               </p>
-              <div className="mt-2 flex items-center justify-between">
-                <p className="text-sm md:text-base font-medium text-white">
-                  {product.price}$
-                </p>
-                <div className="w-3 h-3 bg-white" />
+              <div className="mt-3 flex items-center justify-between">
+                <span className="text-sm md:text-base font-medium text-white">
+                  {product.price} DH
+                </span>
+                {product.originalPrice && (
+                  <span className="text-xs text-gray-500 line-through">
+                    {product.originalPrice} DH
+                  </span>
+                )}
               </div>
             </div>
           </div>

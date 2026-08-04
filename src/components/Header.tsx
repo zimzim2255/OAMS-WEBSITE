@@ -38,7 +38,7 @@ export default function Header() {
         {/* Center: Logo Section - own border */}
         <div className="flex-1 flex items-center justify-center px-6 py-3 border border-white rounded bg-white">
           <span className="font-['Impact','Anton',sans-serif] text-2xl font-bold tracking-tight uppercase">
-            VLOM.CUST
+            OAMS
           </span>
         </div>
 

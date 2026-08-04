@@ -11,10 +11,10 @@ interface CatalogNavCardProps {
 
 const categoryCards = [
   { id: "all", name: "ALL PRODUCTS", href: "/products", image: "https://picsum.photos/seed/all/600/800" },
-  { id: "men", name: "MEN", href: "/products?category=men", image: "https://picsum.photos/seed/men/600/800" },
-  { id: "women", name: "WOMEN", href: "/products?category=women", image: "https://picsum.photos/seed/women/600/800" },
-  { id: "kids", name: "KIDS", href: "/products?category=kids", image: "https://picsum.photos/seed/kids/600/800" },
-  { id: "new", name: "NEW ARRIVALS", href: "/products?category=new", image: "https://picsum.photos/seed/new/600/800" },
+  { id: "shorts", name: "SHORTS", href: "/products?category=shorts", image: "https://picsum.photos/seed/shorts/600/800" },
+  { id: "shirts", name: "SHIRTS", href: "/products?category=shirts", image: "https://picsum.photos/seed/shirts/600/800" },
+  { id: "pants", name: "PANTS", href: "/products?category=pants", image: "https://picsum.photos/seed/pants/600/800" },
+  { id: "ensemble", name: "ENSEMBLE", href: "/products?category=ensemble", image: "https://picsum.photos/seed/ensemble/600/800" },
   { id: "contact", name: "CONTACT", href: "/contact", image: "https://picsum.photos/seed/contact/600/800" },
 ];
 

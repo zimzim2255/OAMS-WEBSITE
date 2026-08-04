@@ -34,12 +34,6 @@ export default function ProductCard({ product }: ProductCardProps) {
       </div>
       <div className="px-1">
         <h3 className="text-sm font-medium text-gray-900 truncate">{product.name}</h3>
-        <div className="flex items-center gap-2 mt-1">
-          <span className="text-sm font-semibold text-gray-900">${product.price.toFixed(2)}</span>
-          {product.originalPrice && (
-            <span className="text-sm text-gray-400 line-through">${product.originalPrice.toFixed(2)}</span>
-          )}
-        </div>
         <div className="flex items-center gap-1 mt-1">
           <div className="flex">
             {[...Array(5)].map((_, i) => (

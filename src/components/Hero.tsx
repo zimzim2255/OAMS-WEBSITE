@@ -34,10 +34,10 @@ export default function Hero() {
               </svg>
             </Link>
             <Link
-              href="/products?category=women"
+              href="/products?category=shorts"
               className="inline-flex items-center px-8 py-3 border border-white/30 text-white font-medium rounded-full hover:bg-white/10 transition-colors"
             >
-              Women's Collection
+              Shorts Collection
             </Link>
           </div>
 

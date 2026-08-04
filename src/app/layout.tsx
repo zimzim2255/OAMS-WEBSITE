@@ -17,7 +17,7 @@ const anton = Anton({
 });
 
 export const metadata: Metadata = {
-  title: "VLOM.CUST - Streetwear Brand",
+  title: "OAMS - Streetwear Brand",
   description: "Custom streetwear brand creating unique looks since 2018. Hand-operated by our artisans.",
 };
 

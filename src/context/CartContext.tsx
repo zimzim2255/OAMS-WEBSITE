@@ -17,6 +17,10 @@ interface CartContextType {
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
+// Version the cart storage so stale data from old product catalogs gets cleared
+const CART_STORAGE_KEY = "cart";
+const CART_VERSION = "2";
+
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
   const [isOpen, setIsOpen] = useState(false);
@@ -24,9 +28,16 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     try {
-      const saved = localStorage.getItem("cart");
-      if (saved) {
-        setItems(JSON.parse(saved));
+      const version = localStorage.getItem(`${CART_STORAGE_KEY}_version`);
+      if (version !== CART_VERSION) {
+        // Old/incompatible cart data — clear it
+        localStorage.removeItem(CART_STORAGE_KEY);
+        localStorage.setItem(`${CART_STORAGE_KEY}_version`, CART_VERSION);
+      } else {
+        const saved = localStorage.getItem(CART_STORAGE_KEY);
+        if (saved) {
+          setItems(JSON.parse(saved));
+        }
       }
     } catch {
       // ignore
@@ -36,7 +47,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (isLoaded) {
-      localStorage.setItem("cart", JSON.stringify(items));
+      localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
     }
   }, [items, isLoaded]);
 
@@ -45,14 +56,18 @@ export function CartProvider({ children }: { children: ReactNode }) {
       const existing = prev.find(
         (item) => item.product.id === product.id && item.size === size && item.color === color
       );
+      const maxStock = product.stock[color] || 0;
       if (existing) {
+        const newQty = Math.min(existing.quantity + quantity, maxStock);
         return prev.map((item) =>
           item.product.id === product.id && item.size === size && item.color === color
-            ? { ...item, quantity: item.quantity + quantity }
+            ? { ...item, quantity: newQty }
             : item
         );
       }
-      return [...prev, { product, quantity, size, color }];
+      const newQty = Math.min(quantity, maxStock);
+      if (newQty <= 0) return prev;
+      return [...prev, { product, quantity: newQty, size, color }];
     });
     setIsOpen(true);
   };
@@ -71,11 +86,13 @@ export function CartProvider({ children }: { children: ReactNode }) {
       return;
     }
     setItems((prev) =>
-      prev.map((item) =>
-        item.product.id === productId && item.size === size && item.color === color
-          ? { ...item, quantity }
-          : item
-      )
+      prev.map((item) => {
+        if (item.product.id === productId && item.size === size && item.color === color) {
+          const maxStock = item.product.stock[color] || 0;
+          return { ...item, quantity: Math.min(quantity, maxStock) };
+        }
+        return item;
+      })
     );
   };
 

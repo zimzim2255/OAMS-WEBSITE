@@ -33,9 +33,12 @@ export default function ProductDetailPage() {
     );
   }
 
+  const availableStock = selectedColor ? (product.stock[selectedColor] || 0) : 0;
+
   const handleAddToCart = () => {
     if (!selectedSize) return;
     if (!selectedColor) return;
+    if (availableStock <= 0) return;
     addItem(product, selectedSize, selectedColor, quantity);
     setAddedToCart(true);
     setTimeout(() => setAddedToCart(false), 2000);
@@ -79,11 +82,6 @@ export default function ProductDetailPage() {
               {product.isNew && (
                 <span className="absolute top-4 left-4 bg-black text-white text-xs font-medium px-3 py-1.5 rounded-full">
                   New
-                </span>
-              )}
-              {product.isSale && product.originalPrice && (
-                <span className="absolute top-4 right-4 bg-red-500 text-white text-xs font-medium px-3 py-1.5 rounded-full">
-                  Sale
                 </span>
               )}
             </div>
@@ -133,14 +131,22 @@ export default function ProductDetailPage() {
 
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">{product.name}</h1>
 
-            <div className="flex items-center gap-3 mt-3">
-              <span className="text-2xl font-bold text-gray-900">${product.price.toFixed(2)}</span>
+            <div className="flex items-center gap-3 mt-4">
+              <span className="text-2xl font-bold text-gray-900">{product.price} DH</span>
               {product.originalPrice && (
-                <span className="text-lg text-gray-400 line-through">${product.originalPrice.toFixed(2)}</span>
+                <span className="text-lg text-gray-400 line-through">{product.originalPrice} DH</span>
               )}
-              {product.originalPrice && (
-                <span className="text-sm font-medium text-red-500 bg-red-50 px-2 py-0.5 rounded-full">
-                  -{Math.round((1 - product.price / product.originalPrice) * 100)}%
+            </div>
+
+            <div className="flex items-center gap-3 mt-2">
+              {availableStock > 0 && (
+                <span className="text-sm font-medium text-green-600 bg-green-50 px-3 py-1 rounded-full">
+                  In Stock ({availableStock} available)
+                </span>
+              )}
+              {availableStock === 0 && selectedColor && (
+                <span className="text-sm font-medium text-red-500 bg-red-50 px-3 py-1 rounded-full">
+                  Out of Stock
                 </span>
               )}
             </div>
@@ -149,12 +155,7 @@ export default function ProductDetailPage() {
 
             {/* Size Selection */}
             <div className="mt-8">
-              <div className="flex items-center justify-between">
-                <h3 className="text-sm font-semibold text-gray-900">Size</h3>
-                <button className="text-xs text-gray-500 hover:text-gray-900 underline">
-                  Size Guide
-                </button>
-              </div>
+              <h3 className="text-sm font-semibold text-gray-900">Size</h3>
               <div className="flex flex-wrap gap-2 mt-3">
                 {product.sizes.map((size) => (
                   <button
@@ -179,19 +180,27 @@ export default function ProductDetailPage() {
             <div className="mt-6">
               <h3 className="text-sm font-semibold text-gray-900">Color: <span className="font-normal text-gray-500">{selectedColor || "Select"}</span></h3>
               <div className="flex flex-wrap gap-2 mt-3">
-                {product.colors.map((color) => (
-                  <button
-                    key={color}
-                    onClick={() => setSelectedColor(color)}
-                    className={`px-4 py-2.5 rounded-lg text-sm font-medium border transition-colors ${
-                      selectedColor === color
-                        ? "bg-gray-900 text-white border-gray-900"
-                        : "bg-white text-gray-700 border-gray-200 hover:border-gray-400"
-                    }`}
-                  >
-                    {color}
-                  </button>
-                ))}
+                {product.colors.map((color) => {
+                  const stock = product.stock[color] || 0;
+                  const isOutOfStock = stock <= 0;
+                  return (
+                    <button
+                      key={color}
+                      onClick={() => setSelectedColor(color)}
+                      disabled={isOutOfStock}
+                      className={`px-4 py-2.5 rounded-lg text-sm font-medium border transition-colors ${
+                        selectedColor === color
+                          ? "bg-gray-900 text-white border-gray-900"
+                          : isOutOfStock
+                          ? "bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed"
+                          : "bg-white text-gray-700 border-gray-200 hover:border-gray-400"
+                      }`}
+                    >
+                      {color}
+                      {isOutOfStock && " (Sold Out)"}
+                    </button>
+                  );
+                })}
               </div>
               {!selectedColor && (
                 <p className="text-xs text-red-500 mt-1">Please select a color</p>
@@ -209,15 +218,16 @@ export default function ProductDetailPage() {
                 </button>
                 <span className="px-4 text-sm font-medium text-gray-900">{quantity}</span>
                 <button
-                  onClick={() => setQuantity(quantity + 1)}
-                  className="px-4 py-2.5 text-gray-600 hover:text-gray-900 text-sm"
+                  onClick={() => setQuantity(Math.min(availableStock || 1, quantity + 1))}
+                  disabled={availableStock > 0 && quantity >= availableStock}
+                  className="px-4 py-2.5 text-gray-600 hover:text-gray-900 text-sm disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   +
                 </button>
               </div>
               <button
                 onClick={handleAddToCart}
-                disabled={!selectedSize || !selectedColor}
+                disabled={!selectedSize || !selectedColor || availableStock <= 0}
                 className={`flex-1 py-3 rounded-full text-sm font-medium transition-all ${
                   addedToCart
                     ? "bg-green-500 text-white"
@@ -243,10 +253,8 @@ export default function ProductDetailPage() {
                 <div className="flex-1">
                   <h4 className="text-xs font-semibold text-gray-900 uppercase tracking-wider">Shipping</h4>
                   <ul className="mt-2 space-y-1 text-sm text-gray-600">
-                    <li>• Free shipping on orders over $50</li>
-                    <li>• Standard delivery: 3-5 days</li>
-                    <li>• Express delivery: 1-2 days</li>
-                    <li>• Easy 30-day returns</li>
+                    <li>• Delivery in Casablanca: 20 DH</li>
+                    <li>• Delivery outside Casablanca: 40 DH</li>
                   </ul>
                 </div>
               </div>
