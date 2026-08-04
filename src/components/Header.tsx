@@ -30,7 +30,7 @@ export default function Header() {
 
         {/* Center: Logo Section - own border, links to home */}
         <Link href="/" className="flex-1 min-w-0 flex items-center justify-center px-2 sm:px-6 py-3 border border-white rounded bg-white">
-          <span className="font-['Impact','Anton',sans-serif] text-xl sm:text-2xl font-bold tracking-tight uppercase">
+          <span className="font-display text-xl sm:text-2xl font-bold tracking-tight uppercase">
             OAMS
           </span>
         </Link>
@@ -42,7 +42,20 @@ export default function Header() {
           aria-label="Open cart"
         >
           <span className="text-xs text-gray-400 uppercase tracking-widest hover:text-black transition-colors whitespace-nowrap">
-            <span className="sm:hidden">🛒</span>
+            <svg
+              className="w-5 h-5 sm:hidden"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={1.8}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <circle cx="9" cy="21" r="1" />
+              <circle cx="20" cy="21" r="1" />
+              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+            </svg>
             <span className="hidden sm:inline">Cart ({getTotalItems()})</span>
           </span>
         </button>

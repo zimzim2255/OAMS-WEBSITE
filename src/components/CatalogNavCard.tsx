@@ -101,7 +101,7 @@ export default function CatalogNavCard({ isOpen, onClose }: CatalogNavCardProps)
         <div className="flex items-start justify-between gap-4 mb-8 sm:mb-10 md:mb-14">
           {/* CATALOG + ✦ */}
           <div className="flex items-center gap-3 sm:gap-5 min-w-0" data-reveal-line>
-            <h1 className="font-['Impact','Anton',sans-serif] text-[40px] sm:text-[56px] md:text-[80px] font-black uppercase tracking-[-0.02em] text-white leading-none">
+            <h1 className="font-display text-[40px] sm:text-[56px] md:text-[80px] font-black uppercase tracking-[-0.02em] text-white leading-none">
               Catalog
             </h1>
             <span className="text-[20px] sm:text-[32px] text-white leading-none">✦</span>
@@ -180,7 +180,7 @@ export default function CatalogNavCard({ isOpen, onClose }: CatalogNavCardProps)
                 </span>
 
                 {/* Category name - bottom left */}
-                <span className="absolute bottom-[80px] left-6 font-['Impact','Anton',sans-serif] text-[28px] md:text-[36px] font-black uppercase tracking-tight text-white group-hover:text-black leading-none transition-colors duration-300">
+                <span className="absolute bottom-[80px] left-6 font-display text-[28px] md:text-[36px] font-black uppercase tracking-tight text-white group-hover:text-black leading-none transition-colors duration-300">
                   {cat.name}
                 </span>
 

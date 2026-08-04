@@ -1,20 +1,21 @@
 import type { Metadata } from "next";
-import { Inter, Anton } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import { CartProvider } from "@/context/CartContext";
 import TargetCursor from "@/components/TargetCursor";
 import Header from "@/components/Header";
 import SplashReveal from "@/components/SplashReveal";
 
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
+const displayFont = localFont({
+  src: "../../public/fonts/titel_fonts/AudioNugget.ttf",
+  variable: "--font-display",
+  display: "swap",
 });
 
-const anton = Anton({
-  subsets: ["latin"],
-  weight: "400",
-  variable: "--font-anton",
+const bodyFont = localFont({
+  src: "../../public/fonts/subtite_font/toxigenesis bd.otf",
+  variable: "--font-body",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -30,7 +31,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${anton.variable} h-full`}
+      className={`${displayFont.variable} ${bodyFont.variable} h-full`}
     >
       <body className="min-h-full flex flex-col bg-white font-sans antialiased">
         <TargetCursor

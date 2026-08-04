@@ -78,7 +78,7 @@ export default function ExpandableCTASection() {
           style={{ height: cardHeight, willChange: 'height' }}
         >
           <h3
-            className="font-['Impact','Anton',sans-serif] text-[clamp(24px,6vw,110px)] sm:text-[clamp(40px,8vw,110px)] font-bold uppercase text-white leading-none tracking-tight text-center"
+            className="font-display text-[clamp(24px,6vw,110px)] sm:text-[clamp(40px,8vw,110px)] font-bold uppercase text-white leading-none tracking-tight text-center"
             style={{
               transform: `scale(${contentScale})`,
               willChange: 'transform',

@@ -2,7 +2,7 @@ export default function Footer() {
   return (
     <footer className="bg-black text-white flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-0 px-4 sm:px-10 py-8 sm:py-10 overflow-hidden">
       <p className="text-[12px] text-center sm:text-left">© 2018 - 2024</p>
-      <p className="font-['Impact','Anton',sans-serif] text-2xl sm:text-3xl md:text-5xl uppercase font-bold tracking-tight text-center min-w-0">
+      <p className="font-display text-2xl sm:text-3xl md:text-5xl uppercase font-bold tracking-tight text-center min-w-0">
         CUSTOM - WHAT IS IT?
       </p>
       <a
