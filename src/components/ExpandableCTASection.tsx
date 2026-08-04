@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import Link from 'next/link';
 
 const clamp = (v: number, min: number, max: number) => Math.max(min, Math.min(max, v));
 
@@ -88,10 +89,13 @@ export default function ExpandableCTASection() {
           <p className="mt-4 sm:mt-6 text-[10px] sm:text-xs md:text-sm uppercase tracking-widest text-white/60 text-center">
             Limited stock — restocked weekly
           </p>
-          <div className="cursor-target mt-6 sm:mt-10 bg-white text-black flex items-center justify-between px-4 sm:px-8 py-3 sm:py-4 cursor-pointer w-full max-w-[280px] sm:max-w-none">
+          <Link
+            href="/products"
+            className="cursor-target mt-6 sm:mt-10 bg-white text-black flex items-center justify-between px-4 sm:px-8 py-3 sm:py-4 cursor-pointer w-full max-w-[280px] sm:max-w-none"
+          >
             <span className="text-[10px] sm:text-sm font-bold uppercase tracking-wider">VIEW ALL BESTSELLERS</span>
             <span className="text-base sm:text-lg ml-3 sm:ml-6">→</span>
-          </div>
+          </Link>
         </div>
       </section>
     </div>

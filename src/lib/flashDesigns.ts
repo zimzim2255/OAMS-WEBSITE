@@ -12,7 +12,7 @@ export const flashDesigns: Product[] = [
     images: [
       "https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846845/blackshort_casse28pcs_grayclair40pcs_grayfonce116pcs_vert_36_noir186pcs-prix80dh_xnlqg7.png",
     ],
-    sizes: ["S", "M", "L", "XL"],
+    sizes: ["M", "L", "XL", "XXL"],
     colors: ["Casse", "Gray Clair", "Gray Fonce", "Vert", "Noir"],
     stock: {
       "Casse": 28,
@@ -36,7 +36,7 @@ export const flashDesigns: Product[] = [
     images: [
       "https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846844/nikeshort_reed36_green_28_mint_11_marron_40pcs_grayclair_32_bleu39pcs_grayfance71pcs_noir120pcs-prix65dh_rzwyiq.png",
     ],
-    sizes: ["S", "M", "L", "XL"],
+    sizes: ["M", "L", "XL", "XXL"],
     colors: ["Reed", "Green", "Mint", "Marron", "Gray Clair", "Bleu", "Gray Fance", "Noir"],
     stock: {
       "Reed": 36,
@@ -55,15 +55,15 @@ export const flashDesigns: Product[] = [
   },
   {
     id: 103,
-    name: "SWD Shirt",
+    name: "STWD Shirt",
     category: "shirts",
     price: 70,
-    description: "SWD shirt available in blue, green, and brown.",
+    description: "STWD shirt available in blue, green, and brown.",
     image: "https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846842/50pcsinblue_green_brown_prix70dh_ac5pvh.png",
     images: [
       "https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846842/50pcsinblue_green_brown_prix70dh_ac5pvh.png",
     ],
-    sizes: ["S", "M", "L", "XL"],
+    sizes: ["M", "L", "XL", "XXL"],
     colors: ["Blue", "Green", "Brown"],
     stock: {
       "Blue": 50,
@@ -77,15 +77,15 @@ export const flashDesigns: Product[] = [
   },
   {
     id: 104,
-    name: "SWD Pants",
+    name: "STWD Pants",
     category: "pants",
     price: 80,
-    description: "SWD pants with premium quality. Available in multiple colors.",
+    description: "STWD pants with premium quality. Available in multiple colors.",
     image: "https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846823/swdpentes_black60pcs_grayclair60pcs_vert24pcs_marron30pcs_grayfance30pcs_prix80dh_jummmi.png",
     images: [
       "https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846823/swdpentes_black60pcs_grayclair60pcs_vert24pcs_marron30pcs_grayfance30pcs_prix80dh_jummmi.png",
     ],
-    sizes: ["S", "M", "L", "XL"],
+    sizes: ["M", "L", "XL", "XXL"],
     colors: ["Black", "Gray Clair", "Vert", "Marron", "Gray Fance"],
     stock: {
       "Black": 60,
@@ -109,7 +109,7 @@ export const flashDesigns: Product[] = [
     images: [
       "https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846788/greenshort_in_stock_36pcs_reed28pcs_grayfonce144pcs_casse40pcs_noir116pcs80dh_ufcu5l.png",
     ],
-    sizes: ["S", "M", "L", "XL"],
+    sizes: ["M", "L", "XL", "XXL"],
     colors: ["Reed", "Gray Fonce", "Casse", "Noir"],
     stock: {
       "Reed": 36,
@@ -124,15 +124,15 @@ export const flashDesigns: Product[] = [
   },
   {
     id: 106,
-    name: "Ensemble SWD Brand",
+    name: "Ensemble STWD Brand",
     category: "ensemble",
     price: 125,
-    description: "Ensemble SWD brand set. Available in multiple colors.",
+    description: "Ensemble STWD brand set. Available in multiple colors.",
     image: "https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846787/ensombleswdbrand_noir30pcs_grayfoncee30pcs_graydh4pcs-125dh_dskvgv.png",
     images: [
       "https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846787/ensombleswdbrand_noir30pcs_grayfoncee30pcs_graydh4pcs-125dh_dskvgv.png",
     ],
-    sizes: ["S", "M", "L", "XL"],
+    sizes: ["M", "L", "XL", "XXL"],
     colors: ["Noir", "Gray Fonce", "Gray"],
     stock: {
       "Noir": 30,
@@ -154,7 +154,7 @@ export const flashDesigns: Product[] = [
     images: [
       "https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846785/v2ofnikeshort_marron56pcs_casse_20pc_gray_clair20pcs_green24pcs_blue24pcs_grayfonce100pcs_black100pcs-60dh_jbjnzb.png",
     ],
-    sizes: ["S", "M", "L", "XL"],
+    sizes: ["M", "L", "XL", "XXL"],
     colors: ["Marron", "Casse", "Gray Clair", "Green", "Blue", "Gray Fonce", "Black"],
     stock: {
       "Marron": 56,
@@ -180,7 +180,7 @@ export const flashDesigns: Product[] = [
     images: [
       "https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846756/v2ofjordenshorts_marron56_casse20pcs_grayclair20pc_green24pcs_blue24pcs_grayfance100_black100pcsprix60dh_r8235v.png",
     ],
-    sizes: ["S", "M", "L", "XL"],
+    sizes: ["M", "L", "XL", "XXL"],
     colors: ["Marron", "Casse", "Gray Clair", "Green", "Blue", "Gray Fance", "Black"],
     stock: {
       "Marron": 56,
@@ -206,7 +206,7 @@ export const flashDesigns: Product[] = [
     images: [
       "https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846751/jordenshort_green15pcs_bleu16pcs_rouge16pcs_grayclair_11pcs_mint8pcs_black44_marron11pcs_grayfonce28pcs-prix65dh_wzspsb.png",
     ],
-    sizes: ["S", "M", "L", "XL"],
+    sizes: ["M", "L", "XL", "XXL"],
     colors: ["Green", "Bleu", "Rouge", "Gray Clair", "Mint", "Black", "Marron", "Gray Fonce"],
     stock: {
       "Green": 15,

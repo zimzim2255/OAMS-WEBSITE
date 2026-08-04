@@ -198,11 +198,12 @@ export default function CartPage() {
                 <span>{total} DH</span>
               </div>
             </div>
-            <button
-              className="w-full mt-6 bg-gray-900 text-white py-3 rounded-full text-sm font-medium hover:bg-gray-800 transition-colors"
+            <Link
+              href="/checkout"
+              className="block w-full mt-6 bg-gray-900 text-white py-3 rounded-full text-sm font-medium hover:bg-gray-800 transition-colors text-center"
             >
               Proceed to Checkout
-            </button>
+            </Link>
             <p className="text-xs text-gray-400 text-center mt-3">
               Delivery in Casablanca: 20 DH • Outside Casablanca: 40 DH
             </p>

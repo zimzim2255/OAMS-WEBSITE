@@ -7,10 +7,10 @@ import ExpandableCTASection from './ExpandableCTASection';
 const products = [
   { id: 1, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846845/blackshort_casse28pcs_grayclair40pcs_grayfonce116pcs_vert_36_noir186pcs-prix80dh_xnlqg7.png', title: 'BLACK SHORT', subtitle: 'Premium quality' },
   { id: 2, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846844/nikeshort_reed36_green_28_mint_11_marron_40pcs_grayclair_32_bleu39pcs_grayfance71pcs_noir120pcs-prix65dh_rzwyiq.png', title: 'NIKE SHORT', subtitle: 'Premium quality' },
-  { id: 3, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846842/50pcsinblue_green_brown_prix70dh_ac5pvh.png', title: 'SWD SHIRT', subtitle: 'Blue, green, brown' },
-  { id: 4, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846823/swdpentes_black60pcs_grayclair60pcs_vert24pcs_marron30pcs_grayfance30pcs_prix80dh_jummmi.png', title: 'SWD PANTS', subtitle: 'Premium quality' },
+  { id: 3, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846842/50pcsinblue_green_brown_prix70dh_ac5pvh.png', title: 'STWD SHIRT', subtitle: 'Blue, green, brown' },
+  { id: 4, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846823/swdpentes_black60pcs_grayclair60pcs_vert24pcs_marron30pcs_grayfance30pcs_prix80dh_jummmi.png', title: 'STWD PANTS', subtitle: 'Premium quality' },
   { id: 5, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846788/greenshort_in_stock_36pcs_reed28pcs_grayfonce144pcs_casse40pcs_noir116pcs80dh_ufcu5l.png', title: 'GREEN SHORT', subtitle: 'In stock' },
-  { id: 6, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846787/ensombleswdbrand_noir30pcs_grayfoncee30pcs_graydh4pcs-125dh_dskvgv.png', title: 'ENSEMBLE SWD', subtitle: 'Brand set' },
+  { id: 6, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846787/ensombleswdbrand_noir30pcs_grayfoncee30pcs_graydh4pcs-125dh_dskvgv.png', title: 'ENSEMBLE STWD', subtitle: 'Brand set' },
 ];
 
 const clamp = (v: number, min: number, max: number) => Math.max(min, Math.min(max, v));

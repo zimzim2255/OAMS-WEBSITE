@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import CatalogNavCard from "./CatalogNavCard";
 import CartDropdown from "./CartDropdown";
 import { useCart } from "@/context/CartContext";
@@ -27,12 +28,12 @@ export default function Header() {
           </button>
         </div>
 
-        {/* Center: Logo Section - own border */}
-        <div className="flex-1 min-w-0 flex items-center justify-center px-2 sm:px-6 py-3 border border-white rounded bg-white">
+        {/* Center: Logo Section - own border, links to home */}
+        <Link href="/" className="flex-1 min-w-0 flex items-center justify-center px-2 sm:px-6 py-3 border border-white rounded bg-white">
           <span className="font-['Impact','Anton',sans-serif] text-xl sm:text-2xl font-bold tracking-tight uppercase">
             OAMS
           </span>
-        </div>
+        </Link>
 
         {/* Right: Cart button - icon-only on mobile, full button on larger screens */}
         <button

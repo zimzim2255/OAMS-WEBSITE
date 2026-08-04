@@ -21,7 +21,7 @@ export const products: Product[] = [
     description: "Premium quality black short. Available in multiple colors.",
     image: cloudinaryImages[0],
     images: [cloudinaryImages[0]],
-    sizes: ["S", "M", "L", "XL"],
+    sizes: ["M", "L", "XL", "XXL"],
     colors: ["Casse", "Gray Clair", "Gray Fonce", "Vert", "Noir"],
     stock: {
       "Casse": 28,
@@ -43,7 +43,7 @@ export const products: Product[] = [
     description: "Nike short with premium quality fabric. Available in multiple colors.",
     image: cloudinaryImages[1],
     images: [cloudinaryImages[1]],
-    sizes: ["S", "M", "L", "XL"],
+    sizes: ["M", "L", "XL", "XXL"],
     colors: ["Reed", "Green", "Mint", "Marron", "Gray Clair", "Bleu", "Gray Fance", "Noir"],
     stock: {
       "Reed": 36,
@@ -62,13 +62,13 @@ export const products: Product[] = [
   },
   {
     id: 3,
-    name: "SWD Shirt",
+    name: "STWD Shirt",
     category: "shirts",
     price: 70,
-    description: "SWD shirt available in blue, green, and brown.",
+    description: "STWD shirt available in blue, green, and brown.",
     image: cloudinaryImages[2],
     images: [cloudinaryImages[2]],
-    sizes: ["S", "M", "L", "XL"],
+    sizes: ["M", "L", "XL", "XXL"],
     colors: ["Blue", "Green", "Brown"],
     stock: {
       "Blue": 50,
@@ -82,13 +82,13 @@ export const products: Product[] = [
   },
   {
     id: 4,
-    name: "SWD Pants",
+    name: "STWD Pants",
     category: "pants",
     price: 80,
-    description: "SWD pants with premium quality. Available in multiple colors.",
+    description: "STWD pants with premium quality. Available in multiple colors.",
     image: cloudinaryImages[3],
     images: [cloudinaryImages[3]],
-    sizes: ["S", "M", "L", "XL"],
+    sizes: ["M", "L", "XL", "XXL"],
     colors: ["Black", "Gray Clair", "Vert", "Marron", "Gray Fance"],
     stock: {
       "Black": 60,
@@ -110,7 +110,7 @@ export const products: Product[] = [
     description: "Green short in stock. Available in multiple colors.",
     image: cloudinaryImages[4],
     images: [cloudinaryImages[4]],
-    sizes: ["S", "M", "L", "XL"],
+    sizes: ["M", "L", "XL", "XXL"],
     colors: ["Reed", "Gray Fonce", "Casse", "Noir"],
     stock: {
       "Reed": 36,
@@ -125,13 +125,13 @@ export const products: Product[] = [
   },
   {
     id: 6,
-    name: "Ensemble SWD Brand",
+    name: "Ensemble STWD Brand",
     category: "ensemble",
     price: 125,
-    description: "Ensemble SWD brand set. Available in multiple colors.",
+    description: "Ensemble STWD brand set. Available in multiple colors.",
     image: cloudinaryImages[5],
     images: [cloudinaryImages[5]],
-    sizes: ["S", "M", "L", "XL"],
+    sizes: ["M", "L", "XL", "XXL"],
     colors: ["Noir", "Gray Fonce", "Gray"],
     stock: {
       "Noir": 30,
@@ -151,7 +151,7 @@ export const products: Product[] = [
     description: "V2 Nike short. Available in multiple colors.",
     image: cloudinaryImages[6],
     images: [cloudinaryImages[6]],
-    sizes: ["S", "M", "L", "XL"],
+    sizes: ["M", "L", "XL", "XXL"],
     colors: ["Marron", "Casse", "Gray Clair", "Green", "Blue", "Gray Fonce", "Black"],
     stock: {
       "Marron": 56,
@@ -175,7 +175,7 @@ export const products: Product[] = [
     description: "V2 Jordan shorts. Available in multiple colors.",
     image: cloudinaryImages[7],
     images: [cloudinaryImages[7]],
-    sizes: ["S", "M", "L", "XL"],
+    sizes: ["M", "L", "XL", "XXL"],
     colors: ["Marron", "Casse", "Gray Clair", "Green", "Blue", "Gray Fance", "Black"],
     stock: {
       "Marron": 56,
@@ -199,7 +199,7 @@ export const products: Product[] = [
     description: "Jordan short. Available in multiple colors.",
     image: cloudinaryImages[8],
     images: [cloudinaryImages[8]],
-    sizes: ["S", "M", "L", "XL"],
+    sizes: ["M", "L", "XL", "XXL"],
     colors: ["Green", "Bleu", "Rouge", "Gray Clair", "Mint", "Black", "Marron", "Gray Fonce"],
     stock: {
       "Green": 15,
@@ -224,7 +224,7 @@ export const products: Product[] = [
     description: "Premium quality black short. Available in multiple colors.",
     image: cloudinaryImages[0],
     images: [cloudinaryImages[0]],
-    sizes: ["S", "M", "L", "XL"],
+    sizes: ["M", "L", "XL", "XXL"],
     colors: ["Casse", "Gray Clair", "Gray Fonce", "Vert", "Noir"],
     stock: {
       "Casse": 28,
@@ -246,7 +246,7 @@ export const products: Product[] = [
     description: "Nike short with premium quality fabric. Available in multiple colors.",
     image: cloudinaryImages[1],
     images: [cloudinaryImages[1]],
-    sizes: ["S", "M", "L", "XL"],
+    sizes: ["M", "L", "XL", "XXL"],
     colors: ["Reed", "Green", "Mint", "Marron", "Gray Clair", "Bleu", "Gray Fance", "Noir"],
     stock: {
       "Reed": 36,
@@ -265,13 +265,13 @@ export const products: Product[] = [
   },
   {
     id: 12,
-    name: "SWD Shirt",
+    name: "STWD Shirt",
     category: "shirts",
     price: 70,
-    description: "SWD shirt available in blue, green, and brown.",
+    description: "STWD shirt available in blue, green, and brown.",
     image: cloudinaryImages[2],
     images: [cloudinaryImages[2]],
-    sizes: ["S", "M", "L", "XL"],
+    sizes: ["M", "L", "XL", "XXL"],
     colors: ["Blue", "Green", "Brown"],
     stock: {
       "Blue": 50,
@@ -285,13 +285,13 @@ export const products: Product[] = [
   },
   {
     id: 13,
-    name: "SWD Pants",
+    name: "STWD Pants",
     category: "pants",
     price: 80,
-    description: "SWD pants with premium quality. Available in multiple colors.",
+    description: "STWD pants with premium quality. Available in multiple colors.",
     image: cloudinaryImages[3],
     images: [cloudinaryImages[3]],
-    sizes: ["S", "M", "L", "XL"],
+    sizes: ["M", "L", "XL", "XXL"],
     colors: ["Black", "Gray Clair", "Vert", "Marron", "Gray Fance"],
     stock: {
       "Black": 60,
@@ -313,7 +313,7 @@ export const products: Product[] = [
     description: "Green short in stock. Available in multiple colors.",
     image: cloudinaryImages[4],
     images: [cloudinaryImages[4]],
-    sizes: ["S", "M", "L", "XL"],
+    sizes: ["M", "L", "XL", "XXL"],
     colors: ["Reed", "Gray Fonce", "Casse", "Noir"],
     stock: {
       "Reed": 36,
@@ -328,13 +328,13 @@ export const products: Product[] = [
   },
   {
     id: 15,
-    name: "Ensemble SWD Brand",
+    name: "Ensemble STWD Brand",
     category: "ensemble",
     price: 125,
-    description: "Ensemble SWD brand set. Available in multiple colors.",
+    description: "Ensemble STWD brand set. Available in multiple colors.",
     image: cloudinaryImages[5],
     images: [cloudinaryImages[5]],
-    sizes: ["S", "M", "L", "XL"],
+    sizes: ["M", "L", "XL", "XXL"],
     colors: ["Noir", "Gray Fonce", "Gray"],
     stock: {
       "Noir": 30,
@@ -354,7 +354,7 @@ export const products: Product[] = [
     description: "V2 Nike short. Available in multiple colors.",
     image: cloudinaryImages[6],
     images: [cloudinaryImages[6]],
-    sizes: ["S", "M", "L", "XL"],
+    sizes: ["M", "L", "XL", "XXL"],
     colors: ["Marron", "Casse", "Gray Clair", "Green", "Blue", "Gray Fonce", "Black"],
     stock: {
       "Marron": 56,
