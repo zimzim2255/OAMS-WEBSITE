@@ -10,12 +10,12 @@ interface CatalogNavCardProps {
 }
 
 const categoryCards = [
-  { id: "all", name: "ALL PRODUCTS", href: "/products", image: "https://picsum.photos/seed/all/600/800" },
-  { id: "shorts", name: "SHORTS", href: "/products?category=shorts", image: "https://picsum.photos/seed/shorts/600/800" },
-  { id: "shirts", name: "SHIRTS", href: "/products?category=shirts", image: "https://picsum.photos/seed/shirts/600/800" },
-  { id: "pants", name: "PANTS", href: "/products?category=pants", image: "https://picsum.photos/seed/pants/600/800" },
-  { id: "ensemble", name: "ENSEMBLE", href: "/products?category=ensemble", image: "https://picsum.photos/seed/ensemble/600/800" },
-  { id: "contact", name: "CONTACT", href: "/contact", image: "https://picsum.photos/seed/contact/600/800" },
+  { id: "all", name: "ALL PRODUCTS", href: "/products", image: "https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846845/blackshort_casse28pcs_grayclair40pcs_grayfonce116pcs_vert_36_noir186pcs-prix80dh_xnlqg7.png" },
+  { id: "shorts", name: "SHORTS", href: "/products?category=shorts", image: "https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846844/nikeshort_reed36_green_28_mint_11_marron_40pcs_grayclair_32_bleu39pcs_grayfance71pcs_noir120pcs-prix65dh_rzwyiq.png" },
+  { id: "shirts", name: "SHIRTS", href: "/products?category=shirts", image: "https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846842/50pcsinblue_green_brown_prix70dh_ac5pvh.png" },
+  { id: "pants", name: "PANTS", href: "/products?category=pants", image: "https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846823/swdpentes_black60pcs_grayclair60pcs_vert24pcs_marron30pcs_grayfance30pcs_prix80dh_jummmi.png" },
+  { id: "ensemble", name: "ENSEMBLE", href: "/products?category=ensemble", image: "https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846787/ensombleswdbrand_noir30pcs_grayfoncee30pcs_graydh4pcs-125dh_dskvgv.png" },
+  { id: "contact", name: "CONTACT", href: "/contact", image: "https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846788/greenshort_in_stock_36pcs_reed28pcs_grayfonce144pcs_casse40pcs_noir116pcs80dh_ufcu5l.png" },
 ];
 
 export default function CatalogNavCard({ isOpen, onClose }: CatalogNavCardProps) {
@@ -96,15 +96,15 @@ export default function CatalogNavCard({ isOpen, onClose }: CatalogNavCardProps)
       className="fixed inset-0 z-50 bg-black overflow-y-auto"
       style={{ opacity: 0, pointerEvents: isOpen ? "auto" : "none" }}
     >
-      <div className="min-h-full flex flex-col px-10 md:px-20 py-8 md:py-10">
+      <div className="min-h-full flex flex-col px-4 sm:px-10 md:px-20 py-6 sm:py-8 md:py-10">
         {/* ===== Top Header Row ===== */}
-        <div className="flex items-start justify-between mb-10 md:mb-14">
+        <div className="flex items-start justify-between gap-4 mb-8 sm:mb-10 md:mb-14">
           {/* CATALOG + ✦ */}
-          <div className="flex items-center gap-5" data-reveal-line>
-            <h1 className="font-['Impact','Anton',sans-serif] text-[72px] md:text-[80px] font-black uppercase tracking-[-0.02em] text-white leading-none">
+          <div className="flex items-center gap-3 sm:gap-5 min-w-0" data-reveal-line>
+            <h1 className="font-['Impact','Anton',sans-serif] text-[40px] sm:text-[56px] md:text-[80px] font-black uppercase tracking-[-0.02em] text-white leading-none">
               Catalog
             </h1>
-            <span className="text-[32px] text-white leading-none">✦</span>
+            <span className="text-[20px] sm:text-[32px] text-white leading-none">✦</span>
           </div>
 
           {/* EXPLORE COLLECTIONS → */}
@@ -115,17 +115,17 @@ export default function CatalogNavCard({ isOpen, onClose }: CatalogNavCardProps)
             <span className="text-[16px] text-white">→</span>
           </div>
 
-          {/* CLOSE ✕ */}
+          {/* CLOSE ✕ — white button, icon-only on mobile, full button on larger screens */}
           <button
             onClick={onClose}
-            className="cursor-target flex items-center gap-4 mt-6"
+            className="cursor-target flex items-center justify-center gap-3 mt-2 sm:mt-4 w-11 h-11 sm:w-auto sm:h-auto sm:px-5 sm:py-3 bg-white text-black rounded-full hover:bg-gray-200 transition-colors duration-300 flex-shrink-0"
             data-reveal-line
             aria-label="Close catalog"
           >
-            <span className="text-[11px] md:text-[12px] uppercase tracking-[0.15em] text-white">
+            <span className="hidden sm:inline text-[11px] md:text-[12px] uppercase tracking-[0.15em] font-bold">
               Close
             </span>
-            <span className="text-[24px] text-white leading-none">✕</span>
+            <span className="text-[18px] leading-none">✕</span>
           </button>
         </div>
 

@@ -19,8 +19,36 @@ export default function CartDropdown() {
 
       {/* Dropdown panel */}
       <div className="fixed top-0 right-0 z-50 h-full w-full max-w-md bg-white shadow-2xl flex flex-col">
+        {/* Footer — shown at TOP on mobile so buttons are always visible */}
+        {items.length > 0 && (
+          <div className="order-first sm:order-last border-b sm:border-t border-gray-100 px-4 sm:px-6 py-3 flex-shrink-0">
+            <div className="flex justify-between items-center mb-1">
+              <span className="text-xs sm:text-sm text-gray-500">Total Items</span>
+              <span className="text-sm sm:text-lg font-bold text-gray-900">{items.reduce((sum, item) => sum + item.quantity, 0)}</span>
+            </div>
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-xs sm:text-sm text-gray-500">Subtotal</span>
+              <span className="text-xs sm:text-sm font-semibold text-gray-900">{items.reduce((sum, item) => sum + item.product.price * item.quantity, 0)} DH</span>
+            </div>
+            <Link
+              href="/cart"
+              onClick={() => setIsOpen(false)}
+              className="block w-full bg-black text-white text-center py-2.5 text-sm font-medium uppercase tracking-wider hover:bg-gray-800 transition-colors"
+            >
+              View Cart
+            </Link>
+            <Link
+              href="/checkout"
+              onClick={() => setIsOpen(false)}
+              className="block w-full mt-1.5 border border-black text-black text-center py-2.5 text-sm font-medium uppercase tracking-wider hover:bg-black hover:text-white transition-colors"
+            >
+              Checkout
+            </Link>
+          </div>
+        )}
+
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+        <div className="order-2 sm:order-1 flex items-center justify-between px-6 py-4 border-b border-gray-100 flex-shrink-0">
           <h2 className="text-lg font-bold text-gray-900 uppercase tracking-wide">
             Cart ({items.length})
           </h2>
@@ -34,7 +62,7 @@ export default function CartDropdown() {
         </div>
 
         {/* Cart items */}
-        <div className="flex-1 overflow-y-auto px-6 py-4">
+        <div className="order-3 flex-1 overflow-y-auto px-6 py-4">
           {items.length === 0 ? (
             <div className="text-center py-16">
               <p className="text-gray-500">Your cart is empty</p>
@@ -105,31 +133,6 @@ export default function CartDropdown() {
           )}
         </div>
 
-        {/* Footer */}
-        {items.length > 0 && (
-          <div className="border-t border-gray-100 px-6 py-4">
-            <div className="flex justify-between items-center mb-1">
-              <span className="text-sm text-gray-500">Total Items</span>
-              <span className="text-lg font-bold text-gray-900">{items.reduce((sum, item) => sum + item.quantity, 0)}</span>
-            </div>
-            <div className="flex justify-between items-center mb-4">
-              <span className="text-sm text-gray-500">Subtotal</span>
-              <span className="text-sm font-semibold text-gray-900">{items.reduce((sum, item) => sum + item.product.price * item.quantity, 0)} DH</span>
-            </div>
-            <Link
-              href="/cart"
-              onClick={() => setIsOpen(false)}
-              className="block w-full bg-black text-white text-center py-3 text-sm font-medium uppercase tracking-wider hover:bg-gray-800 transition-colors"
-            >
-              View Cart
-            </Link>
-            <button
-              className="w-full mt-2 border border-black text-black py-3 text-sm font-medium uppercase tracking-wider hover:bg-black hover:text-white transition-colors"
-            >
-              Checkout
-            </button>
-          </div>
-        )}
       </div>
     </>
   );

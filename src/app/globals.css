@@ -8,6 +8,14 @@
   --font-display: var(--font-display);
 }
 
+html,
+body {
+  /* Prevent horizontal page scroll without creating a scroll container
+     (overflow-x: clip keeps position: sticky working for scroll sections) */
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
 body {
   background: #ffffff;
   color: #171717;
