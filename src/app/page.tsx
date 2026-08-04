@@ -1,4 +1,3 @@
-import Header from "@/components/Header";
 import Marquee from "@/components/Marquee";
 import ZoomSection from "@/components/ZoomSection";
 import BestsellerSection from "@/components/BestsellerSection";
@@ -7,8 +6,6 @@ import Footer from "@/components/Footer";
 export default function Home() {
   return (
     <>
-      <Header />
-
       {/* ===== 3. Hero Section ===== */}
       <section className="relative w-full min-h-[700px] bg-white overflow-hidden">
         {/* Massive "CUSTOMIZATION" text - split */}

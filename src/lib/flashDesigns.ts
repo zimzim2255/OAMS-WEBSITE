@@ -1,0 +1,158 @@
+import { Product } from "./types";
+
+// Flash design products with tattoo/merch aesthetic
+export const flashDesigns: Product[] = [
+  {
+    id: 101,
+    name: "Birds and Skull",
+    category: "men",
+    price: 400,
+    description: "Black and white tattoo-style artwork featuring birds and a skull design. Premium quality print on heavyweight cotton.",
+    image: "https://picsum.photos/seed/birdsskull/600/800",
+    images: [
+      "https://picsum.photos/seed/birdsskulla/600/800",
+      "https://picsum.photos/seed/birdsskullb/600/800",
+    ],
+    sizes: ["S", "M", "L", "XL"],
+    colors: ["Black", "White"],
+    isNew: true,
+    isSale: false,
+    rating: 4.8,
+    reviews: 56,
+  },
+  {
+    id: 102,
+    name: "Toxic Love Angel",
+    category: "men",
+    price: 500,
+    description: "Angel figure artwork with 'END ONE' text overlay. Street art aesthetic on premium fabric.",
+    image: "https://picsum.photos/seed/toxicangel/600/800",
+    images: [
+      "https://picsum.photos/seed/toxicangela/600/800",
+      "https://picsum.photos/seed/toxicangelb/600/800",
+    ],
+    sizes: ["S", "M", "L", "XL"],
+    colors: ["Black", "White"],
+    isNew: true,
+    isSale: false,
+    rating: 4.7,
+    reviews: 42,
+  },
+  {
+    id: 103,
+    name: "Winged Spine",
+    category: "men",
+    price: 300,
+    description: "Winged spine tattoo design in black and white. Detailed linework on soft cotton.",
+    image: "https://picsum.photos/seed/wingedspine/600/800",
+    images: [
+      "https://picsum.photos/seed/wingedspinea/600/800",
+      "https://picsum.photos/seed/wingedspineb/600/800",
+    ],
+    sizes: ["S", "M", "L", "XL"],
+    colors: ["Black", "White"],
+    isNew: false,
+    isSale: false,
+    rating: 4.5,
+    reviews: 34,
+  },
+  {
+    id: 104,
+    name: "Rose Dagger",
+    category: "women",
+    price: 350,
+    description: "Classic rose and dagger flash design. Timeless tattoo artwork with intricate detail.",
+    image: "https://picsum.photos/seed/rosedagger/600/800",
+    images: [
+      "https://picsum.photos/seed/rosedaggera/600/800",
+      "https://picsum.photos/seed/rosedaggerb/600/800",
+    ],
+    sizes: ["S", "M", "L", "XL"],
+    colors: ["Black", "White"],
+    isNew: true,
+    isSale: false,
+    rating: 4.6,
+    reviews: 28,
+  },
+  {
+    id: 105,
+    name: "Snake Coil",
+    category: "women",
+    price: 450,
+    description: "Coiled snake with floral accents. Bold black ink style flash design.",
+    image: "https://picsum.photos/seed/snakecoil/600/800",
+    images: [
+      "https://picsum.photos/seed/snakecoila/600/800",
+      "https://picsum.photos/seed/snakecoilb/600/800",
+    ],
+    sizes: ["S", "M", "L", "XL"],
+    colors: ["Black", "White"],
+    isNew: false,
+    isSale: false,
+    rating: 4.4,
+    reviews: 21,
+  },
+  {
+    id: 106,
+    name: "Dagger Heart",
+    category: "men",
+    price: 380,
+    description: "Dagger through heart flash design. Classic American traditional tattoo style.",
+    image: "https://picsum.photos/seed/daggerheart/600/800",
+    images: [
+      "https://picsum.photos/seed/daggerhearta/600/800",
+      "https://picsum.photos/seed/daggerheartb/600/800",
+    ],
+    sizes: ["S", "M", "L", "XL"],
+    colors: ["Black", "White"],
+    isNew: true,
+    isSale: false,
+    rating: 4.9,
+    reviews: 67,
+  },
+  {
+    id: 107,
+    name: "Octopus Ink",
+    category: "kids",
+    price: 280,
+    description: "Playful octopus ink design. Bold lines and fun graphic style.",
+    image: "https://picsum.photos/seed/octopusink/600/800",
+    images: [
+      "https://picsum.photos/seed/octopusinka/600/800",
+      "https://picsum.photos/seed/octopusinkb/600/800",
+    ],
+    sizes: ["S", "M", "L", "XL"],
+    colors: ["Black", "White"],
+    isNew: false,
+    isSale: false,
+    rating: 4.2,
+    reviews: 18,
+  },
+  {
+    id: 108,
+    name: "Butterfly Skull",
+    category: "women",
+    price: 420,
+    description: "Butterfly and skull combination piece. Intricate flash design artwork.",
+    image: "https://picsum.photos/seed/butterflyskull/600/800",
+    images: [
+      "https://picsum.photos/seed/butterflyskulla/600/800",
+      "https://picsum.photos/seed/butterflyskullb/600/800",
+    ],
+    sizes: ["S", "M", "L", "XL"],
+    colors: ["Black", "White"],
+    isNew: true,
+    isSale: false,
+    rating: 4.6,
+    reviews: 31,
+  },
+];
+
+export function getFlashDesignById(id: number): Product | undefined {
+  return flashDesigns.find((p) => p.id === id);
+}
+
+export function getFlashDesignsByCategory(category: string): Product[] {
+  if (category === "all" || !category) return flashDesigns;
+  return flashDesigns.filter((p) => p.category === category);
+}

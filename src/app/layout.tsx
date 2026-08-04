@@ -3,6 +3,7 @@ import { Inter, Anton } from "next/font/google";
 import "./globals.css";
 import { CartProvider } from "@/context/CartContext";
 import TargetCursor from "@/components/TargetCursor";
+import Header from "@/components/Header";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -40,6 +41,7 @@ export default function RootLayout({
           cursorColorOnTarget="#B497CF"
         />
         <CartProvider>
+          <Header />
           {children}
         </CartProvider>
       </body>

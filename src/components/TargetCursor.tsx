@@ -272,7 +272,9 @@ export default function TargetCursor({
       ];
 
       isActiveRef.current = true;
-      gsap.ticker.add(tickerFnRef.current);
+      if (tickerFnRef.current) {
+        gsap.ticker.add(tickerFnRef.current);
+      }
 
       gsap.to(activeStrengthRef.current, {
         current: 1,

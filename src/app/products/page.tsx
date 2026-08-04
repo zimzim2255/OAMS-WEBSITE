@@ -1,106 +1,106 @@
-import { Suspense } from "react";
 import Link from "next/link";
-import ProductCard from "@/components/ProductCard";
-import { products, categories } from "@/lib/products";
+import { flashDesigns } from "@/lib/flashDesigns";
 
 interface ProductsPageProps {
   searchParams: Promise<{ category?: string }>;
 }
+
+const categories = [
+  { id: "all", label: "All" },
+  { id: "men", label: "Men" },
+  { id: "women", label: "Women" },
+  { id: "kids", label: "Kids" },
+  { id: "new", label: "New" },
+];
 
 export default async function ProductsPage({ searchParams }: ProductsPageProps) {
   const params = await searchParams;
   const category = params.category || "all";
 
   const filtered = category === "all" || category === "new"
-    ? products
-    : products.filter((p) => p.category === category);
-
-  const currentCategory = categories.find((c) => c.id === category);
+    ? flashDesigns
+    : flashDesigns.filter((p) => p.category === category);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-      {/* Breadcrumb */}
-      <div className="flex items-center gap-2 text-sm text-gray-500 mb-8">
-        <Link href="/" className="hover:text-gray-900 transition-colors">Home</Link>
-        <span>/</span>
-        <span className="text-gray-900 font-medium">
-          {currentCategory?.name || category === "new" ? "New Arrivals" : "All Products"}
-        </span>
+    <section className="bg-black min-h-screen">
+      {/* ===== Top Navigation Bar ===== */}
+      <div className="flex justify-between items-center bg-black px-6 py-3 border-b border-white/20"></div>
+
+      {/* ===== Filter Bar ===== */}
+      <div className="flex flex-wrap items-center gap-2 px-4 sm:px-6 lg:px-10 pt-8">
+        {categories.map((cat) => (
+          <Link
+            key={cat.id}
+            href={cat.id === "all" ? "/products" : `/products?category=${cat.id}`}
+            className={`cursor-target px-5 py-2 text-xs font-medium uppercase tracking-widest border transition-all duration-300 ${
+              category === cat.id
+                ? "bg-white text-black border-white"
+                : "bg-transparent text-white border-white/30 hover:border-white hover:bg-white/10"
+            }`}
+          >
+            {cat.label}
+          </Link>
+        ))}
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-8">
-        {/* Sidebar Filters */}
-        <aside className="lg:w-56 flex-shrink-0">
-          <div className="lg:sticky lg:top-24">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Categories</h2>
-            <div className="flex flex-wrap lg:flex-col gap-2">
-              <Link
-                href="/products"
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  category === "all"
-                    ? "bg-gray-900 text-white"
-                    : "bg-gray-50 text-gray-700 hover:bg-gray-100"
-                }`}
-              >
-                All Products
-              </Link>
-              {categories.filter((c) => c.id !== "all").map((cat) => (
-                <Link
-                  key={cat.id}
-                  href={`/products?category=${cat.id}`}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium capitalize transition-colors ${
-                    category === cat.id
-                      ? "bg-gray-900 text-white"
-                      : "bg-gray-50 text-gray-700 hover:bg-gray-100"
-                  }`}
-                >
-                  {cat.name}
-                </Link>
-              ))}
-              <Link
-                href="/products?category=new"
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  category === "new"
-                    ? "bg-gray-900 text-white"
-                    : "bg-gray-50 text-gray-700 hover:bg-gray-100"
-                }`}
-              >
-                New Arrivals
-              </Link>
+      {/* ===== Product Grid ===== */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 w-full px-4 sm:px-6 lg:px-10 py-12">
+        {filtered.map((product, index) => (
+          <div key={product.id} className="group">
+            {/* Card - full width/height image with border radius */}
+            <Link
+              href={`/products/${product.id}`}
+              className="cursor-target block relative aspect-[3/4] rounded-md overflow-hidden bg-gray-100"
+            >
+              <img
+                src={product.image}
+                alt={product.name}
+                className="absolute inset-0 w-full h-full object-cover opacity-100 group-hover:opacity-0 group-hover:scale-105 transition-all duration-500 ease-out"
+              />
+
+              {/* Available badge - only on first card */}
+              {index === 0 && (
+                <span className="absolute top-4 right-4 text-[10px] text-gray-500 bg-white/80 px-2 py-1 rounded-full">
+                  Available
+                </span>
+              )}
+
+              {/* Red "END ONE" overlay - only on second card */}
+              {index === 1 && (
+                <span className="absolute top-6 right-6 text-red-600 text-2xl md:text-3xl font-bold uppercase tracking-tighter opacity-80 rotate-6 group-hover:opacity-100 transition-opacity duration-300">
+                  END ONE
+                </span>
+              )}
+
+              {/* White overlay on hover - makes card fully white like catalog cards */}
+              <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-90 transition-opacity duration-300" />
+
+              {/* "Click to discover" text on hover */}
+              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <span className="text-black text-sm md:text-base font-medium uppercase tracking-[0.15em]">
+                  Click to discover
+                </span>
+              </div>
+            </Link>
+
+            {/* Text outside the card */}
+            <div className="pt-4">
+              <h3 className="text-sm md:text-base font-normal text-white">
+                {product.name}
+              </h3>
+              <p className="text-xs md:text-sm text-gray-400 mt-1 leading-relaxed line-clamp-2">
+                {product.description}
+              </p>
+              <div className="mt-2 flex items-center justify-between">
+                <p className="text-sm md:text-base font-medium text-white">
+                  {product.price}$
+                </p>
+                <div className="w-3 h-3 bg-white" />
+              </div>
             </div>
           </div>
-        </aside>
-
-        {/* Product Grid */}
-        <div className="flex-1">
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
-                {currentCategory?.name || category === "new" ? "New Arrivals" : "All Products"}
-              </h1>
-              <p className="text-sm text-gray-500 mt-1">{filtered.length} products</p>
-            </div>
-          </div>
-
-          {filtered.length === 0 ? (
-            <div className="text-center py-20">
-              <p className="text-gray-500 text-lg">No products found in this category.</p>
-              <Link
-                href="/products"
-                className="inline-block mt-4 text-sm font-medium text-gray-900 underline hover:text-gray-600"
-              >
-                View all products
-              </Link>
-            </div>
-          ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-              {filtered.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-            </div>
-          )}
-        </div>
+        ))}
       </div>
-    </div>
+    </section>
   );
 }
