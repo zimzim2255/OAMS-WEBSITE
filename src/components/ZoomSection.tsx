@@ -28,6 +28,9 @@ export default function ZoomSection() {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [phase, setPhase] = useState<'idle' | 'opening' | 'scrolling'>('idle');
   const [progress, setProgress] = useState(0);
+  const [viewportW, setViewportW] = useState(
+    typeof window !== 'undefined' ? window.innerWidth : 1200
+  );
 
   useEffect(() => {
     const wrapper = wrapperRef.current;
@@ -65,9 +68,16 @@ export default function ZoomSection() {
       }
     };
 
+    const handleResize = () => setViewportW(window.innerWidth);
+
     window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', handleResize);
     handleScroll();
-    return () => window.removeEventListener('scroll', handleScroll);
+    handleResize();
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleResize);
+    };
   }, [phase]);
 
   useEffect(() => {
@@ -79,7 +89,8 @@ export default function ZoomSection() {
     return () => { clearTimeout(timer); document.body.style.overflow = ''; };
   }, [phase]);
 
-  const contentHeight = 800;
+  const isMobile = viewportW < 640;
+  const contentHeight = isMobile ? 350 : 800;
   const scrollableContent = contentHeight - 100;
   const scrollT = phase === 'scrolling' ? Math.max(0, Math.min(1, (progress - 0.05) / 0.9)) : 0;
 
@@ -116,11 +127,11 @@ export default function ZoomSection() {
     transitionStyle = 'none';
   }
 
-  const cardBase = "bg-white/10 backdrop-blur-md border border-white/20 rounded-[4px] overflow-hidden group hover:bg-white/20 transition-all duration-500 w-[340px] max-w-[42vw]";
+  const cardBase = "bg-white/10 backdrop-blur-md border border-white/20 rounded-[4px] overflow-hidden group hover:bg-white/20 transition-all duration-500 w-[160px] sm:w-[240px] lg:w-[340px] max-w-[42vw]";
 
   return (
     <>
-      <div ref={wrapperRef} className="relative h-[840vh]">
+      <div ref={wrapperRef} className="relative" style={{ height: isMobile ? '350vh' : '840vh' }}>
         <section className="sticky top-0 h-screen w-full overflow-hidden bg-black flex items-center justify-center">
           {/* Everything scales together as one unit */}
           <div className="w-full h-full will-change-transform" style={{ transform: `scale(${displayScale})`, transformOrigin: 'center center', transition: transitionStyle }}>
@@ -135,35 +146,35 @@ export default function ZoomSection() {
             <div className="absolute inset-0 z-20 pointer-events-none" style={{ border: `${borderWidth}px solid white`, transition: phase === 'opening' ? 'none' : 'border-width 0.4s ease-out' }} />
 
             {/* Cards content */}
-            <div className="relative w-full h-[800vh] z-10">
-              <div className="flex justify-center gap-16 mt-[160vh]">
-                <div className="flex flex-col items-center gap-6" style={{ transform: `translateY(${phase === 'scrolling' ? displayTranslateY * 0.35 : 0}vh)`, transition: 'transform 0.2s ease-out' }}>
+            <div className="relative w-full z-10" style={{ height: isMobile ? '350vh' : '800vh' }}>
+              <div className="flex justify-center gap-4 sm:gap-8 lg:gap-16" style={{ marginTop: isMobile ? '60vh' : '160vh' }}>
+                <div className="flex flex-col items-center gap-3 sm:gap-6" style={{ transform: `translateY(${phase === 'scrolling' ? displayTranslateY * (isMobile ? 0.25 : 0.35) : 0}vh)`, transition: 'transform 0.2s ease-out' }}>
                   {leftProducts.map((p, idx) => (
                     <Link key={idx} href={`/products/${p.id}`}>
                       <div className={`${cardBase} cursor-pointer`}>
-                        <div className="h-[420px] overflow-hidden">
+                        <div className="h-[200px] sm:h-[300px] lg:h-[420px] overflow-hidden">
                           <img src={p.image} alt="" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" style={{ filter: "grayscale(100%)" }} />
                         </div>
                       </div>
                     </Link>
                   ))}
-                  <div className={`${cardBase} flex items-center justify-center cursor-pointer min-h-[100px]`}>
-                    <span className="text-3xl transition-transform duration-500 group-hover:translate-x-2">→</span>
+                  <div className={`${cardBase} flex items-center justify-center cursor-pointer min-h-[60px] sm:min-h-[100px]`}>
+                    <span className="text-xl sm:text-3xl transition-transform duration-500 group-hover:translate-x-2">→</span>
                   </div>
                 </div>
 
-                <div className="flex flex-col items-center gap-6" style={{ transform: `translateY(${phase === 'scrolling' ? -240 + scrollT * 160 : -240}vh)`, transition: 'transform 0.3s ease-out' }}>
+                <div className="flex flex-col items-center gap-3 sm:gap-6" style={{ transform: `translateY(${phase === 'scrolling' ? (isMobile ? -100 + scrollT * 80 : -240 + scrollT * 160) : (isMobile ? -100 : -240)}vh)`, transition: 'transform 0.3s ease-out' }}>
                   {rightProducts.map((p, idx) => (
                     <Link key={idx} href={`/products/${p.id}`}>
                       <div className={`${cardBase} cursor-pointer`}>
-                        <div className="h-[420px] overflow-hidden">
+                        <div className="h-[200px] sm:h-[300px] lg:h-[420px] overflow-hidden">
                           <img src={p.image} alt="" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" style={{ filter: "grayscale(100%)" }} />
                         </div>
                       </div>
                     </Link>
                   ))}
-                  <div className={`${cardBase} flex items-center justify-center cursor-pointer min-h-[100px]`}>
-                    <span className="text-3xl transition-transform duration-500 group-hover:translate-x-2">→</span>
+                  <div className={`${cardBase} flex items-center justify-center cursor-pointer min-h-[60px] sm:min-h-[100px]`}>
+                    <span className="text-xl sm:text-3xl transition-transform duration-500 group-hover:translate-x-2">→</span>
                   </div>
                 </div>
               </div>

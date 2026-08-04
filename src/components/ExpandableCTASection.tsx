@@ -77,7 +77,7 @@ export default function ExpandableCTASection() {
           style={{ height: cardHeight, willChange: 'height' }}
         >
           <h3
-            className="font-['Impact','Anton',sans-serif] text-[clamp(40px,8vw,110px)] font-bold uppercase text-white leading-none tracking-tight text-center"
+            className="font-['Impact','Anton',sans-serif] text-[clamp(24px,6vw,110px)] sm:text-[clamp(40px,8vw,110px)] font-bold uppercase text-white leading-none tracking-tight text-center"
             style={{
               transform: `scale(${contentScale})`,
               willChange: 'transform',
@@ -85,12 +85,12 @@ export default function ExpandableCTASection() {
           >
             SHOP THE ICONS
           </h3>
-          <p className="mt-6 text-xs md:text-sm uppercase tracking-widest text-white/60 text-center">
+          <p className="mt-4 sm:mt-6 text-[10px] sm:text-xs md:text-sm uppercase tracking-widest text-white/60 text-center">
             Limited stock — restocked weekly
           </p>
-          <div className="cursor-target mt-10 bg-white text-black flex items-center justify-between px-8 py-4 cursor-pointer">
-            <span className="text-sm font-bold uppercase tracking-wider">VIEW ALL BESTSELLERS</span>
-            <span className="text-lg ml-6">→</span>
+          <div className="cursor-target mt-6 sm:mt-10 bg-white text-black flex items-center justify-between px-4 sm:px-8 py-3 sm:py-4 cursor-pointer w-full max-w-[280px] sm:max-w-none">
+            <span className="text-[10px] sm:text-sm font-bold uppercase tracking-wider">VIEW ALL BESTSELLERS</span>
+            <span className="text-base sm:text-lg ml-3 sm:ml-6">→</span>
           </div>
         </div>
       </section>

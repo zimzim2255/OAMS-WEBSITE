@@ -7,18 +7,18 @@ export default function Home() {
   return (
     <>
       {/* ===== 3. Hero Section ===== */}
-      <section className="relative w-full min-h-[700px] bg-white overflow-hidden">
+      <section className="relative w-full min-h-[500px] sm:min-h-[700px] bg-white overflow-hidden">
         {/* Massive "CUSTOMIZATION" text - split */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
-          <div className="flex w-full justify-between px-4">
+          <div className="flex w-full justify-between px-2 sm:px-4">
             <span
-              className="font-['Impact','Anton',sans-serif] text-[clamp(80px,18vw,250px)] font-bold text-black leading-none tracking-tight"
+              className="font-['Impact','Anton',sans-serif] text-[clamp(28px,9vw,250px)] sm:text-[clamp(80px,18vw,250px)] font-bold text-black leading-none tracking-tight"
               style={{ marginLeft: "-2vw" }}
             >
               CUSTO
             </span>
             <span
-              className="font-['Impact','Anton',sans-serif] text-[clamp(80px,18vw,250px)] font-bold text-black leading-none tracking-tight"
+              className="font-['Impact','Anton',sans-serif] text-[clamp(28px,9vw,250px)] sm:text-[clamp(80px,18vw,250px)] font-bold text-black leading-none tracking-tight"
               style={{ marginRight: "-2vw" }}
             >
               ZATION
@@ -28,7 +28,7 @@ export default function Home() {
 
         {/* Model Image - centered, on top of text */}
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className="relative w-auto h-[850px]">
+          <div className="relative w-auto h-[420px] sm:h-[650px] lg:h-[850px]">
             <img
               src="/imgs/hero.png"
               alt="Streetwear model"
@@ -38,10 +38,10 @@ export default function Home() {
         </div>
 
         {/* CTA Bar - bottom center */}
-        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-20">
-          <div className="cursor-target bg-black text-white flex items-center justify-between w-[400px] max-w-[90vw] px-10 py-5">
-            <span className="text-sm font-bold uppercase tracking-wider">SHOP NOW</span>
-            <span className="text-lg">→</span>
+        <div className="absolute bottom-6 sm:bottom-10 left-1/2 -translate-x-1/2 z-20 w-full px-4 sm:px-0 sm:w-auto">
+          <div className="cursor-target bg-black text-white flex items-center justify-between w-full sm:w-[400px] max-w-full sm:max-w-[90vw] px-6 sm:px-10 py-4 sm:py-5">
+            <span className="text-xs sm:text-sm font-bold uppercase tracking-wider">SHOP NOW</span>
+            <span className="text-base sm:text-lg">→</span>
           </div>
         </div>
       </section>

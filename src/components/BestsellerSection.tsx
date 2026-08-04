@@ -62,19 +62,22 @@ export default function BestsellerSection() {
   // Alternate directions for each letter of OAMS
   const letterDirs = [1, -1, 1, -1];
 
-  const sidebarWidth = viewportW ? 200 + expandT * (viewportW - 200) : 200;
+  const isMobile = viewportW < 640;
+  const sidebarWidth = viewportW
+    ? (isMobile ? 70 + expandT * (viewportW - 70) : 200 + expandT * (viewportW - 200))
+    : 200;
   const gridOpacity = 1 - expandT;
   const gridScale = 1 - 0.12 * expandT;
-  const letterOffset = letterT * viewportW * 0.2;
-  const letterGap = letterT * 60;
+  const letterOffset = letterT * viewportW * (isMobile ? 0.12 : 0.2);
+  const letterGap = letterT * (isMobile ? 30 : 60);
   const letterScale = 1 + 0.7 * letterT;
 
   return (
     <>
       {/* ===== Pinned expansion phase: BESTSELLER grows to full display ===== */}
-      <div ref={wrapperRef} className="relative bg-black" style={{ height: '320vh' }}>
+      <div ref={wrapperRef} className="relative bg-black" style={{ height: isMobile ? '200vh' : '320vh' }}>
         <section className="sticky top-0 h-screen w-full overflow-hidden bg-black select-none">
-          <div className="flex items-stretch gap-1 w-full h-full p-3">
+          <div className="flex items-stretch gap-1 w-full h-full p-2 sm:p-3">
             {/* BESTSELLER card — expands to full display, text stays visible */}
             <div className="flex-shrink-0 h-full z-20" style={{ width: `${sidebarWidth}px` }}>
               <div className="relative border border-black bg-white w-full h-full overflow-hidden">
@@ -89,7 +92,7 @@ export default function BestsellerSection() {
                   {'OAMS'.split('').map((letter, i) => (
                     <span
                       key={i}
-                      className="vertical-text font-['Impact','Anton',sans-serif] text-[clamp(50px,8vh,90px)] font-bold text-black leading-none tracking-tight whitespace-nowrap"
+                      className="vertical-text font-['Impact','Anton',sans-serif] text-[clamp(28px,5vh,90px)] sm:text-[clamp(50px,8vh,90px)] font-bold text-black leading-none tracking-tight whitespace-nowrap"
                       style={{
                         transform: `rotate(180deg) translateX(${
                           letterDirs[i] * letterOffset
@@ -118,21 +121,21 @@ export default function BestsellerSection() {
                 <Link
                   key={p.title}
                   href={`/products/${p.id}`}
-                  className={`cursor-pointer border border-black rounded p-2 flex flex-col items-center justify-between bg-white overflow-hidden ${
-                    i === 1 ? 'row-span-2' : ''
+                  className={`cursor-pointer border border-black rounded p-1 sm:p-2 flex flex-col items-center justify-between bg-white overflow-hidden ${
+                    i === 1 ? 'sm:row-span-2' : ''
                   }`}
                 >
                   <div className="flex-1 flex items-center justify-center w-full min-h-0">
                     <img
                       src={p.image}
                       alt={p.title}
-                      className="w-full h-full max-h-[600px] object-contain"
+                      className="w-full h-full max-h-[200px] sm:max-h-[600px] object-contain"
                       style={{ filter: 'grayscale(100%)' }}
                     />
                   </div>
-                  <div className="w-full text-center mt-2">
-                    <p className="text-sm font-bold uppercase text-black">{p.title}</p>
-                    <p className="text-[12px] text-gray-500">{p.subtitle}</p>
+                  <div className="w-full text-center mt-1 sm:mt-2">
+                    <p className="text-[10px] sm:text-sm font-bold uppercase text-black">{p.title}</p>
+                    <p className="text-[8px] sm:text-[12px] text-gray-500 hidden sm:block">{p.subtitle}</p>
                   </div>
                 </Link>
               ))}
@@ -140,10 +143,10 @@ export default function BestsellerSection() {
               {/* VIEW MORE card */}
               <Link
                 href="/products"
-                className="cursor-pointer border border-black rounded p-6 flex flex-col items-center justify-center bg-white text-black overflow-hidden hover:bg-gray-50 transition-colors"
+                className="cursor-pointer border border-black rounded p-4 sm:p-6 flex flex-col items-center justify-center bg-white text-black overflow-hidden hover:bg-gray-50 transition-colors"
               >
-                <p className="text-sm font-bold uppercase tracking-wider">VIEW MORE</p>
-                <span className="text-2xl mt-2">→</span>
+                <p className="text-xs sm:text-sm font-bold uppercase tracking-wider">VIEW MORE</p>
+                <span className="text-xl sm:text-2xl mt-2">→</span>
               </Link>
             </div>
           </div>
@@ -196,25 +199,25 @@ export default function BestsellerSection() {
           <div className="absolute inset-0 bg-black/30" />
 
           {/* Paragraph + heading — top-left corner */}
-          <div className="absolute top-8 left-8 md:top-12 md:left-12 max-w-sm">
-            <p className="text-sm md:text-base text-white/90 leading-relaxed">
+          <div className="absolute top-4 left-4 md:top-12 md:left-12 max-w-[90%] sm:max-w-sm">
+            <p className="text-xs md:text-base text-white/90 leading-relaxed">
               Every bestseller goes through the same journey — designed in-house,
               tested on the streets, and refined until it earns its place in the
               permanent collection. No seasonal gimmicks.
             </p>
-            <h3 className="mt-6 font-['Impact','Anton',sans-serif] text-4xl md:text-6xl font-bold uppercase text-white leading-none tracking-tight">
+            <h3 className="mt-4 md:mt-6 font-['Impact','Anton',sans-serif] text-2xl md:text-6xl font-bold uppercase text-white leading-none tracking-tight">
               BUILT TO LAST
             </h3>
           </div>
 
           {/* Paragraph + heading — bottom-right corner */}
-          <div className="absolute bottom-8 right-8 md:bottom-12 md:right-12 max-w-sm text-right">
-            <p className="text-sm md:text-base text-white/90 leading-relaxed">
+          <div className="absolute bottom-4 right-4 md:bottom-12 md:right-12 max-w-[90%] sm:max-w-sm text-right">
+            <p className="text-xs md:text-base text-white/90 leading-relaxed">
               Six years of streetwear research, three collaborations and one
               permanent collection later — every piece carries the same hand-drawn
               signature, stitched and printed in-house.
             </p>
-            <h3 className="mt-6 font-['Impact','Anton',sans-serif] text-3xl md:text-5xl font-bold uppercase text-white leading-none tracking-tight">
+            <h3 className="mt-4 md:mt-6 font-['Impact','Anton',sans-serif] text-2xl md:text-5xl font-bold uppercase text-white leading-none tracking-tight">
               FOR THE STREETS
             </h3>
           </div>
