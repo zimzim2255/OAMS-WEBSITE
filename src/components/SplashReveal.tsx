@@ -96,7 +96,7 @@ export default function SplashReveal() {
           style={{ backgroundColor: p.color, zIndex: i + 1 }}
         >
           <span
-            className="font-display text-[clamp(44px,18vw,132px)] font-bold uppercase tracking-tight leading-none text-center px-3 py-2"
+            className="font-['Impact','Anton',sans-serif] text-[clamp(44px,18vw,132px)] font-bold uppercase tracking-tight leading-none text-center px-3 py-2"
             style={{ color: p.textColor }}
           >
             OAMS

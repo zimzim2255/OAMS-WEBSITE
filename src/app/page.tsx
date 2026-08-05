@@ -13,13 +13,13 @@ export default function Home() {
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
           <div className="flex w-full justify-between px-2 sm:px-4">
             <span
-              className="font-display text-[clamp(28px,9vw,250px)] sm:text-[clamp(80px,18vw,250px)] font-bold text-black leading-none tracking-tight"
+              className="font-['Impact','Anton',sans-serif] text-[clamp(28px,9vw,250px)] sm:text-[clamp(80px,18vw,250px)] font-bold text-black leading-none tracking-tight"
               style={{ marginLeft: "-2vw" }}
             >
               URBAN
             </span>
             <span
-              className="font-display text-[clamp(28px,9vw,250px)] sm:text-[clamp(80px,18vw,250px)] font-bold text-black leading-none tracking-tight"
+              className="font-['Impact','Anton',sans-serif] text-[clamp(28px,9vw,250px)] sm:text-[clamp(80px,18vw,250px)] font-bold text-black leading-none tracking-tight"
               style={{ marginRight: "-2vw" }}
             >
               STREET

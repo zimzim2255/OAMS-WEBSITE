@@ -3,9 +3,6 @@
 @theme inline {
   --color-background: #ffffff;
   --color-foreground: #171717;
-  --font-sans: var(--font-body);
-  --font-mono: var(--font-body);
-  --font-display: var(--font-display);
 }
 
 html,
@@ -19,7 +16,7 @@ body {
 body {
   background: #ffffff;
   color: #171717;
-  font-family: var(--font-body), Arial, Helvetica, sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 /* Smooth scrolling */

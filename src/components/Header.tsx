@@ -30,7 +30,7 @@ export default function Header() {
 
         {/* Center: Logo Section - own border, links to home */}
         <Link href="/" className="flex-1 min-w-0 flex items-center justify-center px-2 sm:px-6 py-3 border border-white rounded bg-white">
-          <span className="font-display text-xl sm:text-2xl font-bold tracking-tight uppercase">
+          <span className="font-['Impact','Anton',sans-serif] text-xl sm:text-2xl font-bold tracking-tight uppercase">
             OAMS
           </span>
         </Link>

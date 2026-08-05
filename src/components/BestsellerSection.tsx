@@ -92,7 +92,7 @@ export default function BestsellerSection() {
                   {'OAMS'.split('').map((letter, i) => (
                     <span
                       key={i}
-                      className="vertical-text font-display text-[clamp(28px,5vh,90px)] sm:text-[clamp(50px,8vh,90px)] font-bold text-black leading-none tracking-tight whitespace-nowrap"
+                      className="vertical-text font-['Impact','Anton',sans-serif] text-[clamp(28px,5vh,90px)] sm:text-[clamp(50px,8vh,90px)] font-bold text-black leading-none tracking-tight whitespace-nowrap"
                       style={{
                         transform: `rotate(180deg) translateX(${
                           letterDirs[i] * letterOffset
@@ -157,7 +157,7 @@ export default function BestsellerSection() {
       <section className="w-full bg-black p-1">
         <div className="bg-black rounded p-4 md:p-8">
           <div className="bg-white px-6 md:px-12 py-8 md:py-12 rounded">
-            <h3 className="font-display text-3xl md:text-5xl font-bold uppercase text-black tracking-tight mb-8">
+            <h3 className="font-['Impact','Anton',sans-serif] text-3xl md:text-5xl font-bold uppercase text-black tracking-tight mb-8">
               THE PICKS
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1">
@@ -205,7 +205,7 @@ export default function BestsellerSection() {
               tested on the streets, and refined until it earns its place in the
               permanent collection. No seasonal gimmicks.
             </p>
-            <h3 className="mt-4 md:mt-6 font-display text-2xl md:text-6xl font-bold uppercase text-white leading-none tracking-tight">
+            <h3 className="mt-4 md:mt-6 font-['Impact','Anton',sans-serif] text-2xl md:text-6xl font-bold uppercase text-white leading-none tracking-tight">
               BUILT TO LAST
             </h3>
           </div>
@@ -217,7 +217,7 @@ export default function BestsellerSection() {
               permanent collection later — every piece carries the same hand-drawn
               signature, stitched and printed in-house.
             </p>
-            <h3 className="mt-4 md:mt-6 font-display text-2xl md:text-5xl font-bold uppercase text-white leading-none tracking-tight">
+            <h3 className="mt-4 md:mt-6 font-['Impact','Anton',sans-serif] text-2xl md:text-5xl font-bold uppercase text-white leading-none tracking-tight">
               FOR THE STREETS
             </h3>
           </div>
