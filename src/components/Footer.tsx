@@ -1,7 +1,17 @@
+import Link from "next/link";
+
 export default function Footer() {
   return (
     <footer className="bg-black text-white flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-0 px-4 sm:px-10 py-8 sm:py-10 overflow-hidden">
-      <p className="text-[12px] text-center sm:text-left">© 2018 - 2024</p>
+      <div className="flex flex-col items-center sm:items-start gap-2">
+        <p className="text-[12px] text-center sm:text-left">© 2018 - 2024</p>
+        <Link
+          href="/terms"
+          className="text-[10px] uppercase tracking-widest text-white/60 hover:text-white transition-colors"
+        >
+          Terms of Service
+        </Link>
+      </div>
       <p className="font-['Impact','Anton',sans-serif] text-2xl sm:text-3xl md:text-5xl uppercase font-bold tracking-tight text-center min-w-0">
         CUSTOM - WHAT IS IT?
       </p>

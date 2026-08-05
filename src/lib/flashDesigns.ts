@@ -59,9 +59,9 @@ export const flashDesigns: Product[] = [
     category: "shirts",
     price: 70,
     description: "STWD shirt available in blue, green, and brown.",
-    image: "https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846842/50pcsinblue_green_brown_prix70dh_ac5pvh.png",
+    image: "https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785922185/50pcsinblue_green_brown_prix70dh_ac5pvh.png_rezifm.png",
     images: [
-      "https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846842/50pcsinblue_green_brown_prix70dh_ac5pvh.png",
+      "https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785922185/50pcsinblue_green_brown_prix70dh_ac5pvh.png_rezifm.png",
     ],
     sizes: ["M", "L", "XL", "XXL"],
     colors: ["Blue", "Green", "Brown"],

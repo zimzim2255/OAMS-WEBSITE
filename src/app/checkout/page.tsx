@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useCart } from "@/context/CartContext";
 
 const SHIPPING_COSTS = {
@@ -10,11 +11,16 @@ const SHIPPING_COSTS = {
   outside: 40,
 } as const;
 
+const FORMSPREE_ENDPOINT = "https://formspree.io/f/xvkpooqg";
+
 type ShippingZone = keyof typeof SHIPPING_COSTS;
 
 export default function CheckoutPage() {
   const { items, clearCart, getTotalPrice } = useCart();
+  const router = useRouter();
   const [shippingZone, setShippingZone] = useState<ShippingZone>("casablanca");
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [form, setForm] = useState({
     fullName: "",
     phone: "",
@@ -22,9 +28,8 @@ export default function CheckoutPage() {
     city: "",
     notes: "",
   });
-  const [placed, setPlaced] = useState(false);
 
-  if (items.length === 0 && !placed) {
+  if (items.length === 0) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="text-center max-w-md mx-auto">
@@ -41,38 +46,55 @@ export default function CheckoutPage() {
     );
   }
 
-  if (placed) {
-    return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <div className="text-center max-w-md mx-auto">
-          <div className="w-20 h-20 mx-auto rounded-full bg-green-100 flex items-center justify-center">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-10 h-10 text-green-600">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-            </svg>
-          </div>
-          <h1 className="text-2xl font-bold text-gray-900 mt-6">Order Placed!</h1>
-          <p className="text-gray-500 mt-3">
-            Thank you for your order. We'll contact you shortly to confirm delivery details.
-          </p>
-          <Link
-            href="/products"
-            className="inline-block mt-6 bg-gray-900 text-white px-8 py-3 rounded-full text-sm font-medium hover:bg-gray-800 transition-colors"
-          >
-            Continue Shopping
-          </Link>
-        </div>
-      </div>
-    );
-  }
-
   const subtotal = getTotalPrice();
   const shippingCost = SHIPPING_COSTS[shippingZone];
   const total = subtotal + shippingCost;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    clearCart();
-    setPlaced(true);
+    setSubmitting(true);
+    setError(null);
+
+    const orderItems = items
+      .map(
+        (item) =>
+          `- ${item.product.name} (${item.size} / ${item.color}) x ${item.quantity} = ${
+            item.product.price * item.quantity
+          } DH`
+      )
+      .join("\n");
+
+    const data = {
+      _subject: `New Order from ${form.fullName}`,
+      fullName: form.fullName,
+      phone: form.phone,
+      address: form.address,
+      city: form.city,
+      shippingZone: shippingZone === "casablanca" ? "Casablanca (20 DH)" : "Outside Casablanca (40 DH)",
+      notes: form.notes || "None",
+      orderItems,
+      subtotal: `${subtotal} DH`,
+      shippingCost: `${shippingCost} DH`,
+      total: `${total} DH`,
+    };
+
+    try {
+      const res = await fetch(FORMSPREE_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to submit order");
+      }
+
+      clearCart();
+      router.push("/order-confirmation");
+    } catch (err) {
+      setError("Something went wrong sending your order. Please try again.");
+      setSubmitting(false);
+    }
   };
 
   const inputClass =
@@ -90,6 +112,12 @@ export default function CheckoutPage() {
       </div>
 
       <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-8">Checkout</h1>
+
+      {error && (
+        <div className="mb-6 p-4 rounded-xl border border-red-200 bg-red-50 text-red-700 text-sm">
+          {error}
+        </div>
+      )}
 
       <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
         {/* Shipping Details */}
@@ -257,9 +285,10 @@ export default function CheckoutPage() {
 
             <button
               type="submit"
-              className="w-full mt-6 bg-gray-900 text-white py-3 rounded-full text-sm font-medium hover:bg-gray-800 transition-colors"
+              disabled={submitting}
+              className="w-full mt-6 bg-gray-900 text-white py-3 rounded-full text-sm font-medium hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Place Order
+              {submitting ? "Placing Order..." : "Place Order"}
             </button>
             <p className="text-xs text-gray-400 text-center mt-3">
               Cash on delivery • No prepayment required
