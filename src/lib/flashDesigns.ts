@@ -386,6 +386,52 @@ export const flashDesigns: Product[] = [
     rating: 4.5,
     reviews: 0,
   },
+  {
+    id: 118,
+    name: "Sweat Pants",
+    category: "pants",
+    price: 110,
+    description: "Premium sweat pants. Available in gray, reed, and blue.",
+    image: "https://res.cloudinary.com/dlfbj1ix5/image/upload/v1786708206/swet_pentes_110dh_gray_reed_blue_zrhdtl.png",
+    images: [
+      "https://res.cloudinary.com/dlfbj1ix5/image/upload/v1786708206/swet_pentes_110dh_gray_reed_blue_zrhdtl.png",
+    ],
+    sizes: ["M", "L", "XL", "XXL"],
+    colors: ["Gray", "Reed", "Blue"],
+    stock: {
+      "Gray": 40,
+      "Reed": 40,
+      "Blue": 40,
+    },
+    isNew: true,
+    isSale: false,
+    rating: 4.6,
+    reviews: 0,
+  },
+  {
+    id: 119,
+    name: "T-Shirt",
+    category: "shirts",
+    price: 80,
+    description: "Premium quality t-shirt. Available in blue, white, green, black, and gray.",
+    image: "https://res.cloudinary.com/dlfbj1ix5/image/upload/v1786708834/t-shirt-blue-whiet-gree-black-gray_prix80dh_nemonp.png",
+    images: [
+      "https://res.cloudinary.com/dlfbj1ix5/image/upload/v1786708834/t-shirt-blue-whiet-gree-black-gray_prix80dh_nemonp.png",
+    ],
+    sizes: ["M", "L", "XL", "XXL"],
+    colors: ["Blue", "White", "Green", "Black", "Gray"],
+    stock: {
+      "Blue": 20,
+      "White": 20,
+      "Green": 20,
+      "Black": 20,
+      "Gray": 20,
+    },
+    isNew: true,
+    isSale: false,
+    rating: 4.7,
+    reviews: 0,
+  },
 ];
 
 export function getFlashDesignById(id: number): Product | undefined {

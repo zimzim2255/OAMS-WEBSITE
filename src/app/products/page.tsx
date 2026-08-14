@@ -1,25 +1,43 @@
-import Link from "next/link";
-import { flashDesigns } from "@/lib/flashDesigns";
+"use client";
 
-interface ProductsPageProps {
-  searchParams: Promise<{ category?: string }>;
-}
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
+import { flashDesigns } from "@/lib/flashDesigns";
 
 const categories = [
   { id: "all", label: "All" },
   { id: "shorts", label: "Shorts" },
-  { id: "shirts", label: "Shirts" },
+  { id: "t-shirt", label: "T-Shirt" },
   { id: "pants", label: "Pants" },
-  { id: "ensemble", label: "Ensemble" },
+  { id: "full-outfits", label: "Full Outfits" },
 ];
 
-export default async function ProductsPage({ searchParams }: ProductsPageProps) {
-  const params = await searchParams;
-  const category = params.category || "all";
+const PAGE_SIZE = 10;
 
-  const filtered = category === "all"
-    ? flashDesigns
-    : flashDesigns.filter((p) => p.category === category);
+export default function ProductsPage() {
+  const searchParams = useSearchParams();
+  const category = searchParams.get("category") || "all";
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+
+  // Reset visible count when category changes
+  useEffect(() => {
+    setVisibleCount(PAGE_SIZE);
+  }, [category]);
+
+  const filtered = useMemo(() => {
+    if (category === "all") return flashDesigns;
+    if (category === "full-outfits") return flashDesigns.filter((p) => p.category === "ensemble");
+    if (category === "t-shirt") return flashDesigns.filter((p) => p.category === "shirts");
+    return flashDesigns.filter((p) => p.category === category);
+  }, [category]);
+
+  const visibleProducts = filtered.slice(0, visibleCount);
+  const hasMore = visibleCount < filtered.length;
+
+  const handleViewMore = () => {
+    setVisibleCount((prev) => prev + PAGE_SIZE);
+  };
 
   return (
     <section className="bg-black min-h-screen">
@@ -45,7 +63,7 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
 
       {/* ===== Product Grid ===== */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 w-full px-4 sm:px-6 lg:px-10 py-12">
-        {filtered.map((product, index) => (
+        {visibleProducts.map((product, index) => (
           <div key={product.id} className="group">
             {/* Card - full width/height image with border radius */}
             <Link
@@ -105,6 +123,18 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
           </div>
         ))}
       </div>
+
+      {/* ===== View More Button ===== */}
+      {hasMore && (
+        <div className="flex justify-center pb-16">
+          <button
+            onClick={handleViewMore}
+            className="cursor-target px-10 py-3 text-xs font-medium uppercase tracking-widest border border-white/30 text-white hover:bg-white hover:text-black transition-all duration-300"
+          >
+            View More
+          </button>
+        </div>
+      )}
     </section>
   );
 }
