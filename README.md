@@ -4,7 +4,7 @@ Custom streetwear brand creating unique looks since 2018. Hand-operated by our a
 
 ## 🚀 Live Demo
 
-The website is deployed on GitHub Pages: [https://zimzim2255.github.io/OAMS-WEBSITE/](https://zimzim2255.github.io/OAMS-WEBSITE/)
+The website is deployed on GitHub Pages with a custom domain: [https://www.oams.shop](https://www.oams.shop)
 
 ## 🛠️ Tech Stack
 

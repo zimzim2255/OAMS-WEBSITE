@@ -31,7 +31,7 @@ export default function Home() {
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="relative w-auto h-[420px] sm:h-[650px] lg:h-[850px]">
             <img
-              src="/OAMS-WEBSITE/imgs/hero.png"
+              src="/imgs/hero.png"
               alt="Streetwear model"
               className="h-full w-auto object-contain relative z-10"
             />
