@@ -1,36 +1,81 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# OAMS - Streetwear Brand
 
-## Getting Started
+Custom streetwear brand creating unique looks since 2018. Hand-operated by our artisans.
 
-First, run the development server:
+## 🚀 Live Demo
+
+The website is deployed on GitHub Pages: [https://zimzim2255.github.io/OAMS-WEBSITE/](https://zimzim2255.github.io/OAMS-WEBSITE/)
+
+## 🛠️ Tech Stack
+
+- **Framework:** Next.js 16 (App Router)
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS v4
+- **Animations:** GSAP
+- **Deployment:** GitHub Pages (static export)
+
+## 📦 Getting Started
+
+### Prerequisites
+
+- Node.js 20+
+- npm
+
+### Installation
 
 ```bash
+# Clone the repository
+git clone https://github.com/zimzim2255/OAMS-WEBSITE.git
+cd OAMS-WEBSITE
+
+# Install dependencies
+npm install
+
+# Run the development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Production Build
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+```
 
-## Learn More
+This generates a static export in the `out/` directory suitable for GitHub Pages.
 
-To learn more about Next.js, take a look at the following resources:
+## 📄 Pages
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Home** - Hero, brand story, bestsellers
+- **Products** - Full product catalog with filtering
+- **Product Detail** - Size/color selection, add to cart
+- **Cart** - Shopping cart with shipping options
+- **Checkout** - Order form with Formspree integration
+- **Contact** - Contact form with Formspree integration
+- **Terms of Service** - Legal terms
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## ⚙️ Deployment
 
-## Deploy on Vercel
+Deployment to GitHub Pages is automated via GitHub Actions. Any push to the `main` branch triggers the workflow which:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. Installs dependencies
+2. Builds the static export
+3. Deploys to GitHub Pages
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Manual Deploy
+
+```bash
+npm run build
+npx gh-pages -d out
+```
+
+## 📧 Contact
+
+- **Email:** oasm.contact.me@gmail.com
+- **Phone:** +212679122507
+- **Instagram:** [@oams.01](https://www.instagram.com/oams.01)
+
+## 📄 License
+
+This website and its source code are the property of OAMS. Use is granted exclusively to the owner of OAMS. OAMS bears no responsibility for the code once it is obtained by others. See the [LICENSE](LICENSE) file for details.

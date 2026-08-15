@@ -197,10 +197,7 @@ export default function CatalogNavCard({ isOpen, onClose }: CatalogNavCardProps)
         </div>
 
         {/* ===== Bottom Footer Row ===== */}
-        <div className="flex items-center justify-between mt-10 md:mt-14" data-reveal-line>
-          <span className="text-[10px] uppercase tracking-[0.1em] text-white">
-            © All Rights Reserved
-          </span>
+        <div className="flex items-center justify-end mt-10 md:mt-14" data-reveal-line>
           <span className="text-[10px] uppercase tracking-[0.1em] text-white">
             SS / 2024
           </span>

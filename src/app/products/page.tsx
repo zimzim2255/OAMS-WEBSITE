@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import { flashDesigns } from "@/lib/flashDesigns";
 
 const categories = [
@@ -15,7 +15,7 @@ const categories = [
 
 const PAGE_SIZE = 10;
 
-export default function ProductsPage() {
+function ProductsContent() {
   const searchParams = useSearchParams();
   const category = searchParams.get("category") || "all";
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
@@ -136,5 +136,13 @@ export default function ProductsPage() {
         </div>
       )}
     </section>
+  );
+}
+
+export default function ProductsPage() {
+  return (
+    <Suspense fallback={<section className="bg-black min-h-screen" />}>
+      <ProductsContent />
+    </Suspense>
   );
 }

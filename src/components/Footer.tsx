@@ -4,7 +4,6 @@ export default function Footer() {
   return (
     <footer className="bg-black text-white flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-0 px-4 sm:px-10 py-8 sm:py-10 overflow-hidden">
       <div className="flex flex-col items-center sm:items-start gap-2">
-        <p className="text-[12px] text-center sm:text-left">© 2018 - 2024</p>
         <Link
           href="/terms"
           className="text-[10px] uppercase tracking-widest text-white/60 hover:text-white transition-colors"

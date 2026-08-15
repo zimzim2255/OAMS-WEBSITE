@@ -138,7 +138,7 @@ export default function ZoomSection() {
             
             {/* Background image */}
             <div className="absolute inset-0">
-              <img src="/imgs/aboutus.png" alt="" className="w-full h-full object-cover" style={{ filter: "grayscale(100%) contrast(1.2)" }} />
+              <img src="/OAMS-WEBSITE/imgs/aboutus.png" alt="" className="w-full h-full object-cover" style={{ filter: "grayscale(100%) contrast(1.2)" }} />
               <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/80" />
             </div>
 
