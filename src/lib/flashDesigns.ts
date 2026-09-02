@@ -3,6 +3,29 @@ import { Product } from "./types";
 // Flash design products with tattoo/merch aesthetic
 export const flashDesigns: Product[] = [
   {
+    id: 128,
+    name: "Adidas Pants",
+    category: "pants",
+    price: 110,
+    description: "Premium Adidas pants with gray base and black accent lines. 181 pieces in stock across black and gray.",
+    image: "https://res.cloudinary.com/dlfbj1ix5/image/upload/v1788351198/addidas-peintse_graywith_blacklinse_181pcs_black_gray_price110dh_photo1_cvumom.jpg",
+    images: [
+      "https://res.cloudinary.com/dlfbj1ix5/image/upload/v1788351198/addidas-peintse_graywith_blacklinse_181pcs_black_gray_price110dh_photo1_cvumom.jpg",
+      "https://res.cloudinary.com/dlfbj1ix5/image/upload/v1788351200/addidas-peintse_graywith_blacklinse_181pcs_black_gray_price110dh_photo2_bsk0mj.jpg",
+      "https://res.cloudinary.com/dlfbj1ix5/image/upload/v1788351198/addidas-peintse_graywith_blacklinse_181pcs_black_gray_price110dh_photo3_fii3qu.jpg",
+    ],
+    sizes: ["M", "L", "XL", "XXL"],
+    colors: ["Black", "Gray"],
+    stock: {
+      "Black": 90,
+      "Gray": 91,
+    },
+    isNew: true,
+    isSale: false,
+    rating: 4.8,
+    reviews: 0,
+  },
+  {
     id: 101,
     name: "Black Short",
     category: "shorts",

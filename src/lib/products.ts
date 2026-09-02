@@ -26,6 +26,9 @@ const cloudinaryImages = [
   "https://res.cloudinary.com/dlfbj1ix5/image/upload/v1787061050/t-shirt_green_whiet_brown_black_110dh_gwxwda.png",
   "https://res.cloudinary.com/dlfbj1ix5/image/upload/v1787224327/black_pintes_nike_140dh_gray_black_light_green_bdmzjh.png",
   "https://res.cloudinary.com/dlfbj1ix5/image/upload/v1787224616/black_t-shirt_addidas_black_gray_whiet_85dh_vc0b4y.png",
+  "https://res.cloudinary.com/dlfbj1ix5/image/upload/v1788351198/addidas-peintse_graywith_blacklinse_181pcs_black_gray_price110dh_photo1_cvumom.jpg",
+  "https://res.cloudinary.com/dlfbj1ix5/image/upload/v1788351200/addidas-peintse_graywith_blacklinse_181pcs_black_gray_price110dh_photo2_bsk0mj.jpg",
+  "https://res.cloudinary.com/dlfbj1ix5/image/upload/v1788351198/addidas-peintse_graywith_blacklinse_181pcs_black_gray_price110dh_photo3_fii3qu.jpg",
 ];
 
 export const products: Product[] = [
@@ -693,6 +696,25 @@ export const products: Product[] = [
     isNew: true,
     isSale: false,
     rating: 4.6,
+    reviews: 0,
+  },
+  {
+    id: 33,
+    name: "Adidas Pants",
+    category: "pants",
+    price: 110,
+    description: "Premium Adidas pants with gray base and black accent lines. 181 pieces in stock across black and gray.",
+    image: cloudinaryImages[25],
+    images: [cloudinaryImages[25], cloudinaryImages[26], cloudinaryImages[27]],
+    sizes: ["M", "L", "XL", "XXL"],
+    colors: ["Black", "Gray"],
+    stock: {
+      "Black": 90,
+      "Gray": 91,
+    },
+    isNew: true,
+    isSale: false,
+    rating: 4.8,
     reviews: 0,
   },
 ];

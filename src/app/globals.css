@@ -44,3 +44,19 @@ html {
   text-orientation: mixed;
   transform: rotate(180deg);
 }
+
+/* New Arrival popup entrance */
+@keyframes popIn {
+  0% {
+    opacity: 0;
+    transform: translateY(24px) scale(0.96);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-pop-in {
+  animation: popIn 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}

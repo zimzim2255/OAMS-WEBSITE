@@ -76,6 +76,13 @@ function ProductsContent() {
                 className="absolute inset-0 w-full h-full object-cover opacity-100 group-hover:opacity-0 group-hover:scale-105 transition-all duration-500 ease-out"
               />
 
+              {/* New Arrival badge - the newest product sits at the top (index 0) */}
+              {index === 0 && (
+                <span className="absolute top-4 left-4 text-[10px] font-bold text-black bg-[#F4C430] px-2.5 py-1 rounded-full uppercase tracking-widest">
+                  New Arrival
+                </span>
+              )}
+
               {/* Available badge - only on first card */}
               {index === 0 && (
                 <span className="absolute top-4 right-4 text-[10px] text-gray-500 bg-white/80 px-2 py-1 rounded-full">
