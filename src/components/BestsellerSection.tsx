@@ -5,12 +5,12 @@ import Link from 'next/link';
 import ExpandableCTASection from './ExpandableCTASection';
 
 const products = [
-  { id: 1, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846845/blackshort_casse28pcs_grayclair40pcs_grayfonce116pcs_vert_36_noir186pcs-prix80dh_xnlqg7.png', title: 'BLACK SHORT', subtitle: 'Premium quality' },
-  { id: 2, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846844/nikeshort_reed36_green_28_mint_11_marron_40pcs_grayclair_32_bleu39pcs_grayfance71pcs_noir120pcs-prix65dh_rzwyiq.png', title: 'NIKE SHORT', subtitle: 'Premium quality' },
-  { id: 3, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785922185/50pcsinblue_green_brown_prix70dh_ac5pvh.png_rezifm.png', title: 'STWD SHIRT', subtitle: 'Blue, green, brown' },
-  { id: 4, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846823/swdpentes_black60pcs_grayclair60pcs_vert24pcs_marron30pcs_grayfance30pcs_prix80dh_jummmi.png', title: 'STWD PANTS', subtitle: 'Premium quality' },
-  { id: 5, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846788/greenshort_in_stock_36pcs_reed28pcs_grayfonce144pcs_casse40pcs_noir116pcs80dh_ufcu5l.png', title: 'GREEN SHORT', subtitle: 'In stock' },
-  { id: 6, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846787/ensombleswdbrand_noir30pcs_grayfoncee30pcs_graydh4pcs-125dh_dskvgv.png', title: 'ENSEMBLE STWD', subtitle: 'Brand set' },
+  { id: 1, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846845/blackshort_casse28pcs_grayclair40pcs_grayfonce116pcs_vert_36_noir186pcs-prix80dh_xnlqg7.png', title: 'BLACK SHORT', subtitle: 'Premium quality', soldOut: false },
+  { id: 2, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846844/nikeshort_reed36_green_28_mint_11_marron_40pcs_grayclair_32_bleu39pcs_grayfance71pcs_noir120pcs-prix65dh_rzwyiq.png', title: 'NIKE SHORT', subtitle: 'Premium quality', soldOut: false },
+  { id: 3, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785922185/50pcsinblue_green_brown_prix70dh_ac5pvh.png_rezifm.png', title: 'STWD SHIRT', subtitle: 'Blue, green, brown', soldOut: false },
+  { id: 4, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846823/swdpentes_black60pcs_grayclair60pcs_vert24pcs_marron30pcs_grayfance30pcs_prix80dh_jummmi.png', title: 'STWD PANTS', subtitle: 'Premium quality', soldOut: true },
+  { id: 5, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846788/greenshort_in_stock_36pcs_reed28pcs_grayfonce144pcs_casse40pcs_noir116pcs80dh_ufcu5l.png', title: 'GREEN SHORT', subtitle: 'In stock', soldOut: false },
+  { id: 6, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846787/ensombleswdbrand_noir30pcs_grayfoncee30pcs_graydh4pcs-125dh_dskvgv.png', title: 'ENSEMBLE STWD', subtitle: 'Brand set', soldOut: false },
 ];
 
 const clamp = (v: number, min: number, max: number) => Math.max(min, Math.min(max, v));
@@ -125,17 +125,22 @@ export default function BestsellerSection() {
                     i === 1 ? 'sm:row-span-2' : ''
                   }`}
                 >
-                  <div className="flex-1 flex items-center justify-center w-full min-h-0">
+                  <div className="flex-1 flex items-center justify-center w-full min-h-0 relative">
                     <img
                       src={p.image}
                       alt={p.title}
-                      className="w-full h-full max-h-[200px] sm:max-h-[600px] object-contain"
-                      style={{ filter: 'grayscale(100%)' }}
+                      className={`w-full h-full max-h-[200px] sm:max-h-[600px] object-contain ${p.soldOut ? 'grayscale opacity-60' : ''}`}
+                      style={{ filter: p.soldOut ? 'grayscale(100%)' : 'grayscale(100%)' }}
                     />
+                    {p.soldOut && (
+                      <span className="absolute top-2 left-2 bg-black/80 text-white text-[8px] sm:text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full border border-white/40">
+                        Sold Out
+                      </span>
+                    )}
                   </div>
                   <div className="w-full text-center mt-1 sm:mt-2">
                     <p className="text-[10px] sm:text-sm font-bold uppercase text-black">{p.title}</p>
-                    <p className="text-[8px] sm:text-[12px] text-gray-500 hidden sm:block">{p.subtitle}</p>
+                    <p className="text-[8px] sm:text-[12px] text-gray-500 hidden sm:block">{p.soldOut ? 'Sold out — will be back soon' : p.subtitle}</p>
                   </div>
                 </Link>
               ))}
@@ -167,7 +172,7 @@ export default function BestsellerSection() {
                   href={`/products/${p.id}`}
                   className="block"
                 >
-                  <div className="flex-1 flex items-center justify-center">
+                  <div className={`flex-1 flex items-center justify-center ${p.soldOut ? 'opacity-60' : ''}`}>
                     <img
                       src={p.image}
                       alt={p.title}
@@ -177,7 +182,11 @@ export default function BestsellerSection() {
                   </div>
                   <div className="w-full text-center mt-4">
                     <p className="text-sm font-bold uppercase text-black">{p.title}</p>
-                    <p className="text-[12px] text-gray-500">{p.subtitle}</p>
+                    {p.soldOut ? (
+                      <p className="text-[12px] text-red-500 font-semibold uppercase">Sold out</p>
+                    ) : (
+                      <p className="text-[12px] text-gray-500">{p.subtitle}</p>
+                    )}
                   </div>
                 </Link>
               ))}

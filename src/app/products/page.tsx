@@ -63,7 +63,9 @@ function ProductsContent() {
 
       {/* ===== Product Grid ===== */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 w-full px-4 sm:px-6 lg:px-10 py-12">
-        {visibleProducts.map((product, index) => (
+        {visibleProducts.map((product, index) => {
+          const isSoldOut = Object.values(product.stock).every((s) => s <= 0);
+          return (
           <div key={product.id} className="group">
             {/* Card - full width/height image with border radius */}
             <Link
@@ -73,18 +75,31 @@ function ProductsContent() {
               <img
                 src={product.image}
                 alt={product.name}
-                className="absolute inset-0 w-full h-full object-cover opacity-100 group-hover:opacity-0 group-hover:scale-105 transition-all duration-500 ease-out"
+                className={`absolute inset-0 w-full h-full object-cover transition-all duration-500 ease-out ${
+                  isSoldOut
+                    ? "opacity-100 grayscale group-hover:opacity-60"
+                    : "opacity-100 group-hover:opacity-0 group-hover:scale-105"
+                }`}
               />
 
               {/* New Arrival badge - the newest product sits at the top (index 0) */}
               {index === 0 && (
-                <span className="absolute top-4 left-4 text-[10px] font-bold text-black bg-[#F4C430] px-2.5 py-1 rounded-full uppercase tracking-widest">
+                <span className={`absolute top-4 text-[10px] font-bold text-black bg-[#F4C430] px-2.5 py-1 rounded-full uppercase tracking-widest ${
+                  isSoldOut ? "right-4" : "left-4"
+                }`}>
                   New Arrival
                 </span>
               )}
 
-              {/* Available badge - only on first card */}
-              {index === 0 && (
+              {/* Sold out badge */}
+              {isSoldOut && (
+                <span className="absolute top-4 left-4 text-[10px] font-bold text-white bg-black/80 px-3 py-1.5 rounded-full uppercase tracking-widest border border-white/40">
+                  Sold Out
+                </span>
+              )}
+
+              {/* Available badge - only on first card when not sold out */}
+              {index === 0 && !isSoldOut && (
                 <span className="absolute top-4 right-4 text-[10px] text-gray-500 bg-white/80 px-2 py-1 rounded-full">
                   Available
                 </span>
@@ -125,10 +140,16 @@ function ProductsContent() {
                     {product.originalPrice} DH
                   </span>
                 )}
+                {isSoldOut && (
+                  <span className="text-[10px] font-bold text-red-400 uppercase tracking-widest">
+                    Sold Out
+                  </span>
+                )}
               </div>
             </div>
           </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* ===== View More Button ===== */}

@@ -4,7 +4,7 @@ import { CartProvider } from "@/context/CartContext";
 import TargetCursor from "@/components/TargetCursor";
 import Header from "@/components/Header";
 import SplashReveal from "@/components/SplashReveal";
-import NewArrivalModal from "@/components/NewArrivalModal";
+import PromoModal from "@/components/PromoModal";
 
 export const metadata: Metadata = {
   title: "OAMS - Streetwear Brand",
@@ -29,7 +29,7 @@ export default function RootLayout({
         />
         <CartProvider>
           <SplashReveal />
-          <NewArrivalModal />
+          <PromoModal />
           <Header />
           {children}
         </CartProvider>

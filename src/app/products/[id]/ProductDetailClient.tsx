@@ -31,6 +31,7 @@ export default function ProductDetailClient({ id }: { id: number }) {
   }
 
   const availableStock = selectedColor ? (product.stock[selectedColor] || 0) : 0;
+  const isSoldOut = Object.values(product.stock).every((s) => s <= 0);
 
   const handleAddToCart = () => {
     if (!selectedSize) return;
@@ -71,11 +72,18 @@ export default function ProductDetailClient({ id }: { id: number }) {
                 src={product.images[selectedImage] || product.image}
                 alt={product.name}
                 fill
-                className="object-cover"
+                className={isSoldOut ? "object-cover grayscale opacity-70" : "object-cover"}
                 sizes="(max-width: 1024px) 100vw, 50vw"
                 priority
                 unoptimized
               />
+              {isSoldOut && (
+                <div className="absolute inset-0 bg-black/10 flex items-center justify-center">
+                  <span className="bg-black/80 text-white text-sm font-bold uppercase tracking-[0.2em] px-5 py-2.5 rounded-full border border-white/40">
+                    Sold Out
+                  </span>
+                </div>
+              )}
               {product.isNew && (
                 <span className="absolute top-4 left-4 bg-black text-white text-xs font-medium px-3 py-1.5 rounded-full">
                   New
@@ -136,12 +144,17 @@ export default function ProductDetailClient({ id }: { id: number }) {
             </div>
 
             <div className="flex items-center gap-3 mt-2">
-              {availableStock > 0 && (
+              {isSoldOut && (
+                <span className="text-sm font-medium text-red-500 bg-red-50 px-3 py-1 rounded-full">
+                  Sold Out
+                </span>
+              )}
+              {!isSoldOut && availableStock > 0 && (
                 <span className="text-sm font-medium text-green-600 bg-green-50 px-3 py-1 rounded-full">
                   In Stock ({availableStock} available)
                 </span>
               )}
-              {availableStock === 0 && selectedColor && (
+              {!isSoldOut && availableStock === 0 && selectedColor && (
                 <span className="text-sm font-medium text-red-500 bg-red-50 px-3 py-1 rounded-full">
                   Out of Stock
                 </span>
@@ -158,9 +171,12 @@ export default function ProductDetailClient({ id }: { id: number }) {
                   <button
                     key={size}
                     onClick={() => setSelectedSize(size)}
+                    disabled={isSoldOut}
                     className={`px-4 py-2.5 rounded-lg text-sm font-medium border transition-colors ${
                       selectedSize === size
                         ? "bg-gray-900 text-white border-gray-900"
+                        : isSoldOut
+                        ? "bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed"
                         : "bg-white text-gray-700 border-gray-200 hover:border-gray-400"
                     }`}
                   >
@@ -209,14 +225,15 @@ export default function ProductDetailClient({ id }: { id: number }) {
               <div className="flex items-center border border-gray-200 rounded-full">
                 <button
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="px-4 py-2.5 text-gray-600 hover:text-gray-900 text-sm"
+                  disabled={isSoldOut}
+                  className="px-4 py-2.5 text-gray-600 hover:text-gray-900 text-sm disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   −
                 </button>
                 <span className="px-4 text-sm font-medium text-gray-900">{quantity}</span>
                 <button
                   onClick={() => setQuantity(Math.min(availableStock || 1, quantity + 1))}
-                  disabled={availableStock > 0 && quantity >= availableStock}
+                  disabled={isSoldOut || (availableStock > 0 && quantity >= availableStock)}
                   className="px-4 py-2.5 text-gray-600 hover:text-gray-900 text-sm disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   +
@@ -224,14 +241,14 @@ export default function ProductDetailClient({ id }: { id: number }) {
               </div>
               <button
                 onClick={handleAddToCart}
-                disabled={!selectedSize || !selectedColor || availableStock <= 0}
+                disabled={isSoldOut || !selectedSize || !selectedColor || availableStock <= 0}
                 className={`flex-1 py-3 rounded-full text-sm font-medium transition-all ${
                   addedToCart
                     ? "bg-green-500 text-white"
                     : "bg-gray-900 text-white hover:bg-gray-800 disabled:bg-gray-200 disabled:text-gray-400"
                 }`}
               >
-                {addedToCart ? "Added to Cart ✓" : "Add to Cart"}
+                {isSoldOut ? "Sold Out" : addedToCart ? "Added to Cart ✓" : "Add to Cart"}
               </button>
             </div>
 

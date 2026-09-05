@@ -4,24 +4,24 @@ import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 
 const leftProducts = [
-  { id: 1, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846845/blackshort_casse28pcs_grayclair40pcs_grayfonce116pcs_vert_36_noir186pcs-prix80dh_xnlqg7.png' },
-  { id: 2, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846844/nikeshort_reed36_green_28_mint_11_marron_40pcs_grayclair_32_bleu39pcs_grayfance71pcs_noir120pcs-prix65dh_rzwyiq.png' },
-  { id: 3, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785922185/50pcsinblue_green_brown_prix70dh_ac5pvh.png_rezifm.png' },
-  { id: 4, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846823/swdpentes_black60pcs_grayclair60pcs_vert24pcs_marron30pcs_grayfance30pcs_prix80dh_jummmi.png' },
-  { id: 5, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846788/greenshort_in_stock_36pcs_reed28pcs_grayfonce144pcs_casse40pcs_noir116pcs80dh_ufcu5l.png' },
-  { id: 6, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846787/ensombleswdbrand_noir30pcs_grayfoncee30pcs_graydh4pcs-125dh_dskvgv.png' },
-  { id: 1, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846845/blackshort_casse28pcs_grayclair40pcs_grayfonce116pcs_vert_36_noir186pcs-prix80dh_xnlqg7.png' },
+  { id: 1, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846845/blackshort_casse28pcs_grayclair40pcs_grayfonce116pcs_vert_36_noir186pcs-prix80dh_xnlqg7.png', soldOut: false },
+  { id: 2, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846844/nikeshort_reed36_green_28_mint_11_marron_40pcs_grayclair_32_bleu39pcs_grayfance71pcs_noir120pcs-prix65dh_rzwyiq.png', soldOut: false },
+  { id: 3, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785922185/50pcsinblue_green_brown_prix70dh_ac5pvh.png_rezifm.png', soldOut: false },
+  { id: 4, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846823/swdpentes_black60pcs_grayclair60pcs_vert24pcs_marron30pcs_grayfance30pcs_prix80dh_jummmi.png', soldOut: true },
+  { id: 5, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846788/greenshort_in_stock_36pcs_reed28pcs_grayfonce144pcs_casse40pcs_noir116pcs80dh_ufcu5l.png', soldOut: false },
+  { id: 6, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846787/ensombleswdbrand_noir30pcs_grayfoncee30pcs_graydh4pcs-125dh_dskvgv.png', soldOut: false },
+  { id: 1, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846845/blackshort_casse28pcs_grayclair40pcs_grayfonce116pcs_vert_36_noir186pcs-prix80dh_xnlqg7.png', soldOut: false },
 ];
 
 const rightProducts = [
-  { id: 2, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846844/nikeshort_reed36_green_28_mint_11_marron_40pcs_grayclair_32_bleu39pcs_grayfance71pcs_noir120pcs-prix65dh_rzwyiq.png' },
-  { id: 3, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785922185/50pcsinblue_green_brown_prix70dh_ac5pvh.png_rezifm.png' },
-  { id: 4, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846823/swdpentes_black60pcs_grayclair60pcs_vert24pcs_marron30pcs_grayfance30pcs_prix80dh_jummmi.png' },
-  { id: 5, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846788/greenshort_in_stock_36pcs_reed28pcs_grayfonce144pcs_casse40pcs_noir116pcs80dh_ufcu5l.png' },
-  { id: 6, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846787/ensombleswdbrand_noir30pcs_grayfoncee30pcs_graydh4pcs-125dh_dskvgv.png' },
-  { id: 1, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846845/blackshort_casse28pcs_grayclair40pcs_grayfonce116pcs_vert_36_noir186pcs-prix80dh_xnlqg7.png' },
-  { id: 2, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846844/nikeshort_reed36_green_28_mint_11_marron_40pcs_grayclair_32_bleu39pcs_grayfance71pcs_noir120pcs-prix65dh_rzwyiq.png' },
-  { id: 3, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785922185/50pcsinblue_green_brown_prix70dh_ac5pvh.png_rezifm.png' },
+  { id: 2, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846844/nikeshort_reed36_green_28_mint_11_marron_40pcs_grayclair_32_bleu39pcs_grayfance71pcs_noir120pcs-prix65dh_rzwyiq.png', soldOut: false },
+  { id: 3, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785922185/50pcsinblue_green_brown_prix70dh_ac5pvh.png_rezifm.png', soldOut: false },
+  { id: 4, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846823/swdpentes_black60pcs_grayclair60pcs_vert24pcs_marron30pcs_grayfance30pcs_prix80dh_jummmi.png', soldOut: true },
+  { id: 5, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846788/greenshort_in_stock_36pcs_reed28pcs_grayfonce144pcs_casse40pcs_noir116pcs80dh_ufcu5l.png', soldOut: false },
+  { id: 6, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846787/ensombleswdbrand_noir30pcs_grayfoncee30pcs_graydh4pcs-125dh_dskvgv.png', soldOut: false },
+  { id: 1, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846845/blackshort_casse28pcs_grayclair40pcs_grayfonce116pcs_vert_36_noir186pcs-prix80dh_xnlqg7.png', soldOut: false },
+  { id: 2, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846844/nikeshort_reed36_green_28_mint_11_marron_40pcs_grayclair_32_bleu39pcs_grayfance71pcs_noir120pcs-prix65dh_rzwyiq.png', soldOut: false },
+  { id: 3, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785922185/50pcsinblue_green_brown_prix70dh_ac5pvh.png_rezifm.png', soldOut: false },
 ];
 
 export default function ZoomSection() {
@@ -152,8 +152,13 @@ export default function ZoomSection() {
                   {leftProducts.map((p, idx) => (
                     <Link key={idx} href={`/products/${p.id}`}>
                       <div className={`${cardBase} cursor-pointer`}>
-                        <div className="h-[200px] sm:h-[300px] lg:h-[420px] overflow-hidden">
-                          <img src={p.image} alt="" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" style={{ filter: "grayscale(100%)" }} />
+                        <div className="relative h-[200px] sm:h-[300px] lg:h-[420px] overflow-hidden">
+                          <img src={p.image} alt="" className={`w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 ${p.soldOut ? 'opacity-60' : ''}`} style={{ filter: "grayscale(100%)" }} />
+                          {p.soldOut && (
+                            <span className="absolute top-2 left-2 bg-black/80 text-white text-[9px] sm:text-[11px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full border border-white/40">
+                              Sold Out
+                            </span>
+                          )}
                         </div>
                       </div>
                     </Link>
@@ -167,8 +172,13 @@ export default function ZoomSection() {
                   {rightProducts.map((p, idx) => (
                     <Link key={idx} href={`/products/${p.id}`}>
                       <div className={`${cardBase} cursor-pointer`}>
-                        <div className="h-[200px] sm:h-[300px] lg:h-[420px] overflow-hidden">
-                          <img src={p.image} alt="" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" style={{ filter: "grayscale(100%)" }} />
+                        <div className="relative h-[200px] sm:h-[300px] lg:h-[420px] overflow-hidden">
+                          <img src={p.image} alt="" className={`w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 ${p.soldOut ? 'opacity-60' : ''}`} style={{ filter: "grayscale(100%)" }} />
+                          {p.soldOut && (
+                            <span className="absolute top-2 left-2 bg-black/80 text-white text-[9px] sm:text-[11px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full border border-white/40">
+                              Sold Out
+                            </span>
+                          )}
                         </div>
                       </div>
                     </Link>
