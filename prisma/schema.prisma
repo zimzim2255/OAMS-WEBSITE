@@ -1,0 +1,240 @@
+// OAMS Platform — PostgreSQL schema (source of truth for the whole system).
+// Run `npx prisma migrate dev` after editing to generate migrations.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  USER
+  SELLER
+  ADMIN
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  REFUNDED
+}
+
+// The "full SaaS click system" event types.
+enum EventType {
+  PAGE_VIEW
+  PRODUCT_VIEW
+  PRODUCT_CLICK
+  LISTING_VIEW
+  LISTING_CLICK
+  EXPAND
+  ADD_TO_CART
+  CHECKOUT
+  PURCHASE
+  SEARCH
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  role         Role     @default(USER)
+  bio          String?
+  avatarUrl    String?
+  storeName    String?
+  storeCategory String?
+  // none | requested | active | suspended
+  sellerStatus String   @default("none")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  products   Product[]
+  orders     Order[]
+  favorites  Favorite[]
+  events     AnalyticsEvent[]
+  sessions   Session[]
+  orderItems OrderItem[]
+}
+
+// One table powers BOTH the official store catalog (sellerId = null)
+// and marketplace seller listings (sellerId set, marketplaceEnabled = true).
+model Product {
+  id          String   @id @default(cuid())
+  slug        String
+  name        String
+  description String
+  category    String
+  // Money stored in minor units (e.g. cents). Within OAMS prices are integer DH.
+  price           Int
+  originalPrice   Int?
+  currency        String   @default("MAD")
+  brand           String?
+  sizes           String[]
+  colors          String[]
+  // JSON map: color -> quantity, e.g. { "Black": 30 }
+  stock            Json
+  isNew            Boolean  @default(false)
+  isSale           Boolean  @default(false)
+  isActive         Boolean  @default(true)
+  marketplaceEnabled Boolean @default(false)
+  rating           Float    @default(0)
+  reviewsCount     Int      @default(0)
+
+  sellerId String?
+  seller   User?  @relation(fields: [sellerId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  images     ProductImage[]
+  orderItems OrderItem[]
+  events     AnalyticsEvent[]
+  favorites  Favorite[]
+
+  @@unique([sellerId, slug])
+  @@index([category])
+  @@index([marketplaceEnabled])
+}
+
+model ProductImage {
+  id        String @id @default(cuid())
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  url    String // primary / smallest sensible
+  master String?
+  large  String?
+  medium String?
+  thumb  String?
+  tiny   String?
+
+  isPrimary Boolean @default(false)
+  sortOrder Int     @default(0)
+  createdAt DateTime @default(now())
+
+  @@index([productId])
+}
+
+model Favorite {
+  id        String @id @default(cuid())
+  userId    String
+  user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, productId])
+  @@index([userId])
+}
+
+// Image-only displays shown to users (e.g. a popup on site open).
+// Each is a photo plus a target route for where it navigates when clicked.
+model Banner {
+  id        String   @id @default(cuid())
+  title     String?
+  imageUrl  String
+  route     String   @default("/")
+  isPopup   Boolean  @default(true)
+  isActive  Boolean  @default(true)
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([isActive])
+}
+
+model Order {
+  id          String @id @default(cuid())
+  orderNumber String @unique
+  userId      String?
+  user        User?  @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  status OrderStatus @default(PENDING)
+
+  // Snapshot of the customer at order time (name, email, phone, address, notes)
+  customer     Json
+  subtotal     Int
+  shippingCost Int    @default(0)
+  total        Int
+  currency     String @default("MAD")
+
+  paidAt      DateTime?
+  shippedAt   DateTime?
+  deliveredAt DateTime?
+  cancelledAt DateTime?
+  notes       String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  items OrderItem[]
+
+  @@index([status])
+  @@index([userId])
+}
+
+model OrderItem {
+  id        String @id @default(cuid())
+  orderId   String
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId String?
+  product   Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+
+  // Every item carries its seller so sellers only see their own sales.
+  sellerId String?
+  seller   User? @relation(fields: [sellerId], references: [id], onDelete: SetNull)
+
+  skuSnapshot Json // name/sku snapshot at purchase time
+  name    String
+  price   Int
+  quantity Int
+  size    String?
+  color   String?
+  total   Int
+
+  @@index([orderId])
+  @@index([sellerId])
+}
+
+// The SaaS analytics engine — append-only event stream.
+model AnalyticsEvent {
+  id        String    @id @default(cuid())
+  type      EventType
+  userId    String?
+  user      User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+  productId String?
+  product   Product?  @relation(fields: [productId], references: [id], onDelete: SetNull)
+
+  sessionId String?
+  page      String?
+  referrer  String?
+  userAgent String?
+  device    String?
+  ip        String?
+  meta      Json?
+
+  createdAt DateTime @default(now())
+
+  @@index([type, createdAt])
+  @@index([productId, type])
+  @@index([userId])
+  @@index([sessionId])
+}
+
+// Optional JWT revocation / session tracking.
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}

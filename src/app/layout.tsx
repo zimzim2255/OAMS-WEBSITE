@@ -5,6 +5,7 @@ import TargetCursor from "@/components/TargetCursor";
 import Header from "@/components/Header";
 import SplashReveal from "@/components/SplashReveal";
 import PromoModal from "@/components/PromoModal";
+import DashboardPopup from "@/components/DashboardPopup";
 
 export const metadata: Metadata = {
   title: "OAMS - Streetwear Brand",
@@ -30,6 +31,7 @@ export default function RootLayout({
         <CartProvider>
           <SplashReveal />
           <PromoModal />
+          <DashboardPopup />
           <Header />
           {children}
         </CartProvider>

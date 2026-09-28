@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import CatalogNavCard from "./CatalogNavCard";
 import CartDropdown from "./CartDropdown";
@@ -8,7 +8,21 @@ import { useCart } from "@/context/CartContext";
 
 export default function Header() {
   const [isCatalogOpen, setIsCatalogOpen] = useState(false);
+  const [isAuthed, setIsAuthed] = useState<boolean | null>(null);
   const { setIsOpen, getTotalItems } = useCart();
+
+  // Determine authentication state so the Profile button routes
+  // non-authenticated users to the login page instead of /account.
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await fetch("/api/auth/me");
+        setIsAuthed(res.ok);
+      } catch {
+        setIsAuthed(false);
+      }
+    })();
+  }, []);
 
   return (
     <header>
@@ -28,10 +42,45 @@ export default function Header() {
           </button>
         </div>
 
+        {/* Products button - links to the products page (desktop only) */}
+        <Link
+          href="/products"
+          className="hidden sm:flex items-center justify-center px-6 py-3 border border-white rounded bg-white"
+        >
+          <span className="flex items-center gap-2 text-sm font-bold uppercase tracking-wide hover:opacity-60 transition-opacity">
+            Products
+          </span>
+        </Link>
+
         {/* Center: Logo Section - own border, links to home */}
         <Link href="/" className="flex-1 min-w-0 flex items-center justify-center px-2 sm:px-6 py-3 border border-white rounded bg-white">
           <span className="font-['Impact','Anton',sans-serif] text-xl sm:text-2xl font-bold tracking-tight uppercase">
             OAMS
+          </span>
+        </Link>
+
+        {/* Profile button - same size as the cart button.
+            Non-authenticated users are sent to the login page. */}
+        <Link
+          href={isAuthed ? "/account" : "/login"}
+          className="cursor-target w-10 sm:w-[200px] flex items-center justify-center py-3 px-2 sm:pr-6 border border-white rounded bg-white"
+          aria-label="Profile"
+        >
+          <span className="text-xs text-gray-400 uppercase tracking-widest hover:text-black transition-colors whitespace-nowrap flex items-center gap-2">
+            <svg
+              className="w-5 h-5 sm:hidden"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={1.8}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+              <circle cx="12" cy="7" r="4" />
+            </svg>
+            <span className="hidden sm:inline">Profile</span>
           </span>
         </Link>
 

@@ -12,7 +12,21 @@ The website is deployed on GitHub Pages with a custom domain: [https://www.oams.
 - **Language:** TypeScript
 - **Styling:** Tailwind CSS v4
 - **Animations:** GSAP
-- **Deployment:** GitHub Pages (static export)
+- **Deployment:** GitHub Pages (static export, current) → **VPS + Docker (v2)**
+
+## 🧱 The full platform (v2)
+
+This repo is growing from a static store into a **full SaaS e-commerce +
+marketplace platform** (PostgreSQL‑backed, hosted on a VPS). It adds:
+
+- **Admin panel** — add / edit / remove products, manage & process orders, manage users & sellers
+- **Marketplace** — registered sellers list products and see per‑product **click / view / sale** analytics (the "SaaS click system")
+- **Fast images** — a server‑side `sharp` pipeline stores small WebP thumbnails for instant rendering & downloads
+- **Accounts & orders** — JWT auth (`USER / SELLER / ADMIN`), database‑backed checkout, SMTP order emails
+
+See **[`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)** for the complete design:
+data model, API surface, analytics engine, image pipeline and the phased rollout.
+The current storefront (Phase 1) still builds and deploys unchanged.
 
 ## 📦 Getting Started
 
@@ -69,6 +83,41 @@ Deployment to GitHub Pages is automated via GitHub Actions. Any push to the `mai
 npm run build
 npx gh-pages -d out
 ```
+
+## 🗄️ Database & VPS deployment (v2)
+
+The platform is built on **PostgreSQL + Prisma** and runs in **Docker on a VPS**
+(see [`docker-compose.yml`](docker-compose.yml) and [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)).
+
+```bash
+# 1) Setup: copy env template, edit the values, install
+cp .env.example .env
+npm install                 # also runs prisma generate (postinstall)
+
+# 2) Local dev against PostgreSQL (must have a running postgres)
+cp .env.example .env        # set DATABASE_URL, JWT_SECRET, ADMIN_*
+npm run db:migrate          # create tables
+npm run db:seed             # create the admin user
+npm run dev
+
+# 3) Deploy to a VPS
+docker compose up -d --build   # runs postgres + the app; applies migrations, seeds
+```
+
+Key npm scripts:
+
+| Command | Purpose |
+|---------|---------|
+| `dev` / `build` / `start` | Next.js dev / build / serve |
+| `db:generate` | regenerate the Prisma client |
+| `db:migrate` | create/apply dev migrations |
+| `db:deploy` | apply migrations in production |
+| `db:seed` | seed the admin account |
+
+> **Going live:** the current GitHub Pages *static export* (`output: "export"`)
+> is only for the Phase‑1 storefront. To activate the full backend on the VPS,
+> remove `output: "export"` from [`next.config.ts`](next.config.ts) so Next.js
+> runs as a Node server (required for API routes, auth and the database).
 
 ## 📧 Contact
 
