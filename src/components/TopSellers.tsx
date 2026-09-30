@@ -12,10 +12,8 @@ export default function TopSellers() {
   const topTrackRef = useRef<HTMLDivElement>(null);
   const bottomTrackRef = useRef<HTMLDivElement>(null);
 
-  // Pick the most popular products (by reviews, falling back to rating).
-  const sellers = [...flashDesigns]
-    .sort((a, b) => (b.reviews || b.rating) - (a.reviews || a.rating))
-    .slice(0, 10);
+  // Featured selection: first ten products from the catalogue.
+  const sellers = flashDesigns.slice(0, 10);
 
   // Two rows of 5; duplicate each 3x so both rows have room to scroll in
   // either direction under the arrows.

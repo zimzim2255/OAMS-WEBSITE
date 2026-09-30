@@ -72,7 +72,6 @@ model User {
 
   products   Product[]
   orders     Order[]
-  favorites  Favorite[]
   events     AnalyticsEvent[]
   sessions   Session[]
   orderItems OrderItem[]
@@ -113,7 +112,6 @@ model Product {
   images     ProductImage[]
   orderItems OrderItem[]
   events     AnalyticsEvent[]
-  favorites  Favorite[]
 
   @@unique([sellerId, slug])
   @@index([category])
@@ -143,18 +141,6 @@ model ProductImage {
   createdAt DateTime @default(now())
 
   @@index([productId])
-}
-
-model Favorite {
-  id        String @id @default(cuid())
-  userId    String
-  user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  productId String
-  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now())
-
-  @@unique([userId, productId])
-  @@index([userId])
 }
 
 // Image-only displays shown to users (e.g. a popup on site open).

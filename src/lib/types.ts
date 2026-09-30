@@ -12,8 +12,8 @@ export interface Product {
   stock: Record<string, number>;
   isNew: boolean;
   isSale: boolean;
-  rating: number;
-  reviews: number;
+  rating?: number;
+  reviews?: number;
 }
 
 export interface CartItem {

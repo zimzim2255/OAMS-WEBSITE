@@ -15,7 +15,6 @@ const BASE_NAV = [
   { href: "/account", label: "Overview" },
   { href: "/account/orders", label: "Orders" },
   { href: "/account/track", label: "Track orders" },
-  { href: "/account/favorites", label: "Favorites" },
   { href: "/account/switch-account", label: "Switch account" },
   { href: "/account/settings", label: "Settings" },
 ];
@@ -93,7 +92,7 @@ export default function AccountLayout({ children }: { children: ReactNode }) {
           {user.name} · {user.email}
         </p>
       ) : (
-        <p className="text-base md:text-lg text-neutral-500 mb-6">Manage your orders, favourites and shop</p>
+        <p className="text-base md:text-lg text-neutral-500 mb-6">Manage your orders and shop</p>
       )}
 
       <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">

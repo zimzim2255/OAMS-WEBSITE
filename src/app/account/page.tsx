@@ -14,19 +14,16 @@ interface Me {
 export default function AccountOverviewPage() {
   const [user, setUser] = useState<Me | null>(null);
   const [orders, setOrders] = useState<unknown[]>([]);
-  const [favorites, setFavorites] = useState<unknown[]>([]);
   const [checked, setChecked] = useState(false);
 
   async function load() {
     try {
-      const [m, o, f] = await Promise.all([
+      const [m, o] = await Promise.all([
         fetch("/api/auth/me").then((r) => r.json()),
         fetch("/api/account/orders").then((r) => r.json()),
-        fetch("/api/account/favorites").then((r) => r.json()),
       ]);
       if (m.user) setUser(m.user);
       if (o.orders) setOrders(o.orders);
-      if (f.favorites) setFavorites(f.favorites);
     } catch {
       // ignore
     }
@@ -45,7 +42,7 @@ export default function AccountOverviewPage() {
     return (
       <div className="bg-white rounded-2xl shadow p-8 text-center">
         <p className="text-lg font-semibold mb-2">Sign in to manage your account</p>
-        <p className="text-sm text-neutral-500 mb-4">View orders, favourites and your seller shop.</p>
+        <p className="text-sm text-neutral-500 mb-4">View orders and your seller shop.</p>
         <Link
           href="/login"
           className="inline-block bg-neutral-900 text-white rounded-lg px-5 py-2 text-sm"
@@ -60,7 +57,6 @@ export default function AccountOverviewPage() {
 
   const cards = [
     { label: "Orders", value: orders.length.toString(), href: "/account/orders" },
-    { label: "Favorites", value: favorites.length.toString(), href: "/account/favorites" },
     { label: "My products", value: isSeller ? "Manage" : "—", href: "/account/my-products" },
   ];
 
