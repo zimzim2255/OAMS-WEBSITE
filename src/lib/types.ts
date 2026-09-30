@@ -93,6 +93,7 @@ export interface ProductDto {
 }
 
 export interface OrderItemDto {
+  id: string;
   productId?: string;
   name: string;
   price: number;
@@ -100,6 +101,8 @@ export interface OrderItemDto {
   size?: string;
   color?: string;
   total: number;
+  status?: OrderStatus;
+  trackingNumber?: string;
 }
 
 export interface OrderDto {
@@ -111,6 +114,7 @@ export interface OrderDto {
   total: number;
   currency: string;
   createdAt: string;
+  trackingNumber?: string;
   items: OrderItemDto[];
 }
 

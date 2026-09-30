@@ -92,6 +92,11 @@ export default function AccountTrackPage() {
               </div>
             )}
 
+{o.trackingNumber && (
+              <p className="text-sm text-neutral-600 mt-2">
+                Tracking number: <b>{o.trackingNumber}</b>
+              </p>
+            )}
             <div className="border-t border-neutral-100 mt-4 pt-3 flex justify-between text-sm">
               <span className="text-neutral-500">{new Date(o.createdAt).toLocaleDateString()}</span>
               <span className="font-semibold">{o.total} {o.currency}</span>

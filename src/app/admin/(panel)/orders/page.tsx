@@ -26,6 +26,8 @@ const STATUS_COLORS: Record<OrderStatus, string> = {
 export default function AdminOrdersPage() {
   const [orders, setOrders] = useState<OrderDto[]>([]);
   const [loading, setLoading] = useState(true);
+  const [tracking, setTracking] = useState<Record<string, string>>({});
+  const [saving, setSaving] = useState<Record<string, boolean>>({});
 
   async function load() {
     const res = await fetch("/api/admin/orders");
@@ -43,12 +45,18 @@ export default function AdminOrdersPage() {
   }, []);
 
   async function setStatus(order: OrderDto, status: OrderStatus) {
-    const res = await fetch(`/api/admin/orders/${order.id}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ status }),
-    });
-    if (res.ok) await load();
+    setSaving({ ...saving, [order.id]: true });
+    try {
+      const track = tracking[order.id] ?? order.trackingNumber ?? "";
+      const res = await fetch(`/api/admin/orders/${order.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status, trackingNumber: track }),
+      });
+      if (res.ok) await load();
+    } finally {
+      setSaving({ ...saving, [order.id]: false });
+    }
   }
 
   if (loading) return <div className="p-10 text-center">Loading orders…</div>;
@@ -63,7 +71,7 @@ export default function AdminOrdersPage() {
         <div className="space-y-3">
           {orders.map((o) => (
             <div key={o.id} className="bg-white rounded-xl shadow p-5">
-              <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center justify-between mb-3 flex-wrap">
                 <div>
                   <span className="font-semibold">#{o.orderNumber}</span>
                   <span className="text-sm text-neutral-500 ml-3">
@@ -76,6 +84,7 @@ export default function AdminOrdersPage() {
                   </span>
                   <select
                     value={o.status}
+                    disabled={saving[o.id]}
                     onChange={(e) => setStatus(o, e.target.value as OrderStatus)}
                     className="border border-neutral-300 rounded-lg px-2 py-1 text-sm"
                   >
@@ -95,15 +104,33 @@ export default function AdminOrdersPage() {
                       {i.name} × {i.quantity}
                       {i.size ? ` · ${i.size}` : ""}
                       {i.color ? ` (${i.color})` : ""}
+                      {i.status && i.status !== o.status ? ` · ${i.status}` : ""}
                     </span>
                     <span>{i.total} {o.currency}</span>
                   </div>
                 ))}
               </div>
 
+              <div className="flex flex-wrap items-center gap-2 mb-1">
+                <input
+                  value={tracking[o.id] ?? o.trackingNumber ?? ""}
+                  onChange={(e) => setTracking({ ...tracking, [o.id]: e.target.value })}
+                  placeholder="Tracking number"
+                  className="border border-neutral-300 rounded-lg px-2 py-1 text-sm w-56"
+                />
+                <button
+                  onClick={() => setStatus(o, o.status)}
+                  disabled={saving[o.id]}
+                  className="text-xs bg-neutral-100 hover:bg-neutral-200 rounded-lg px-2.5 py-1.5 border border-neutral-300"
+                >
+                  Set #
+                </button>
+              </div>
+
               <div className="flex justify-between border-t border-neutral-100 pt-2 text-sm">
                 <span>
                   Subtotal {o.subtotal} · Shipping {o.shippingCost}
+                  {o.trackingNumber ? ` · Tracking ${o.trackingNumber}` : ""}
                 </span>
                 <span className="font-semibold">Total: {o.total} {o.currency}</span>
               </div>

@@ -33,6 +33,7 @@ export async function GET(request: NextRequest) {
     total: number;
     currency: string;
     createdAt: string;
+    trackingNumber?: string;
     items: OrderItemDto[];
   } => ({
     id: o.id,
@@ -43,9 +44,11 @@ export async function GET(request: NextRequest) {
     total: o.total,
     currency: o.currency,
     createdAt: o.createdAt.toISOString(),
+    trackingNumber: o.trackingNumber ?? undefined,
     items: o.items
       .filter((i) => i.sellerId === seller.id)
       .map((i): OrderItemDto => ({
+        id: i.id,
         productId: i.productId ?? undefined,
         name: i.name,
         price: i.price,
@@ -53,6 +56,8 @@ export async function GET(request: NextRequest) {
         size: i.size ?? undefined,
         color: i.color ?? undefined,
         total: i.total,
+        status: i.status,
+        trackingNumber: i.trackingNumber ?? undefined,
       })),
   }));
 

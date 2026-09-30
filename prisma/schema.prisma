@@ -209,6 +209,10 @@ model Order {
   cancelledAt DateTime?
   notes       String?
 
+  // Courier / carrier reference given to the customer (set by admin, or by a
+  // seller when they ship their own line). Emailed to the buyer once shipped.
+  trackingNumber String?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -237,8 +241,14 @@ model OrderItem {
   color   String?
   total   Int
 
+  // Per-line fulfillment so each seller can update the status of their own
+  // sales independently (admin still controls the whole order).
+  status OrderStatus @default(PENDING)
+  trackingNumber String?
+
   @@index([orderId])
   @@index([sellerId])
+  @@index([status])
 }
 
 // The SaaS analytics engine — append-only event stream.

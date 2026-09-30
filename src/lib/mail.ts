@@ -56,6 +56,22 @@ export async function sendOrderConfirmation(
  * Notify a seller (or the platform admin) that an order contains their item(s).
  * `lines` are the human-readable line items that belong to this recipient.
  */
+export async function sendShippedNotification(
+  to: string,
+  orderNumber: string,
+  trackingNumber: string,
+  siteUrl: string
+): Promise<void> {
+  await sendMail(
+    to,
+    `OAMS — Order ${orderNumber} shipped 🚚`,
+    `<h1>Your order is on the way!</h1>
+     <p>Order <b>${orderNumber}</b> has been shipped.</p>
+     <p><b>Tracking number:</b> ${trackingNumber || "to be confirmed"}</p>
+     <p>Track it from <a href="${siteUrl}/account/track">your account</a>.</p>`
+  );
+}
+
 export async function sendOrderItemNotification(
   to: string,
   orderNumber: string,

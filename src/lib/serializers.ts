@@ -57,6 +57,7 @@ export function toProductDto(p: ProductWithImages, seller?: SellerRef | null): P
 
 export function toOrderDto(o: OrderWithItems): OrderDto {
   const items: OrderItemDto[] = o.items.map((i) => ({
+    id: i.id,
     productId: i.productId ?? undefined,
     name: i.name,
     price: i.price,
@@ -64,6 +65,8 @@ export function toOrderDto(o: OrderWithItems): OrderDto {
     size: i.size ?? undefined,
     color: i.color ?? undefined,
     total: i.total,
+    status: i.status,
+    trackingNumber: i.trackingNumber ?? undefined,
   }));
 
   return {
@@ -75,6 +78,7 @@ export function toOrderDto(o: OrderWithItems): OrderDto {
     total: o.total,
     currency: o.currency,
     createdAt: o.createdAt.toISOString(),
+    trackingNumber: o.trackingNumber ?? undefined,
     items,
   };
 }
