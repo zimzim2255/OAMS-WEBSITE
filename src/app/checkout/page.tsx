@@ -11,8 +11,6 @@ const SHIPPING_COSTS = {
   outside: 40,
 } as const;
 
-const FORMSPREE_ENDPOINT = "https://formspree.io/f/xvkpooqg";
-
 type ShippingZone = keyof typeof SHIPPING_COSTS;
 
 export default function CheckoutPage() {
@@ -23,6 +21,7 @@ export default function CheckoutPage() {
   const [error, setError] = useState<string | null>(null);
   const [form, setForm] = useState({
     fullName: "",
+    email: "",
     phone: "",
     address: "",
     city: "",
@@ -55,38 +54,36 @@ export default function CheckoutPage() {
     setSubmitting(true);
     setError(null);
 
-    const orderItems = items
-      .map(
-        (item) =>
-          `- ${item.product.name} (${item.size} / ${item.color}) x ${item.quantity} = ${
-            item.product.price * item.quantity
-          } DH`
-      )
-      .join("\n");
-
-    const data = {
-      _subject: `New Order from ${form.fullName}`,
-      fullName: form.fullName,
+    const payload = {
+      items: items.map((item) => ({
+        productId: String(item.product.id),
+        name: item.product.name,
+        price: item.product.price,
+        quantity: item.quantity,
+        size: item.size,
+        color: item.color,
+      })),
+      name: form.fullName,
+      email: form.email,
       phone: form.phone,
       address: form.address,
       city: form.city,
-      shippingZone: shippingZone === "casablanca" ? "Casablanca (20 DH)" : "Outside Casablanca (40 DH)",
-      notes: form.notes || "None",
-      orderItems,
-      subtotal: `${subtotal} DH`,
-      shippingCost: `${shippingCost} DH`,
-      total: `${total} DH`,
+      notes: form.notes,
+      shippingCost: SHIPPING_COSTS[shippingZone],
     };
 
     try {
-      const res = await fetch(FORMSPREE_ENDPOINT, {
+      const res = await fetch("/api/orders", {
         method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify(data),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
       });
 
+      const data = await res.json().catch(() => null);
       if (!res.ok) {
-        throw new Error("Failed to submit order");
+        setError((data && (data.error as string)) ?? "Could not place your order. Please try again.");
+        setSubmitting(false);
+        return;
       }
 
       clearCart();
@@ -135,6 +132,17 @@ export default function CheckoutPage() {
                   onChange={(e) => setForm({ ...form, fullName: e.target.value })}
                   className={inputClass}
                   placeholder="Your full name"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">Email *</label>
+                <input
+                  type="email"
+                  required
+                  value={form.email}
+                  onChange={(e) => setForm({ ...form, email: e.target.value })}
+                  className={inputClass}
+                  placeholder="you@example.com"
                 />
               </div>
               <div>

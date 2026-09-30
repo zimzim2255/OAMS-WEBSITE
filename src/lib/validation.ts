@@ -45,6 +45,10 @@ export const orderItemSchema = z.object({
   quantity: z.number().int().positive(),
   size: z.string().optional(),
   color: z.string().optional(),
+  // Snapshot fallbacks so orders still record name/price if the product is no
+  // longer in the DB (e.g. legacy catalogue items).
+  name: z.string().optional(),
+  price: z.number().int().nonnegative().optional(),
 });
 
 export const orderSchema = z.object({
@@ -55,6 +59,7 @@ export const orderSchema = z.object({
   address: z.string().min(1).max(500),
   city: z.string().max(120).optional(),
   notes: z.string().max(2000).optional(),
+  shippingCost: z.number().int().nonnegative().default(0),
 });
 
 export const eventSchema = z.object({

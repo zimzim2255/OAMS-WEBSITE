@@ -52,6 +52,30 @@ export async function sendOrderConfirmation(
   );
 }
 
+/**
+ * Notify a seller (or the platform admin) that an order contains their item(s).
+ * `lines` are the human-readable line items that belong to this recipient.
+ */
+export async function sendOrderItemNotification(
+  to: string,
+  orderNumber: string,
+  recipientLabel: string,
+  buyerName: string,
+  buyerEmail: string,
+  lines: string[]
+): Promise<void> {
+  const itemsHtml = lines.map((l) => `<li>${l.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")}</li>`).join("");
+  await sendMail(
+    to,
+    `OAMS — New order ${orderNumber} (${recipientLabel})`,
+    `<h1>You have a new order</h1>
+     <p>Order <b>${orderNumber}</b> contains items from your store.</p>
+     <p><b>Customer:</b> ${buyerName} &lt;${buyerEmail}&gt;</p>
+     <ul>${itemsHtml}</ul>
+     <p>The order is pending and will be processed from the admin panel.</p>`
+  );
+}
+
 export async function sendSupportConfirmation(
   to: string,
   ticketNumber: string,
