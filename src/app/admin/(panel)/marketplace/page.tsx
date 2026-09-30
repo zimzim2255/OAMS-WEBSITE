@@ -41,6 +41,9 @@ export default function AdminMarketplacePage() {
   const [message, setMessage] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("all");
+  const [tab, setTab] = useState<"sellers" | "listings">("sellers");
+  const [listingSearch, setListingSearch] = useState("");
+  const [listingStatus, setListingStatus] = useState("all");
 
   async function load() {
     const qs = new URLSearchParams();
@@ -108,6 +111,19 @@ export default function AdminMarketplacePage() {
   const thCls = "text-left text-xs font-semibold uppercase tracking-wider text-neutral-500 px-3 py-2";
   const tdCls = "px-3 py-3 text-sm align-middle";
 
+  // Client-side filter for the Listings tab (products + extras are already loaded).
+  const filteredListings = listings.filter((l) => {
+    const q = listingSearch.trim().toLowerCase();
+    const matchQ =
+      !q ||
+      l.name.toLowerCase().includes(q) ||
+      l.sellerName.toLowerCase().includes(q) ||
+      l.category.toLowerCase().includes(q);
+    const matchStatus =
+      listingStatus === "all" ? true : listingStatus === "live" ? l.isActive : !l.isActive;
+    return matchQ && matchStatus;
+  });
+
   return (
     <div>
       <h1 className="text-2xl font-bold mb-6">Marketplace</h1>
@@ -119,6 +135,32 @@ export default function AdminMarketplacePage() {
         </div>
       )}
 
+      {/* Tab bar — switch between Sellers and Listings */}
+      <div className="flex flex-wrap gap-2 mb-5">
+        <button
+          onClick={() => setTab("sellers")}
+          className={`px-4 py-2 text-sm font-medium rounded-lg border transition-colors ${
+            tab === "sellers"
+              ? "bg-neutral-900 text-white border-neutral-900"
+              : "bg-white text-neutral-600 border-neutral-300 hover:border-neutral-400"
+          }`}
+        >
+          Sellers ({sellers.length})
+        </button>
+        <button
+          onClick={() => setTab("listings")}
+          className={`px-4 py-2 text-sm font-medium rounded-lg border transition-colors ${
+            tab === "listings"
+              ? "bg-neutral-900 text-white border-neutral-900"
+              : "bg-white text-neutral-600 border-neutral-300 hover:border-neutral-400"
+          }`}
+        >
+          Listings ({listings.length})
+        </button>
+      </div>
+
+      {tab === "sellers" && (
+        <>
       {/* Toolbar: search + filter + count */}
       <div className="flex flex-wrap items-center gap-3 mb-6">
         <input
@@ -234,10 +276,36 @@ export default function AdminMarketplacePage() {
           </table>
         </div>
       )}
+        </>
+      )}
+
+      {tab === "listings" && (
+        <>
+      {/* Toolbar: search + status filter */}
+      <div className="flex flex-wrap items-center gap-3 mb-6">
+        <input
+          value={listingSearch}
+          onChange={(e) => setListingSearch(e.target.value)}
+          placeholder="Search products…"
+          className="border border-neutral-300 rounded-lg px-3 py-2 text-sm w-72"
+        />
+        <select
+          value={listingStatus}
+          onChange={(e) => setListingStatus(e.target.value)}
+          className="border border-neutral-300 rounded-lg px-3 py-2 text-sm"
+        >
+          <option value="all">Live &amp; Hidden</option>
+          <option value="live">Live</option>
+          <option value="hidden">Hidden</option>
+        </select>
+        <span className="text-sm text-neutral-500">
+          {filteredListings.length} listing{filteredListings.length === 1 ? "" : "s"}
+        </span>
+      </div>
 {/* Listings table */}
       <h2 className="text-xl font-semibold mb-3">Listings</h2>
-      {listings.length === 0 ? (
-        <p className="text-neutral-500">No marketplace listings yet.</p>
+      {filteredListings.length === 0 ? (
+        <p className="text-neutral-500">No marketplace listings match your filters.</p>
       ) : (
         <div className="overflow-x-auto bg-white rounded-xl shadow">
           <table className="w-full min-w-[760px] text-sm">
@@ -251,7 +319,7 @@ export default function AdminMarketplacePage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-neutral-100">
-              {listings.map((l) => (
+              {filteredListings.map((l) => (
                 <tr key={l.id} className="hover:bg-neutral-50">
                   <td className={tdCls}>
                     <div className="flex items-center gap-3">
@@ -287,6 +355,8 @@ export default function AdminMarketplacePage() {
             </tbody>
           </table>
         </div>
+      )}
+        </>
       )}
     </div>
   );
