@@ -17,6 +17,7 @@ export async function PATCH(request: NextRequest) {
   if (parsed.data.name !== undefined && parsed.data.name) data.name = parsed.data.name;
   if (parsed.data.storeName !== undefined) data.storeName = parsed.data.storeName || null;
   if (parsed.data.storeCategory !== undefined) data.storeCategory = parsed.data.storeCategory || null;
+  if (parsed.data.avatarUrl !== undefined) data.avatarUrl = parsed.data.avatarUrl || null;
   if (Object.keys(data).length === 0) return badRequest("Nothing to update");
 
   const updated = await db.user.update({ where: { id: user.id }, data });

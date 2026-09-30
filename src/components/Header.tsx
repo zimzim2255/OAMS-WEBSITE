@@ -42,13 +42,13 @@ export default function Header() {
           </button>
         </div>
 
-        {/* Products button - links to the products page (desktop only) */}
+        {/* Marketplace button - links to the products page (desktop only) */}
         <Link
           href="/products"
           className="hidden sm:flex items-center justify-center px-6 py-3 border border-white rounded bg-white"
         >
           <span className="flex items-center gap-2 text-sm font-bold uppercase tracking-wide hover:opacity-60 transition-opacity">
-            Products
+            Marketplace
           </span>
         </Link>
 

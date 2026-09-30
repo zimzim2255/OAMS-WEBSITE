@@ -4,6 +4,7 @@ import { requireRole } from "@/lib/auth/guard";
 import { productSchema } from "@/lib/validation";
 import { slugify } from "@/lib/slug";
 import { toProductDto } from "@/lib/serializers";
+import { normalizeImageInput } from "@/lib/product-images";
 import { json, badRequest, unauthorized, forbidden } from "@/lib/http";
 import type { Prisma } from "@prisma/client";
 
@@ -47,7 +48,7 @@ export async function GET(request: NextRequest) {
   ]);
 
   return json({
-    products: products.map(toProductDto),
+    products: products.map((p) => toProductDto(p)),
     total,
     page,
     pageSize,
@@ -88,7 +89,7 @@ export async function POST(request: NextRequest) {
       isActive: rest.isActive,
       marketplaceEnabled: rest.marketplaceEnabled,
       sellerId: null,
-      images: { create: images.map((url) => ({ url })) },
+      images: { create: images.map(normalizeImageInput) },
     },
     include: { images: true },
   });

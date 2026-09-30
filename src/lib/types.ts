@@ -63,6 +63,9 @@ export interface ImageSetDto {
   medium?: string;
   thumb?: string;
   tiny?: string;
+  size?: string;
+  color?: string;
+  price?: number;
 }
 
 export interface ProductDto {
@@ -84,6 +87,8 @@ export interface ProductDto {
   marketplaceEnabled: boolean;
   rating: number;
   sellerId?: string;
+  sellerName?: string;
+  sellerAvatar?: string;
   images: ImageSetDto[];
 }
 
@@ -136,4 +141,43 @@ export interface BannerDto {
   isPopup: boolean;
   isActive: boolean;
   sortOrder: number;
+}
+
+export interface HeroSlideDto {
+  id: string;
+  title?: string;
+  imageUrl: string;
+  route?: string;
+  isActive: boolean;
+  sortOrder: number;
+}
+
+export type SupportStatus = "NEW" | "OPEN" | "WAITING" | "RESOLVED" | "CLOSED";
+export type SupportPriority = "LOW" | "MEDIUM" | "HIGH" | "URGENT";
+
+export interface SupportTicketDto {
+  id: string;
+  ticketNumber: string;
+  subject: string;
+  message: string;
+  status: SupportStatus;
+  priority: SupportPriority;
+  name: string;
+  email: string;
+  createdAt: string;
+  updatedAt: string;
+  messageCount?: number;
+}
+
+export interface SupportMessageDto {
+  id: string;
+  authorName: string;
+  isStaff: boolean;
+  body: string;
+  createdAt: string;
+}
+
+export interface SupportThreadDto {
+  ticket: SupportTicketDto;
+  messages: SupportMessageDto[];
 }

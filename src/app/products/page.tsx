@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useMemo, useState } from "react";
 import { flashDesigns } from "@/lib/flashDesigns";
+import type { ProductDto } from "@/lib/types";
 
 const categories = [
   { id: "all", label: "All" },
@@ -15,22 +16,78 @@ const categories = [
 
 const PAGE_SIZE = 10;
 
+interface DisplayProduct {
+  id: string;
+  name: string;
+  category: string;
+  description: string;
+  price: number;
+  originalPrice?: number;
+  image: string;
+  stock: Record<string, number>;
+}
+
+// The design catalogue is bundled at build time; database products (added by
+// via the admin panel) are fetched live and merged with them below.
+const staticProducts: DisplayProduct[] = flashDesigns.map((p) => ({
+  id: String(p.id),
+  name: p.name,
+  category: p.category,
+  description: p.description,
+  price: p.price,
+  originalPrice: p.originalPrice,
+  image: p.image,
+  stock: p.stock,
+}));
+
+function dbProductToDisplay(p: ProductDto): DisplayProduct {
+  return {
+    id: p.id,
+    name: p.name,
+    category: p.category,
+    description: p.description,
+    price: p.price,
+    originalPrice: p.originalPrice,
+    image: p.images[0]?.url ?? "",
+    stock: p.stock ?? {},
+  };
+}
+
 function ProductsContent() {
   const searchParams = useSearchParams();
   const category = searchParams.get("category") || "all";
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  const [dbProducts, setDbProducts] = useState<DisplayProduct[]>([]);
+
+  // Fetch live products from the database (official + marketplace listings).
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await fetch("/api/shop/products");
+        if (res.ok) {
+          const data = await res.json();
+          setDbProducts((data.products ?? []).map(dbProductToDisplay));
+        }
+      } catch {
+        // ignore — fall back to the bundled catalogue
+      }
+    })();
+  }, []);
 
   // Reset visible count when category changes
   useEffect(() => {
     setVisibleCount(PAGE_SIZE);
   }, [category]);
 
+  const allProducts = useMemo(() => [...dbProducts, ...staticProducts], [dbProducts]);
+
   const filtered = useMemo(() => {
-    if (category === "all") return flashDesigns;
-    if (category === "full-outfits") return flashDesigns.filter((p) => p.category === "ensemble");
-    if (category === "t-shirt") return flashDesigns.filter((p) => p.category === "shirts");
-    return flashDesigns.filter((p) => p.category === category);
-  }, [category]);
+    const list = allProducts;
+    if (category === "all") return list;
+    if (category === "full-outfits") return list.filter((p) => p.category === "ensemble");
+    if (category === "t-shirt") return list.filter((p) => p.category === "shirts");
+    return list.filter((p) => p.category === category);
+  }, [allProducts, category]);
 
   const visibleProducts = filtered.slice(0, visibleCount);
   const hasMore = visibleCount < filtered.length;

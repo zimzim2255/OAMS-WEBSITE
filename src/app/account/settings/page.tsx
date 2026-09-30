@@ -176,9 +176,9 @@ export default function AccountSettingsPage() {
 
       <Section title="Contact & support">
         <p className="text-sm text-neutral-600 mb-3">
-          Need help with an order, your seller account, or anything else? Reach our team any time.
+          Need help with an order, your seller account, or anything else? Open a support ticket and we’ll get back to you.
         </p>
-        <Link href="/contact" className="text-sm bg-neutral-900 text-white rounded-lg px-4 py-2 inline-block">
+        <Link href="/support" className="text-sm bg-neutral-900 text-white rounded-lg px-4 py-2 inline-block">
           Contact support
         </Link>
       </Section>

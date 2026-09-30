@@ -4,7 +4,7 @@ import { summarizeForSeller } from "@/lib/analytics";
 import { json, unauthorized } from "@/lib/http";
 
 export async function GET(request: NextRequest) {
-  const seller = await requireRole(request, ["SELLER"]);
+  const seller = await requireRole(request, ["SELLER", "ADMIN"]);
   if (!seller) return unauthorized();
   const summary = await summarizeForSeller(seller.id);
   return json({ summary });

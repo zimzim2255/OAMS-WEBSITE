@@ -14,6 +14,10 @@ export interface DecodedSession extends SessionPayload {
 
 const SECRET = () => new TextEncoder().encode(process.env.JWT_SECRET ?? "dev-only-secret-change-me");
 export const SESSION_COOKIE = process.env.SESSION_COOKIE ?? "oams_session";
+// Separate cookie for the admin panel. Issued only by the admin login route and
+// required by every /api/admin/* handler, so a normal storefront session can
+// never authorize admin access (and vice-versa).
+export const ADMIN_SESSION_COOKIE = process.env.ADMIN_SESSION_COOKIE ?? "oams_admin_session";
 
 function ttlSeconds(): number {
   const parsed = Number(process.env.SESSION_TTL ?? 604800);
@@ -51,7 +55,7 @@ export async function verifySessionToken(token: string): Promise<DecodedSession 
   }
 }
 
-/** Read the raw JWT from a request's cookies. */
+/** Read the raw JWT (storefront session) from a request's cookies. */
 export function tokenFromRequest(request: NextRequest): string | undefined {
   if (typeof request.cookies === "object" && request.cookies) {
     const cookie = request.cookies.get(SESSION_COOKIE);
@@ -60,12 +64,31 @@ export function tokenFromRequest(request: NextRequest): string | undefined {
   return undefined;
 }
 
-/** Build a Set-Cookie header that stores the session token. */
+/** Read the raw JWT (admin session) from a request's cookies. */
+export function adminTokenFromRequest(request: NextRequest): string | undefined {
+  if (typeof request.cookies === "object" && request.cookies) {
+    const cookie = request.cookies.get(ADMIN_SESSION_COOKIE);
+    return cookie?.value;
+  }
+  return undefined;
+}
+
+/** Build a Set-Cookie header that stores the storefront session token. */
 export function buildSessionCookie(token: string, maxAge: number): string {
   const secure = process.env.NODE_ENV === "production";
   return `${SESSION_COOKIE}=${token}; HttpOnly; Path=/; Max-Age=${maxAge}; SameSite=Lax${secure ? "; Secure" : ""}`;
 }
 
+/** Build a Set-Cookie header that stores the admin session token. */
+export function buildAdminSessionCookie(token: string, maxAge: number): string {
+  const secure = process.env.NODE_ENV === "production";
+  return `${ADMIN_SESSION_COOKIE}=${token}; HttpOnly; Path=/; Max-Age=${maxAge}; SameSite=Strict${secure ? "; Secure" : ""}`;
+}
+
 export function clearSessionCookie(): string {
   return `${SESSION_COOKIE}=; HttpOnly; Path=/; Max-Age=0; SameSite=Lax`;
+}
+
+export function clearAdminSessionCookie(): string {
+  return `${ADMIN_SESSION_COOKIE}=; HttpOnly; Path=/; Max-Age=0; SameSite=Strict`;
 }

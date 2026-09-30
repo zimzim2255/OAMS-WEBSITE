@@ -11,6 +11,16 @@ export const loginSchema = z.object({
   password: z.string().min(1),
 });
 
+export const productImageInput = z.union([
+  z.string(),
+  z.object({
+    url: z.string(),
+    size: z.string().optional(),
+    color: z.string().optional(),
+    price: z.number().int().nonnegative().optional(),
+  }),
+]);
+
 export const productSchema = z.object({
   name: z.string().min(1).max(160),
   slug: z.string().min(1).max(200).optional(),
@@ -27,7 +37,7 @@ export const productSchema = z.object({
   isSale: z.boolean().default(false),
   isActive: z.boolean().default(true),
   marketplaceEnabled: z.boolean().default(false),
-  images: z.array(z.string()).default([]),
+  images: z.array(productImageInput).default([]),
 });
 
 export const orderItemSchema = z.object({
@@ -70,12 +80,14 @@ export const eventSchema = z.object({
 export const becomeSellerSchema = z.object({
   storeName: z.string().min(1).max(80),
   storeCategory: z.string().min(1).max(60),
+  avatarUrl: z.string().max(2000).optional(),
 });
 
 export const profileSchema = z.object({
   name: z.string().min(1).max(120).optional(),
   storeName: z.string().max(80).optional(),
   storeCategory: z.string().max(60).optional(),
+  avatarUrl: z.string().max(2000).optional(),
 });
 
 export const bannerSchema = z.object({
@@ -85,4 +97,28 @@ export const bannerSchema = z.object({
   isPopup: z.boolean().default(true),
   isActive: z.boolean().default(true),
   sortOrder: z.number().int().default(0),
+});
+
+export const heroSlideSchema = z.object({
+  title: z.string().max(200).optional().or(z.literal("")),
+  imageUrl: z.string().min(1).max(2000),
+  route: z.string().max(2000).optional().or(z.literal("")),
+  isActive: z.boolean().default(true),
+  sortOrder: z.number().int().default(0),
+});
+
+export const supportTicketSchema = z.object({
+  subject: z.string().min(1).max(200),
+  message: z.string().min(1).max(5000),
+  name: z.string().min(1).max(120),
+  email: z.string().email(),
+});
+
+export const supportReplySchema = z.object({
+  body: z.string().min(1).max(5000),
+});
+
+export const supportTicketUpdateSchema = z.object({
+  status: z.enum(["NEW", "OPEN", "WAITING", "RESOLVED", "CLOSED"]).optional(),
+  priority: z.enum(["LOW", "MEDIUM", "HIGH", "URGENT"]).optional(),
 });

@@ -1,8 +1,25 @@
 @import "tailwindcss";
 
+:root {
+  /* Core Backgrounds */
+  --bg-dark: #f2f1ef;
+  --bg-light: #FFFFFF;
+
+  /* Text & Labels */
+  --text-dark: #000000; /* For 'collection 1' title and fine print text */
+  --text-light: #FFFFFF; /* For 'OAMS' large logo and piping */
+
+  /* Gritty Textures (from the model's clothing and the print) */
+  --texture-medium-grey: #4A4A4A; /* From the shorts and hat texture */
+  --texture-dark-grey: #1A1A1A; /* From the darkest shadows of the print */
+
+  /* Elements */
+  --grid-lines: #000000; /* Used for the borders and boxes in the central column */
+}
+
 @theme inline {
-  --color-background: #ffffff;
-  --color-foreground: #171717;
+  --color-background: var(--bg-dark);
+  --color-foreground: var(--text-dark);
 }
 
 html,
@@ -14,8 +31,8 @@ body {
 }
 
 body {
-  background: #ffffff;
-  color: #171717;
+  background: var(--bg-dark);
+  color: var(--text-dark);
   font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -36,6 +53,20 @@ html {
 
 .animate-marquee {
   animation: marquee 20s linear infinite;
+}
+
+/* Reverse marquee — moves the row to the RIGHT */
+@keyframes marqueeReverse {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.animate-marquee-reverse {
+  animation: marqueeReverse 26s linear infinite;
 }
 
 /* Vertical text */

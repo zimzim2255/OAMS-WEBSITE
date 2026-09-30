@@ -15,6 +15,8 @@ interface Me {
 const NAV = [
   { href: "/admin", label: "Dashboard", icon: "▦" },
   { href: "/admin/products", label: "Products", icon: "◇" },
+  { href: "/admin/hero-slides", label: "Hero Slides", icon: "◉" },
+  { href: "/admin/support", label: "Support", icon: "✉" },
   { href: "/admin/dashboards", label: "Dashboards", icon: "▣" },
   { href: "/admin/marketplace", label: "Marketplace", icon: "⬡" },
   { href: "/admin/orders", label: "Orders", icon: "▤" },
@@ -29,7 +31,7 @@ export default function AdminPanelLayout({ children }: { children: ReactNode }) 
   useEffect(() => {
     (async () => {
       try {
-        const res = await fetch("/api/auth/me");
+        const res = await fetch("/api/admin/auth/me");
         if (res.ok) {
           const data = await res.json();
           setUser(data.user);
@@ -47,7 +49,7 @@ export default function AdminPanelLayout({ children }: { children: ReactNode }) 
   }, [needsRedirect, router]);
 
   async function logout() {
-    await fetch("/api/auth/logout", { method: "POST" });
+    await fetch("/api/admin/auth/logout", { method: "POST" });
     router.replace("/admin/login");
     router.refresh();
   }

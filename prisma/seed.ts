@@ -25,6 +25,19 @@ async function main() {
     },
   });
 
+  // Seed the default homepage hero slides (safe to re-run).
+  const heroSlides: { title: string; imageUrl: string; route: string; sortOrder: number }[] = [
+    { title: "OAMS Hero 2", imageUrl: "/imgs/hero-2.jpg", route: "/products", sortOrder: 0 },
+    { title: "OAMS Hero", imageUrl: "/imgs/hero.png", route: "/products", sortOrder: 1 },
+    { title: "OAMS Collection", imageUrl: "/imgs/home-3.jpg", route: "/products", sortOrder: 2 },
+  ];
+  for (const s of heroSlides) {
+    const existing = await db.heroSlide.findFirst({ where: { imageUrl: s.imageUrl } });
+    if (!existing) {
+      await db.heroSlide.create({ data: s });
+    }
+  }
+
   console.log(`Seeded admin: ${adminEmail}`);
 }
 

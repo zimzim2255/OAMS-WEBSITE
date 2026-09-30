@@ -5,11 +5,19 @@ export type ProductWithImages = Prisma.ProductGetPayload<{
   include: { images: true };
 }>;
 
+// Light reference to a product's seller (for marketplace listings).
+export interface SellerRef {
+  id: string;
+  name: string | null;
+  storeName: string | null;
+  avatarUrl: string | null;
+}
+
 export type OrderWithItems = Prisma.OrderGetPayload<{
   include: { items: true };
 }>;
 
-export function toProductDto(p: ProductWithImages): ProductDto {
+export function toProductDto(p: ProductWithImages, seller?: SellerRef | null): ProductDto {
   return {
     id: p.id,
     slug: p.slug,
@@ -29,6 +37,8 @@ export function toProductDto(p: ProductWithImages): ProductDto {
     marketplaceEnabled: p.marketplaceEnabled,
     rating: p.rating,
     sellerId: p.sellerId ?? undefined,
+    sellerName: seller?.storeName || seller?.name || undefined,
+    sellerAvatar: seller?.avatarUrl ?? undefined,
     images: (p.images ?? []).map(
       (img): ImageSetDto => ({
         url: img.url,
@@ -37,6 +47,9 @@ export function toProductDto(p: ProductWithImages): ProductDto {
         medium: img.medium ?? undefined,
         thumb: img.thumb ?? undefined,
         tiny: img.tiny ?? undefined,
+        size: img.size ?? undefined,
+        color: img.color ?? undefined,
+        price: img.price ?? undefined,
       })
     ),
   };

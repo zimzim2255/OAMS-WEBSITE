@@ -1,67 +1,56 @@
 import Link from "next/link";
 import Marquee from "@/components/Marquee";
-import ZoomSection from "@/components/ZoomSection";
+import HeroSlider from "@/components/HeroSlider";
+import TopSellers from "@/components/TopSellers";
 import BestsellerSection from "@/components/BestsellerSection";
 import Footer from "@/components/Footer";
 
 export default function Home() {
   return (
     <>
-      {/* ===== 3. Hero Section ===== */}
-      <section className="relative w-full min-h-[500px] sm:min-h-[700px] bg-white overflow-hidden">
-        {/* Massive "URBAN STREET" text - split */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
-          <div className="flex w-full justify-between px-2 sm:px-4">
-            <span
-              className="font-['Impact','Anton',sans-serif] text-[clamp(28px,9vw,250px)] sm:text-[clamp(80px,18vw,250px)] font-bold text-black leading-none tracking-tight"
-              style={{ marginLeft: "-2vw" }}
-            >
-              URBAN
-            </span>
-            <span
-              className="font-['Impact','Anton',sans-serif] text-[clamp(28px,9vw,250px)] sm:text-[clamp(80px,18vw,250px)] font-bold text-black leading-none tracking-tight"
-              style={{ marginRight: "-2vw" }}
-            >
-              STREET
-            </span>
-          </div>
-        </div>
+      {/* ===== 3. Hero Slide Gallery ===== */}
+      <HeroSlider />
 
-        {/* Model Image - centered, on top of text */}
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="relative w-auto h-[420px] sm:h-[650px] lg:h-[850px]">
-            <img
-              src="/imgs/hero.png"
-              alt="Streetwear model"
-              className="h-full w-auto object-contain relative z-10"
-            />
-          </div>
-        </div>
+      {/* ===== 4. Our Top Sellers card slider ===== */}
+      <TopSellers />
 
-        {/* CTA Bar - bottom center */}
-        <div className="absolute bottom-6 sm:bottom-10 left-1/2 -translate-x-1/2 z-20 w-full px-4 sm:px-0 sm:w-auto">
+      {/* ===== 5. Two Image Cards ===== */}
+      <section className="w-full bg-[#fcfdf7]">
+        <div className="grid grid-cols-1 md:grid-cols-2">
           <Link
             href="/products"
-            className="cursor-target bg-black text-white flex items-center justify-between w-full sm:w-[400px] max-w-full sm:max-w-[90vw] px-6 sm:px-10 py-4 sm:py-5"
+            className="cursor-target group relative block aspect-[3/4] md:aspect-auto md:h-[85vh] lg:h-[95vh] overflow-hidden"
           >
-            <span className="text-xs sm:text-sm font-bold uppercase tracking-wider">SHOP NOW</span>
-            <span className="text-base sm:text-lg">→</span>
+            <img
+              src="/imgs/OAMS-catsimg.jpg"
+              alt="OAMS catalog"
+              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+            />
+            <div className="absolute inset-0 bg-black/30" />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <span className="font-['Impact','Anton',sans-serif] text-3xl md:text-5xl font-bold uppercase text-white tracking-wide text-center px-4">
+                OAMS Products
+              </span>
+            </div>
+          </Link>
+          <Link
+            href="/products"
+            className="cursor-target group relative block aspect-[3/4] md:aspect-auto md:h-[85vh] lg:h-[95vh] overflow-hidden"
+          >
+            <img
+              src="/imgs/market-placeimg.jpg"
+              alt="Marketplace"
+              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+            />
+            <div className="absolute inset-0 bg-black/30" />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <span className="font-['Impact','Anton',sans-serif] text-3xl md:text-5xl font-bold uppercase text-white tracking-wide text-center px-4">
+                Our Marketplace
+              </span>
+            </div>
           </Link>
         </div>
       </section>
-
-      {/* ===== 4. Scrolling Text Banner (Marquee) ===== */}
-      <Marquee
-        text="OAMS STREET CULTURE"
-        bgColor="bg-white"
-        textColor="text-black"
-        fontSize="text-4xl"
-        py="py-6"
-        className="my-4 rounded-xl border-y-4 border-white ring-4 ring-white ring-offset-4 ring-offset-black"
-      />
-
-      {/* ===== 5. Brand Story Section with Zoom Animation ===== */}
-      <ZoomSection />
 
       {/* ===== 6. Second Scrolling Banner ===== */}
       <Marquee
@@ -72,6 +61,15 @@ export default function Home() {
         py="py-6"
         className="my-4 rounded-xl border-y-4 border-white ring-4 ring-white ring-offset-4 ring-offset-black"
       />
+
+      {/* ===== 6.5 Full-width Image under the banner ===== */}
+      <section className="w-full bg-[#fcfdf7]">
+        <img
+          src="/imgs/home-1.jpg"
+          alt="OAMS home"
+          className="w-full h-auto object-cover"
+        />
+      </section>
 
       {/* ===== 7. BESTSELLER Expand-on-Scroll Section ===== */}
       <BestsellerSection />

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import type { SellerStatsDto } from "@/lib/types";
 
 export default function AccountSellerPage() {
-  const [role, setRole] = useState<string | null>(null);
+  const [isSeller, setIsSeller] = useState(false);
   const [summary, setSummary] = useState<SellerStatsDto | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -12,8 +12,10 @@ export default function AccountSellerPage() {
     (async () => {
       try {
         const me = await fetch("/api/auth/me").then((r) => r.json());
-        setRole(me.user?.role ?? null);
-        if (me.user?.role === "SELLER") {
+        const u = me.user;
+        const sell = Boolean(u && (u.role === "SELLER" || u.sellerStatus === "active"));
+        setIsSeller(sell);
+        if (sell) {
           const res = await fetch("/api/marketplace/stats");
           if (res.ok) {
             const data = await res.json();
@@ -29,7 +31,7 @@ export default function AccountSellerPage() {
 
   if (loading) return <p className="text-center py-10 text-neutral-500">Loading…</p>;
 
-  if (role !== "SELLER") {
+  if (!isSeller) {
     return (
       <div className="bg-white rounded-2xl shadow p-8 text-center text-neutral-500">
         Become a seller to see your sales dashboard.

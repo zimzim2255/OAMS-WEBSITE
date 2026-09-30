@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
   const parsed = becomeSellerSchema.safeParse(body);
   if (!parsed.success) return badRequest("Brand name and category are required");
 
-  const { storeName, storeCategory } = parsed.data;
+  const { storeName, storeCategory, avatarUrl } = parsed.data;
 
   // Instant switch to Seller — no approval needed. Admins stay admins.
   const isAdmin = user.role === "ADMIN";
@@ -23,6 +23,7 @@ export async function POST(request: NextRequest) {
       sellerStatus: "active",
       storeName,
       storeCategory,
+      avatarUrl: avatarUrl || null,
     },
   });
 
@@ -35,6 +36,7 @@ export async function POST(request: NextRequest) {
       sellerStatus: updated.sellerStatus,
       storeName: updated.storeName,
       storeCategory: updated.storeCategory,
+      avatarUrl: updated.avatarUrl,
     },
   });
 }

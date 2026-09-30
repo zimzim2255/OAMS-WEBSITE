@@ -3,29 +3,38 @@ import { db } from "@/lib/db";
 import { currentUser } from "@/lib/auth/guard";
 import { json, unauthorized } from "@/lib/http";
 
-// Switch a seller's account type back to a personal (user) account.
+// Switch a seller's account back to a personal (user) account.
+// This closes the store: the seller's listed products and their orders
+// are permanently deleted before the account type is reverted.
 export async function POST(request: NextRequest) {
   const user = await currentUser(request);
   if (!user) return unauthorized();
 
-  // Admins can't downgrade to USER (they'd lose panel access).
-  if (user.role === "ADMIN") {
-    return json({
-      user: {
-        id: user.id,
-        email: user.email,
-        name: user.name,
-        role: user.role,
-        sellerStatus: user.sellerStatus,
-        storeName: user.storeName,
-        storeCategory: user.storeCategory,
-      },
-    });
+  // Admins keep the ADMIN role (so they retain panel access) but lose the
+  // seller/store status. Everyone else reverts to a plain USER.
+  const isAdmin = user.role === "ADMIN";
+
+  const products = await db.product.findMany({
+    where: { sellerId: user.id },
+    select: { id: true },
+  });
+  const productIds = products.map((p) => p.id);
+
+  // Delete the seller's sales/order lines, then the listed products
+  // (product images cascade-delete with the product).
+  if (productIds.length > 0) {
+    await db.orderItem.deleteMany({ where: { sellerId: user.id } });
+    await db.product.deleteMany({ where: { id: { in: productIds } } });
   }
 
   const updated = await db.user.update({
     where: { id: user.id },
-    data: { role: "USER", sellerStatus: "none" },
+    data: {
+      role: isAdmin ? "ADMIN" : "USER",
+      sellerStatus: "none",
+      storeName: null,
+      storeCategory: null,
+    },
   });
 
   return json({
@@ -38,5 +47,6 @@ export async function POST(request: NextRequest) {
       storeName: updated.storeName,
       storeCategory: updated.storeCategory,
     },
+    deleted: { products: productIds.length },
   });
 }

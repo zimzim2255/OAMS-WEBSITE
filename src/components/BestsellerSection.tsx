@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import ExpandableCTASection from './ExpandableCTASection';
+import { flashDesigns } from '@/lib/flashDesigns';
 
 const products = [
   { id: 1, image: 'https://res.cloudinary.com/dlfbj1ix5/image/upload/v1785846845/blackshort_casse28pcs_grayclair40pcs_grayfonce116pcs_vert_36_noir186pcs-prix80dh_xnlqg7.png', title: 'BLACK SHORT', subtitle: 'Premium quality', soldOut: false },
@@ -19,6 +20,25 @@ export default function BestsellerSection() {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [progress, setProgress] = useState(0);
   const [viewportW, setViewportW] = useState(1200);
+  // Marketplace-style category filter for "THE PICKS".
+  const [category, setCategory] = useState('all');
+
+  const categories = [
+    { id: 'all', label: 'All' },
+    { id: 'shorts', label: 'Shorts' },
+    { id: 't-shirt', label: 'T-Shirt' },
+    { id: 'pants', label: 'Pants' },
+    { id: 'full-outfits', label: 'Full Outfits' },
+  ];
+
+  const filtered =
+    category === 'all'
+      ? flashDesigns
+      : category === 'full-outfits'
+      ? flashDesigns.filter((p) => p.category === 'ensemble')
+      : category === 't-shirt'
+      ? flashDesigns.filter((p) => p.category === 'shirts')
+      : flashDesigns.filter((p) => p.category === category);
 
   useEffect(() => {
     const wrapper = wrapperRef.current;
@@ -165,71 +185,101 @@ export default function BestsellerSection() {
             <h3 className="font-['Impact','Anton',sans-serif] text-3xl md:text-5xl font-bold uppercase text-black tracking-tight mb-8">
               THE PICKS
             </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1">
-              {products.map((p) => (
-                <Link
-                  key={p.title}
-                  href={`/products/${p.id}`}
-                  className="block"
+
+            {/* Category filter — marketplace style */}
+            <div className="flex flex-wrap items-center gap-2 mb-8">
+              {categories.map((cat) => (
+                <button
+                  key={cat.id}
+                  type="button"
+                  onClick={() => setCategory(cat.id)}
+                  className={`cursor-target px-5 py-2 text-xs font-bold uppercase tracking-widest border transition-all duration-300 ${
+                    category === cat.id
+                      ? "bg-black text-white border-black"
+                      : "bg-transparent text-black border-black/30 hover:border-black hover:bg-black/5"
+                  }`}
                 >
-                  <div className={`flex-1 flex items-center justify-center ${p.soldOut ? 'opacity-60' : ''}`}>
-                    <img
-                      src={p.image}
-                      alt={p.title}
-                      className="max-h-[260px] w-auto object-contain"
-                      style={{ filter: 'grayscale(100%)' }}
-                    />
-                  </div>
-                  <div className="w-full text-center mt-4">
-                    <p className="text-sm font-bold uppercase text-black">{p.title}</p>
-                    {p.soldOut ? (
-                      <p className="text-[12px] text-red-500 font-semibold uppercase">Sold out</p>
-                    ) : (
-                      <p className="text-[12px] text-gray-500">{p.subtitle}</p>
-                    )}
-                  </div>
-                </Link>
+                  {cat.label}
+                </button>
               ))}
+            </div>
+
+            {/* Marketplace-style product grid */}
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-4">
+              {filtered.map((p) => {
+                const isSoldOut = Object.values(p.stock).every((s) => s <= 0);
+                return (
+                  <Link
+                    key={p.id}
+                    href={`/products/${p.id}`}
+                    className="cursor-target group block"
+                  >
+                    <div className="relative aspect-[3/4] bg-[#e9e7e3] overflow-hidden">
+                      <img
+                        src={p.image}
+                        alt={p.name}
+                        className={`w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 ${
+                          isSoldOut ? "opacity-60 grayscale" : ""
+                        }`}
+                      />
+                      {p.isNew && (
+                        <span className="absolute top-3 left-3 text-xs font-medium bg-white text-black px-2.5 py-1 uppercase tracking-widest border border-black">
+                          New
+                        </span>
+                      )}
+                      {isSoldOut && (
+                        <span className="absolute top-3 left-3 bg-black text-white text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 border border-white/40">
+                          Sold Out
+                        </span>
+                      )}
+                    </div>
+                    <div className="pt-3 flex flex-col gap-1">
+                      <p className="text-sm font-bold uppercase text-black">{p.name}</p>
+                      <p className="text-sm text-black">
+                        {p.price} DH
+                        {isSoldOut && <span className="ml-2 text-[10px] text-red-500 uppercase font-semibold">Sold out</span>}
+                      </p>
+                    </div>
+                  </Link>
+                );
+              })}
             </div>
           </div>
         </div>
       </section>
 
-      {/* ===== Editorial story — single bg image with paragraphs in the corners ===== */}
-      <section className="w-full bg-black p-3">
-        <div className="relative w-full h-[560px] md:h-[760px] border border-black rounded overflow-hidden">
-          {/* Full background image with dark overlay for readability */}
-          <img
-            src="https://picsum.photos/seed/bestsellerstory/1600/1100"
-            alt="Bestseller story"
-            className="absolute inset-0 w-full h-full object-cover"
-            style={{ filter: 'grayscale(100%)' }}
-          />
-          <div className="absolute inset-0 bg-black/30" />
+      {/* ===== Marketplace features — fit for a marketplace site ===== */}
+      <section className="w-full bg-black py-16 md:py-24 px-5 md:px-10">
+        <div className="max-w-6xl mx-auto text-center">
+          <h2 className="font-['Impact','Anton',sans-serif] text-3xl md:text-6xl font-bold uppercase text-white tracking-tight">
+            A marketplace built for streetwear
+          </h2>
+          <p className="mt-4 md:text-lg text-white/70 max-w-2xl mx-auto">
+            Buy from official OAMS pieces and independent sellers — all in one feed.
+            Transparent pricing, tracked shipping and buyer protection on every order.
+          </p>
 
-          {/* Paragraph + heading — top-left corner */}
-          <div className="absolute top-4 left-4 md:top-12 md:left-12 max-w-[90%] sm:max-w-sm">
-            <p className="text-xs md:text-base text-white/90 leading-relaxed">
-              Every bestseller goes through the same journey — designed in-house,
-              tested on the streets, and refined until it earns its place in the
-              permanent collection. No seasonal gimmicks.
-            </p>
-            <h3 className="mt-4 md:mt-6 font-['Impact','Anton',sans-serif] text-2xl md:text-6xl font-bold uppercase text-white leading-none tracking-tight">
-              BUILT TO LAST
-            </h3>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-px md:gap-px gap-8 mt-12">
+            {[
+              { n: '01', t: 'Sell', d: 'List your own pieces and reach real streetwear buyers.' },
+              { n: '02', t: 'Buy Direct', d: 'Shop verified listings straight from the seller.' },
+              { n: '03', t: 'Tracked Shipping', d: 'Every order is tracked to your door.' },
+              { n: '04', t: 'Buyer Protection', d: 'Pay securely with full order protection.' },
+            ].map((f) => (
+              <div key={f.n} className="border border-white/20 p-6 rounded transition-colors hover:bg-white/5">
+                <p className="text-xs text-white/50 uppercase tracking-widest">{f.n}</p>
+                <h3 className="font-['Impact','Anton',sans-serif] text-xl md:text-2xl font-bold uppercase text-white mt-2">{f.t}</h3>
+                <p className="text-sm text-white/70 mt-2 leading-relaxed">{f.d}</p>
+              </div>
+            ))}
           </div>
 
-          {/* Paragraph + heading — bottom-right corner */}
-          <div className="absolute bottom-4 right-4 md:bottom-12 md:right-12 max-w-[90%] sm:max-w-sm text-right">
-            <p className="text-xs md:text-base text-white/90 leading-relaxed">
-              Six years of streetwear research, three collaborations and one
-              permanent collection later — every piece carries the same hand-drawn
-              signature, stitched and printed in-house.
-            </p>
-            <h3 className="mt-4 md:mt-6 font-['Impact','Anton',sans-serif] text-2xl md:text-5xl font-bold uppercase text-white leading-none tracking-tight">
-              FOR THE STREETS
-            </h3>
-          </div>
+          <Link
+            href="/products"
+            className="cursor-target mt-10 inline-block border border-white/40 text-white px-8 py-3 text-sm font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-colors"
+          >
+            Explore the marketplace
+          </Link>
         </div>
       </section>
 

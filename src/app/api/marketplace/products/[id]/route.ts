@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { requireRole } from "@/lib/auth/guard";
 import { productSchema } from "@/lib/validation";
 import { toProductDto } from "@/lib/serializers";
+import { normalizeImageInput } from "@/lib/product-images";
 import { json, badRequest, unauthorized, notFound, forbidden } from "@/lib/http";
 import type { Prisma } from "@prisma/client";
 
@@ -11,7 +12,7 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  const seller = await requireRole(request, ["SELLER"]);
+  const seller = await requireRole(request, ["SELLER", "ADMIN"]);
   if (!seller) return unauthorized();
 
   const product = await db.product.findUnique({ where: { id } });
@@ -40,8 +41,8 @@ export async function PATCH(
   if (d.images !== undefined) {
     await db.productImage.deleteMany({ where: { productId: id } });
     await db.productImage.createMany({
-      data: d.images.map((url, index) => ({
-        url,
+      data: d.images.map((img, index) => ({
+        ...normalizeImageInput(img),
         productId: id,
         sortOrder: index,
         isPrimary: index === 0,
@@ -59,7 +60,7 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  const seller = await requireRole(request, ["SELLER"]);
+  const seller = await requireRole(request, ["SELLER", "ADMIN"]);
   if (!seller) return unauthorized();
 
   const product = await db.product.findUnique({ where: { id } });

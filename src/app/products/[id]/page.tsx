@@ -9,7 +9,7 @@ export function generateStaticParams() {
   }));
 }
 
-export const dynamicParams = false;
+export const dynamicParams = true;
 
 export default async function ProductDetailPage({
   params,
@@ -17,5 +17,5 @@ export default async function ProductDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  return <ProductDetailClient id={Number(id)} />;
+  return <ProductDetailClient id={id} />;
 }

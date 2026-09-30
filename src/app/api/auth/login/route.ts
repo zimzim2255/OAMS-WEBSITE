@@ -7,7 +7,7 @@ import {
   sessionTtlSeconds,
 } from "@/lib/auth/session";
 import { loginSchema } from "@/lib/validation";
-import { json, badRequest, unauthorized } from "@/lib/http";
+import { json, badRequest, unauthorized, forbidden } from "@/lib/http";
 
 export async function POST(request: NextRequest) {
   const body = await request.json().catch(() => null);
@@ -17,6 +17,12 @@ export async function POST(request: NextRequest) {
   const { email, password } = parsed.data;
   const user = await db.user.findUnique({ where: { email } });
   if (!user) return unauthorized("Invalid email or password");
+
+  // Admin accounts are isolated to the admin panel (separate session cookie).
+  // They can't use the storefront login.
+  if (user.role === "ADMIN") {
+    return forbidden("This account is an administrator — sign in from the admin panel instead.");
+  }
 
   const ok = await verifyPassword(password, user.passwordHash);
   if (!ok) return unauthorized("Invalid email or password");

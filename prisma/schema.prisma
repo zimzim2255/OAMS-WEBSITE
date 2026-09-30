@@ -39,6 +39,22 @@ enum EventType {
   SEARCH
 }
 
+// Customer support ticket lifecycle.
+enum SupportStatus {
+  NEW
+  OPEN
+  WAITING
+  RESOLVED
+  CLOSED
+}
+
+enum SupportPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
 model User {
   id           String   @id @default(cuid())
   email        String   @unique
@@ -60,6 +76,8 @@ model User {
   events     AnalyticsEvent[]
   sessions   Session[]
   orderItems OrderItem[]
+  supportTickets  SupportTicket[]
+  supportMessages SupportMessage[]
 }
 
 // One table powers BOTH the official store catalog (sellerId = null)
@@ -114,6 +132,12 @@ model ProductImage {
   thumb  String?
   tiny   String?
 
+  // Which variant (size / color / price) this image shows. One size can have
+  // multiple images, and each image can show a different size/color/price.
+  size  String?
+  color String?
+  price Int    @default(0)
+
   isPrimary Boolean @default(false)
   sortOrder Int     @default(0)
   createdAt DateTime @default(now())
@@ -141,6 +165,21 @@ model Banner {
   imageUrl  String
   route     String   @default("/")
   isPopup   Boolean  @default(true)
+  isActive  Boolean  @default(true)
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([isActive])
+}
+
+// Single-image slides shown in the homepage hero slide gallery. Admins can
+// upload (add) new slides and remove existing ones from the admin panel.
+model HeroSlide {
+  id        String   @id @default(cuid())
+  title     String?
+  imageUrl  String
+  route     String?
   isActive  Boolean  @default(true)
   sortOrder Int      @default(0)
   createdAt DateTime @default(now())
@@ -237,4 +276,45 @@ model Session {
   createdAt DateTime @default(now())
 
   @@index([userId])
+}
+
+// Customer support / help-desk ticket. Anyone can open one from the /support
+// page; admins manage the queue and reply from the admin panel.
+model SupportTicket {
+  id           String          @id @default(cuid())
+  ticketNumber String          @unique
+  subject      String
+  // Original request body (first contact with the customer).
+  message      String
+  status       SupportStatus   @default(NEW)
+  priority     SupportPriority @default(MEDIUM)
+
+  name  String
+  email String
+  userId String?
+  user   User?  @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  messages  SupportMessage[]
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+
+  @@index([status])
+  @@index([email])
+  @@index([userId])
+}
+
+// One conversation entry inside a support ticket (customer or staff).
+model SupportMessage {
+  id         String        @id @default(cuid())
+  ticketId   String
+  ticket     SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+
+  authorId   String?
+  author     User?         @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  authorName String
+  isStaff    Boolean       @default(false)
+  body       String
+  createdAt  DateTime      @default(now())
+
+  @@index([ticketId])
 }

@@ -6,7 +6,16 @@ export async function GET(request: NextRequest) {
   const user = await currentUser(request);
   if (!user) return unauthorized();
   return json({
-    user: { id: user.id, email: user.email, name: user.name, role: user.role, sellerStatus: user.sellerStatus },
+    user: {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      role: user.role,
+      sellerStatus: user.sellerStatus,
+      storeName: user.storeName,
+      storeCategory: user.storeCategory,
+      avatarUrl: user.avatarUrl,
+    },
   });
 }
 

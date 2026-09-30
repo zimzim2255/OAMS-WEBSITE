@@ -64,7 +64,22 @@ function splitList(value: string): string[] {
     .filter(Boolean);
 }
 
-function buildPayload(form: FormState) {
+interface ImageInput {
+  url: string;
+  size?: string;
+  color?: string;
+  price?: number;
+}
+
+interface Variant {
+  id: string;
+  url: string;
+  color: string;
+  size: string;
+  price: string;
+}
+
+function buildPayload(form: FormState, imageInputs: ImageInput[]) {
   return {
     name: form.name,
     category: form.category,
@@ -75,9 +90,11 @@ function buildPayload(form: FormState) {
     sizes: splitList(form.sizes),
     colors: splitList(form.colors),
     stock: parseStock(form.stockText),
-    images: splitList(form.images),
+    images: imageInputs,
   };
 }
+
+let nextVariantId = 0;
 
 function productToForm(p: ProductDto): FormState {
   return {
@@ -109,6 +126,9 @@ export default function AdminProductsPage() {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
   const [total, setTotal] = useState(0);
+  const [flatImages, setFlatImages] = useState<string[]>([]);
+  const [variants, setVariants] = useState<Variant[]>([]);
+  const [uploading, setUploading] = useState(false);
 
   async function refresh() {
     const qs = new URLSearchParams();
@@ -154,20 +174,38 @@ export default function AdminProductsPage() {
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setMessage(null);
+    const imageInputs: ImageInput[] = [
+      ...splitList(form.images).map((url) => ({ url })),
+      ...flatImages.map((url) => ({ url })),
+      ...variants
+        .filter((v) => v.url)
+        .map((v) => ({
+          url: v.url,
+          size: v.size || undefined,
+          color: v.color || undefined,
+          price: v.price ? Number(v.price) || undefined : undefined,
+        })),
+    ];
+    if (imageInputs.length === 0) {
+      setMessage("Add at least one photo (browse or paste an image URL).");
+      return;
+    }
     const url = editingId ? `/api/admin/products/${editingId}` : "/api/admin/products";
     const method = editingId ? "PATCH" : "POST";
     const res = await fetch(url, {
       method,
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(buildPayload(form)),
+      body: JSON.stringify(buildPayload(form, imageInputs)),
     });
     const data = await res.json();
     if (!res.ok) {
-      setMessage(data.error ?? "Failed to save product");
+      setMessage(data.error ?? (editingId ? "Failed to update product" : "Failed to add product"));
       return;
     }
-    setMessage(editingId ? "Product updated." : "Product created.");
+    setMessage(editingId ? "Product updated." : "Product added.");
     setForm(EMPTY_FORM);
+    setFlatImages([]);
+    setVariants([]);
     setEditingId(null);
     setShowForm(false);
     await refresh();
@@ -175,7 +213,21 @@ export default function AdminProductsPage() {
 
   function startEdit(p: ProductDto) {
     setEditingId(p.id);
-    setForm(productToForm(p));
+    // The pasted-URL field is kept empty on edit; existing images are split
+    // into the browsed list (plain images) and variant photos (size/color/price).
+    setForm({ ...productToForm(p), images: "" });
+    setFlatImages((p.images ?? []).filter((img) => !img.size && !img.color).map((img) => img.url));
+    setVariants(
+      (p.images ?? [])
+        .filter((img) => img.size || img.color)
+        .map((img) => ({
+          id: `v${++nextVariantId}`,
+          url: img.url,
+          color: img.color ?? "",
+          size: img.size ?? "",
+          price: img.price ? String(img.price) : "",
+        }))
+    );
     setShowForm(true);
     setMessage(null);
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -184,8 +236,74 @@ export default function AdminProductsPage() {
   function cancelEdit() {
     setEditingId(null);
     setForm(EMPTY_FORM);
+    setFlatImages([]);
+    setVariants([]);
     setShowForm(false);
     setMessage(null);
+  }
+
+  async function uploadFiles(e: React.ChangeEvent<HTMLInputElement>) {
+    const files = Array.from(e.target.files ?? []);
+    if (files.length === 0) return;
+    setUploading(true);
+    setMessage(null);
+    const fd = new FormData();
+    files.forEach((f) => fd.append("file", f));
+    try {
+      const res = await fetch("/api/upload", { method: "POST", body: fd });
+      const data = await res.json();
+      if (!res.ok) {
+        setMessage(data.error ?? "Upload failed");
+        return;
+      }
+      const imgs: { url: string }[] = data.images ?? [];
+      setFlatImages((prev) => [...prev, ...imgs.map((img) => img.url)]);
+    } catch {
+      setMessage("Upload failed. Try again.");
+    } finally {
+      setUploading(false);
+      e.target.value = "";
+    }
+  }
+
+  function addVariant() {
+    setVariants((prev) => [
+      ...prev,
+      { id: `v${++nextVariantId}`, url: "", color: "", size: "", price: "" },
+    ]);
+  }
+
+  function removeVariant(id: string) {
+    setVariants((prev) => prev.filter((v) => v.id !== id));
+  }
+
+  function setVariantProp(id: string, key: "color" | "size" | "price", value: string) {
+    setVariants((prev) => prev.map((v) => (v.id === id ? { ...v, [key]: value } : v)));
+  }
+
+  async function uploadVariant(id: string, e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setMessage(null);
+    const fd = new FormData();
+    fd.append("file", file);
+    try {
+      const res = await fetch("/api/upload", { method: "POST", body: fd });
+      const data = await res.json();
+      if (!res.ok) {
+        setMessage(data.error ?? "Upload failed");
+        return;
+      }
+      const img = (data.images?.[0] ?? {}) as { url?: string };
+      if (img.url) {
+        const url = img.url;
+        setVariants((prev) => prev.map((v) => (v.id === id ? { ...v, url } : v)));
+      }
+    } catch {
+      setMessage("Upload failed. Try again.");
+    } finally {
+      e.target.value = "";
+    }
   }
 
   async function toggleActive(p: ProductDto) {
@@ -248,6 +366,9 @@ export default function AdminProductsPage() {
           onClick={() => {
             setEditingId(null);
             setForm(EMPTY_FORM);
+            setFlatImages([]);
+            setVariants([]);
+            setMessage(null);
             setShowForm((v) => !v);
           }}
           className="bg-neutral-900 text-white rounded-lg px-4 py-2 text-sm font-medium whitespace-nowrap"
@@ -257,75 +378,165 @@ export default function AdminProductsPage() {
       </div>
 
       {showForm && (
-      <form onSubmit={onSubmit} className="bg-white rounded-xl shadow p-6 mb-8">
-        <h2 className="text-lg font-semibold mb-4">
-          {editingId ? "Edit product" : "Add new product"}
-        </h2>
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className={labelCls}>Name *</label>
-            <input className={inputCls} value={form.name} onChange={(e) => set("name", e.target.value)} required />
-          </div>
-          <div>
-            <label className={labelCls}>Category *</label>
-            <input className={inputCls} value={form.category} onChange={(e) => set("category", e.target.value)} required placeholder="shorts" />
-          </div>
-          <div>
-            <label className={labelCls}>Price (MAD) *</label>
-            <input className={inputCls} type="number" value={form.price} onChange={(e) => set("price", e.target.value)} required />
-          </div>
-          <div>
-            <label className={labelCls}>Original price (sale)</label>
-            <input className={inputCls} type="number" value={form.originalPrice} onChange={(e) => set("originalPrice", e.target.value)} />
-          </div>
-          <div>
-            <label className={labelCls}>Brand</label>
-            <input className={inputCls} value={form.brand} onChange={(e) => set("brand", e.target.value)} />
-          </div>
-          <div>
-            <label className={labelCls}>Sizes (comma-separated)</label>
-            <input className={inputCls} value={form.sizes} onChange={(e) => set("sizes", e.target.value)} placeholder="S, M, L, XL" />
-          </div>
-          <div>
-            <label className={labelCls}>Colors (comma-separated)</label>
-            <input className={inputCls} value={form.colors} onChange={(e) => set("colors", e.target.value)} placeholder="Black, Gray" />
-          </div>
-        </div>
-
-<div className="mt-4">
-          <label className={labelCls}>Description</label>
-          <textarea className={inputCls} rows={3} value={form.description} onChange={(e) => set("description", e.target.value)} />
-        </div>
-
-        <div className="grid grid-cols-2 gap-4 mt-4">
-          <div>
-            <label className={labelCls}>Stock (one per line, Color: qty)</label>
-            <textarea className={inputCls} rows={4} value={form.stockText} onChange={(e) => set("stockText", e.target.value)} placeholder={"Black: 30\nGray: 40"} />
-          </div>
-          <div>
-            <label className={labelCls}>Image URLs (one per line)</label>
-            <textarea className={inputCls} rows={4} value={form.images} onChange={(e) => set("images", e.target.value)} />
-          </div>
-        </div>
-
-        <div className="mt-5 flex gap-2">
-          <button
-            type="submit"
-            className="bg-neutral-900 text-white rounded-lg px-4 py-2 text-sm font-medium"
-          >
-            {editingId ? "Save changes" : "Add product"}
-          </button>
-          {editingId && (
+        <form onSubmit={onSubmit} className="bg-white rounded-2xl shadow p-6 mb-8">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-bold">{editingId ? "Edit product" : "Add a product"}</h2>
             <button
               type="button"
               onClick={cancelEdit}
-              className="bg-neutral-200 rounded-lg px-4 py-2 text-sm"
+              className="text-sm text-neutral-500 hover:text-neutral-800"
             >
               Cancel
             </button>
-          )}
-        </div>
-      </form>
+          </div>
+          <div className="grid gap-4">
+            <div>
+              <label className={labelCls}>Name *</label>
+              <input className={inputCls} value={form.name} onChange={(e) => set("name", e.target.value)} required />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className={labelCls}>Category *</label>
+                <input className={inputCls} value={form.category} onChange={(e) => set("category", e.target.value)} required placeholder="shorts" />
+              </div>
+              <div>
+                <label className={labelCls}>Price (MAD) *</label>
+                <input className={inputCls} type="number" value={form.price} onChange={(e) => set("price", e.target.value)} required />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className={labelCls}>Original price (sale)</label>
+                <input className={inputCls} type="number" value={form.originalPrice} onChange={(e) => set("originalPrice", e.target.value)} />
+              </div>
+              <div>
+                <label className={labelCls}>Brand</label>
+                <input className={inputCls} value={form.brand} onChange={(e) => set("brand", e.target.value)} />
+              </div>
+            </div>
+            <div>
+              <label className={labelCls}>Description</label>
+              <textarea className={inputCls} rows={3} value={form.description} onChange={(e) => set("description", e.target.value)} />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className={labelCls}>Colors *</label>
+                <input className={inputCls} value={form.colors} onChange={(e) => set("colors", e.target.value)} placeholder="Black, White, Navy" required />
+              </div>
+              <div>
+                <label className={labelCls}>Sizes *</label>
+                <input className={inputCls} value={form.sizes} onChange={(e) => set("sizes", e.target.value)} placeholder="S, M, L, XL" required />
+              </div>
+            </div>
+            <div>
+              <label className={labelCls}>Stock (per color: qty per line)</label>
+              <textarea className={inputCls} rows={2} value={form.stockText} onChange={(e) => set("stockText", e.target.value)} placeholder="Black: 10" />
+            </div>
+            <div>
+              <label className={labelCls}>Photos *</label>
+              <div className="flex flex-wrap items-center gap-3">
+                <label className="inline-flex items-center gap-2 cursor-pointer bg-neutral-100 hover:bg-neutral-200 rounded-lg px-4 py-2 text-sm text-neutral-700">
+                  <input type="file" accept="image/*" multiple className="sr-only" onChange={uploadFiles} />
+                  {uploading ? "Uploading…" : "📷 Browse images"}
+                </label>
+                <span className="text-xs text-neutral-400">You can upload more than one image</span>
+              </div>
+
+              {flatImages.length > 0 && (
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {flatImages.map((url, i) => (
+                    <div key={url} className="relative">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={url} alt={`photo ${i + 1}`} className="w-16 h-16 object-cover rounded-lg border border-neutral-200" />
+                      <button
+                        type="button"
+                        onClick={() => setFlatImages((prev) => prev.filter((_, idx) => idx !== i))}
+                        className="absolute -top-2 -right-2 h-5 w-5 rounded-full bg-red-500 text-white text-xs leading-none"
+                        aria-label="Remove image"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              <div className="mt-3">
+                <label className={labelCls}>Or paste image URLs (one per line)</label>
+                <textarea className={inputCls} rows={2} value={form.images} onChange={(e) => set("images", e.target.value)} placeholder="/imgs/product.jpg or https://…" />
+              </div>
+
+              {/* Variant photos: "+" adds a photo with its own size / color / price */}
+              <div className="mt-5 border-t border-neutral-200 pt-4">
+                <div className="flex items-center justify-between">
+                  <p className="text-sm font-medium text-neutral-700">Variant photos (size / color / price)</p>
+                  <button
+                    type="button"
+                    onClick={addVariant}
+                    className="inline-flex items-center gap-1 rounded-lg bg-neutral-900 text-white px-3 py-1.5 text-sm"
+                  >
+                    + Add
+                  </button>
+                </div>
+                <p className="text-xs text-neutral-400 mt-1">
+                  Each photo can have its own size, color and price. You can add several photos for the same size.
+                </p>
+
+                <div className="mt-3 space-y-3">
+                  {variants.length === 0 && (
+                    <p className="text-xs text-neutral-400">No variant photos yet — click “+ Add”.</p>
+                  )}
+                  {variants.map((v, idx) => (
+                    <div key={v.id} className="border border-neutral-300 rounded-xl p-3">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-xs font-medium text-neutral-600">Photo {idx + 1}</span>
+                        <button
+                          type="button"
+                          onClick={() => removeVariant(v.id)}
+                          className="text-xs text-red-600 hover:underline"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                      <div className="flex flex-wrap items-center gap-3">
+                        <label className="inline-flex items-center gap-2 cursor-pointer bg-neutral-100 hover:bg-neutral-200 rounded-lg px-4 py-2 text-sm text-neutral-700">
+                          <input type="file" accept="image/*" className="sr-only" onChange={(e) => uploadVariant(v.id, e)} />
+                          {v.url ? "Change photo" : "📷 Browse photo"}
+                        </label>
+                        {v.url && (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img src={v.url} alt={`variant ${idx + 1}`} className="w-14 h-14 object-cover rounded-md border border-neutral-200" />
+                        )}
+                        <input
+                          value={v.color}
+                          onChange={(e) => setVariantProp(v.id, "color", e.target.value)}
+                          placeholder="Color"
+                          className="w-28 border border-neutral-300 rounded-lg px-2 py-1.5 text-sm"
+                        />
+                        <input
+                          value={v.size}
+                          onChange={(e) => setVariantProp(v.id, "size", e.target.value)}
+                          placeholder="Size"
+                          className="w-20 border border-neutral-300 rounded-lg px-2 py-1.5 text-sm"
+                        />
+                        <input
+                          value={v.price}
+                          type="number"
+                          onChange={(e) => setVariantProp(v.id, "price", e.target.value)}
+                          placeholder="Price"
+                          className="w-24 border border-neutral-300 rounded-lg px-2 py-1.5 text-sm"
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+          <button type="submit" className="mt-6 bg-neutral-900 text-white rounded-lg px-4 py-2 text-sm font-medium w-fit">
+            {editingId ? "Save changes" : "Save product"}
+          </button>
+        </form>
       )}
 
       {/* Result count + pagination */}

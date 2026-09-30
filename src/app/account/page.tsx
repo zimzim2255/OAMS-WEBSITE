@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import BecomeSellerForm from "@/components/BecomeSellerForm";
 
 interface Me {
   id: string;
@@ -17,8 +16,6 @@ export default function AccountOverviewPage() {
   const [orders, setOrders] = useState<unknown[]>([]);
   const [favorites, setFavorites] = useState<unknown[]>([]);
   const [checked, setChecked] = useState(false);
-  const [sellerMsg, setSellerMsg] = useState<string | null>(null);
-  const [showSellerForm, setShowSellerForm] = useState(false);
 
   async function load() {
     try {
@@ -61,12 +58,6 @@ export default function AccountOverviewPage() {
 
   const isSeller = user.role === "SELLER" || user.sellerStatus === "active";
 
-  function becomeSellerDone() {
-    setUser((prev) => (prev ? { ...prev, role: "SELLER" } : prev));
-    setShowSellerForm(false);
-    setSellerMsg("You are now a seller! Add products from My products.");
-  }
-
   const cards = [
     { label: "Orders", value: orders.length.toString(), href: "/account/orders" },
     { label: "Favorites", value: favorites.length.toString(), href: "/account/favorites" },
@@ -90,26 +81,6 @@ export default function AccountOverviewPage() {
             </Link>
           )}
         </div>
-
-        {!isSeller && (
-          <div className="mt-5 border-t border-neutral-100 pt-4">
-            <p className="text-sm text-neutral-700 mb-2">
-              Want to sell on the marketplace? Set your brand and category to open your store instantly.
-            </p>
-            <button
-              onClick={() => setShowSellerForm((v) => !v)}
-              className="bg-[#D96BA8] hover:opacity-90 text-white rounded-lg px-4 py-2 text-sm font-semibold"
-            >
-              {showSellerForm ? "Cancel" : "Switch to seller"}
-            </button>
-            {showSellerForm && (
-              <div className="mt-4 max-w-md">
-                <BecomeSellerForm onDone={becomeSellerDone} />
-              </div>
-            )}
-            {sellerMsg && <p className="text-sm text-neutral-500 mt-2">{sellerMsg}</p>}
-          </div>
-        )}
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">

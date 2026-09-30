@@ -17,7 +17,10 @@ export interface ImageVariants {
 }
 
 const SIZES: Array<{ key: keyof ImageVariants; width: number; quality: number }> = [
-  { key: "master", width: 2048, quality: 82 },
+  // "master" is the highest-res rendition — used for large displays (hero
+  // slides, full-bleed). Kept bigger than "large" so full-screen heroes stay
+  // sharp instead of upscaling a smaller rendition.
+  { key: "master", width: 3000, quality: 85 },
   { key: "large", width: 1280, quality: 80 },
   { key: "medium", width: 800, quality: 70 },
   { key: "thumb", width: 480, quality: 70 },

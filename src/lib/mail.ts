@@ -51,3 +51,33 @@ export async function sendOrderConfirmation(
      <p>Total: <b>${totalDisplay}</b></p><p>Track it from <a href="${siteUrl}/account/orders">your account</a>.</p>`
   );
 }
+
+export async function sendSupportConfirmation(
+  to: string,
+  ticketNumber: string,
+  subject: string
+): Promise<void> {
+  await sendMail(
+    to,
+    `OAMS — Support ticket ${ticketNumber} received`,
+    `<h1>We received your request</h1>
+     <p>Thank you for contacting OAMS support. Your ticket <b>${ticketNumber}</b>
+     ("${subject}") has been opened and our team will get back to you shortly.</p>
+     <p>You can track it at <a href="${process.env.NEXT_PUBLIC_SITE_URL ?? ""}/support">oams support</a>.</p>`
+  );
+}
+
+export async function sendSupportReply(
+  to: string,
+  ticketNumber: string,
+  snippet: string
+): Promise<void> {
+  const escaped = snippet.replace(/</g, "&lt;").replace(/\n/g, "<br>");
+  await sendMail(
+    to,
+    `OAMS — New reply on ticket ${ticketNumber}`,
+    `<p>Our team has replied to your ticket <b>${ticketNumber}</b> (OAMS support):</p>
+     <blockquote>${escaped}</blockquote>
+     <p>Reply any time from <a href="${process.env.NEXT_PUBLIC_SITE_URL ?? ""}/support">oams support</a>.</p>`
+  );
+}

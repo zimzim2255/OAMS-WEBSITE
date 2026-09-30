@@ -4,24 +4,25 @@ import { requireRole } from "@/lib/auth/guard";
 import { productSchema } from "@/lib/validation";
 import { slugify } from "@/lib/slug";
 import { toProductDto } from "@/lib/serializers";
+import { normalizeImageInput } from "@/lib/product-images";
 import { json, badRequest, unauthorized, forbidden } from "@/lib/http";
 import type { Prisma } from "@prisma/client";
 
 // List the current seller's own products.
 export async function GET(request: NextRequest) {
-  const seller = await requireRole(request, ["SELLER"]);
+  const seller = await requireRole(request, ["SELLER", "ADMIN"]);
   if (!seller) return unauthorized();
   const products = await db.product.findMany({
     where: { sellerId: seller.id },
     include: { images: true },
     orderBy: { createdAt: "desc" },
   });
-  return json({ products: products.map(toProductDto) });
+  return json({ products: products.map((p) => toProductDto(p)) });
 }
 
 // Create a new marketplace listing (own).
 export async function POST(request: NextRequest) {
-  const seller = await requireRole(request, ["SELLER"]);
+  const seller = await requireRole(request, ["SELLER", "ADMIN"]);
   if (!seller) return unauthorized();
   if (seller.sellerStatus !== "active") return forbidden("Seller not approved yet");
 
@@ -53,7 +54,7 @@ export async function POST(request: NextRequest) {
       isActive: rest.isActive,
       marketplaceEnabled: true,
       sellerId: seller.id,
-      images: { create: images.map((url) => ({ url })) },
+      images: { create: images.map(normalizeImageInput) },
     },
     include: { images: true },
   });

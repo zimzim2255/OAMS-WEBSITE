@@ -1,28 +1,97 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { getProductById, products } from "@/lib/products";
 import { getFlashDesignById, flashDesigns } from "@/lib/flashDesigns";
 import { useCart } from "@/context/CartContext";
 import ProductCard from "@/components/ProductCard";
+import type { Product, ProductDto } from "@/lib/types";
 
-export default function ProductDetailClient({ id }: { id: number }) {
+// Convert a database product (ProductDto) into the legacy Product shape used
+// by the detail view + cart. The id keeps its string value so cart matching and
+// the product URL stay consistent.
+function toProductType(p: ProductDto): Product {
+  const urls = (p.images ?? []).map((i) => i.url);
+  return {
+    id: p.id as unknown as number,
+    name: p.name,
+    category: p.category,
+    price: p.price,
+    originalPrice: p.originalPrice,
+    description: p.description,
+    image: urls[0] ?? "",
+    images: urls,
+    sizes: p.sizes,
+    colors: p.colors,
+    stock: p.stock,
+    isNew: p.isNew,
+    isSale: p.isSale,
+    rating: p.rating,
+    reviews: 0,
+  };
+}
+
+export default function ProductDetailClient({ id }: { id: string }) {
   const { addItem } = useCart();
-  const product = getProductById(id) || getFlashDesignById(id);
+  const staticProduct = getProductById(Number(id)) || getFlashDesignById(Number(id));
 
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [addedToCart, setAddedToCart] = useState(false);
+  const [dbProduct, setDbProduct] = useState<Product | null>(null);
+  const [notFound, setNotFound] = useState(false);
+  const [seller, setSeller] = useState<{ name?: string; avatar?: string } | null>(null);
+
+  // If the product isn't part of the bundled catalogue, load it from the
+  // database (e.g. products added through the admin panel / by a seller).
+  useEffect(() => {
+    if (staticProduct) {
+      setDbProduct(null);
+      setSeller(null);
+      setNotFound(false);
+      return;
+    }
+    let cancelled = false;
+    setNotFound(false);
+    (async () => {
+      try {
+        const res = await fetch(`/api/shop/products/${encodeURIComponent(id)}`);
+        if (cancelled) return;
+        if (res.ok) {
+          const data = await res.json();
+          const dto = data.product;
+          setDbProduct(dto ? toProductType(dto) : null);
+          setSeller(dto && (dto.sellerName || dto.sellerAvatar) ? { name: dto.sellerName, avatar: dto.sellerAvatar } : null);
+        } else {
+          setDbProduct(null);
+          setNotFound(true);
+        }
+      } catch {
+        if (!cancelled) setNotFound(true);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [id, staticProduct]);
+
+  const product = staticProduct || dbProduct;
 
   if (!product) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
-        <h1 className="text-2xl font-bold text-gray-900">Product Not Found</h1>
-        <p className="text-gray-500 mt-2">The product you're looking for doesn't exist.</p>
+        <h1 className="text-2xl font-bold text-gray-900">
+          {notFound ? "Product Not Found" : "Loading…"}
+        </h1>
+        <p className="text-gray-500 mt-2">
+          {notFound
+            ? "The product you're looking for doesn't exist."
+            : "Please wait a moment."}
+        </p>
         <Link href="/products" className="inline-block mt-6 text-sm font-medium text-gray-900 underline">
           Back to Products
         </Link>
@@ -135,6 +204,19 @@ export default function ProductDetailClient({ id }: { id: number }) {
             </div>
 
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">{product.name}</h1>
+
+            {/* Seller brand — logo + store name, shown on marketplace listings */}
+            {seller && (seller.name || seller.avatar) && (
+              <div className="flex items-center gap-2 mt-3">
+                {seller.avatar && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={seller.avatar} alt={seller.name ?? "store"} className="w-9 h-9 rounded-full object-cover border border-gray-200" />
+                )}
+                <span className="text-sm text-gray-500">
+                  Sold by <span className="font-semibold text-gray-900">{seller.name || "this seller"}</span>
+                </span>
+              </div>
+            )}
 
             <div className="flex items-center gap-3 mt-4">
               <span className="text-2xl font-bold text-gray-900">{product.price} DH</span>
