@@ -87,7 +87,10 @@ export default function CheckoutPage() {
       }
 
       clearCart();
-      router.push("/order-confirmation");
+      const orderNumber = data?.order?.orderNumber as string | undefined;
+      router.push(
+        orderNumber ? `/order-confirmation?order=${encodeURIComponent(orderNumber)}` : "/order-confirmation"
+      );
     } catch (err) {
       setError("Something went wrong sending your order. Please try again.");
       setSubmitting(false);

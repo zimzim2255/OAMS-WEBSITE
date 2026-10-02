@@ -48,7 +48,9 @@ export async function sendOrderConfirmation(
     to,
     `OAMS — Order ${orderNumber} received`,
     `<h1>Thanks for your order!</h1><p>Order <b>${orderNumber}</b> has been received.</p>
-     <p>Total: <b>${totalDisplay}</b></p><p>Track it from <a href="${siteUrl}/account/orders">your account</a>.</p>`
+     <p>Total: <b>${totalDisplay}</b></p>
+     <p>We will call you shortly to confirm the delivery details.</p>
+     <p><a href="${siteUrl}/account/track">Track your order</a> &nbsp;·&nbsp; <a href="${siteUrl}/account/orders">View your orders</a></p>`
   );
 }
 
