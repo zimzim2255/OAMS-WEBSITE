@@ -2,7 +2,7 @@
 
 import { useLayoutEffect, useRef } from "react";
 import Link from "next/link";
-import { flashDesigns } from "@/lib/flashDesigns";
+import { useLiveProducts } from "@/lib/useLiveProducts";
 
 // "Our Top Sellers" — a two-row table of products separated by vertical black
 // lines. The two rows are arrow-driven and move in OPPOSITE directions: the top
@@ -12,8 +12,8 @@ export default function TopSellers() {
   const topTrackRef = useRef<HTMLDivElement>(null);
   const bottomTrackRef = useRef<HTMLDivElement>(null);
 
-  // Featured selection: first ten products from the catalogue.
-  const sellers = flashDesigns.slice(0, 10);
+  // Featured selection: the first ten products from the live catalogue.
+  const sellers = useLiveProducts(10);
 
   // Two rows of 5; duplicate each 3x so both rows have room to scroll in
   // either direction under the arrows.

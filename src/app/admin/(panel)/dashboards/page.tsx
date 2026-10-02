@@ -29,6 +29,7 @@ export default function AdminDashboardsPage() {
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState<FormState>(EMPTY);
+  const [uploading, setUploading] = useState(false);
 
   async function load() {
     const res = await fetch("/api/admin/dashboards");
@@ -47,6 +48,32 @@ export default function AdminDashboardsPage() {
 
   function set<K extends keyof FormState>(key: K, value: FormState[K]) {
     setForm((f) => ({ ...f, [key]: value }));
+  }
+
+  async function uploadImage(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    setMessage(null);
+    const fd = new FormData();
+    fd.append("file", file);
+    try {
+      const res = await fetch("/api/upload", { method: "POST", body: fd });
+      const data = await res.json();
+      if (!res.ok) {
+        setMessage(data.error ?? "Upload failed");
+        return;
+      }
+      // Use the highest-resolution rendition so the banner stays sharp.
+      const img = (data.images?.[0] ?? {}) as { master?: string; large?: string };
+      const url = img.master ?? img.large;
+      if (url) setForm((f) => ({ ...f, imageUrl: url }));
+    } catch {
+      setMessage("Upload failed. Try again.");
+    } finally {
+      setUploading(false);
+      e.target.value = "";
+    }
   }
 
   function startEdit(b: BannerDto) {
@@ -143,7 +170,14 @@ export default function AdminDashboardsPage() {
               <input className={inputCls} value={form.title} onChange={(e) => set("title", e.target.value)} />
             </div>
             <div>
-              <label className={labelCls}>Image URL (uploaded photo) *</label>
+              <label className={labelCls}>Image (upload from device or paste URL) *</label>
+              <div className="flex flex-wrap items-center gap-3 mb-2">
+                <label className="inline-flex items-center gap-2 cursor-pointer bg-neutral-100 hover:bg-neutral-200 rounded-lg px-4 py-2 text-sm text-neutral-700">
+                  <input type="file" accept="image/*" className="sr-only" onChange={uploadImage} />
+                  {uploading ? "Uploading…" : "📷 Browse image"}
+                </label>
+                <span className="text-xs text-neutral-400">or paste an image URL below.</span>
+              </div>
               <input
                 className={inputCls}
                 value={form.imageUrl}

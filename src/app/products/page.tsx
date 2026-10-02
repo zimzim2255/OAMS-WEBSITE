@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useMemo, useState } from "react";
-import { flashDesigns } from "@/lib/flashDesigns";
 import type { ProductDto } from "@/lib/types";
 
 const categories = [
@@ -27,18 +26,9 @@ interface DisplayProduct {
   stock: Record<string, number>;
 }
 
-// The design catalogue is bundled at build time; database products (added by
-// via the admin panel) are fetched live and merged with them below.
-const staticProducts: DisplayProduct[] = flashDesigns.map((p) => ({
-  id: String(p.id),
-  name: p.name,
-  category: p.category,
-  description: p.description,
-  price: p.price,
-  originalPrice: p.originalPrice,
-  image: p.image,
-  stock: p.stock,
-}));
+// Product listings come straight from the database (official store + marketplace
+// seller uploads) — fetched live below. No products are bundled at build time.
+const staticProducts: DisplayProduct[] = [];
 
 function dbProductToDisplay(p: ProductDto): DisplayProduct {
   return {

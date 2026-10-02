@@ -1,14 +1,12 @@
-import { products } from "@/lib/products";
-import { flashDesigns } from "@/lib/flashDesigns";
 import ProductDetailClient from "./ProductDetailClient";
 
+// Product pages are rendered dynamically and load their data from the database
+// (official store + marketplace listings). No product IDs are bundled at build.
 export function generateStaticParams() {
-  const allProducts = [...products, ...flashDesigns];
-  return allProducts.map((p) => ({
-    id: String(p.id),
-  }));
+  return [];
 }
 
+export const dynamic = "force-dynamic";
 export const dynamicParams = true;
 
 export default async function ProductDetailPage({

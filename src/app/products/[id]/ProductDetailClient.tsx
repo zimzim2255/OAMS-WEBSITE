@@ -3,37 +3,14 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { getProductById, products } from "@/lib/products";
-import { getFlashDesignById, flashDesigns } from "@/lib/flashDesigns";
+import { toProductType, useLiveProducts } from "@/lib/useLiveProducts";
 import { useCart } from "@/context/CartContext";
 import ProductCard from "@/components/ProductCard";
-import type { Product, ProductDto } from "@/lib/types";
-
-// Convert a database product (ProductDto) into the legacy Product shape used
-// by the detail view + cart. The id keeps its string value so cart matching and
-// the product URL stay consistent.
-function toProductType(p: ProductDto): Product {
-  const urls = (p.images ?? []).map((i) => i.url);
-  return {
-    id: p.id as unknown as number,
-    name: p.name,
-    category: p.category,
-    price: p.price,
-    originalPrice: p.originalPrice,
-    description: p.description,
-    image: urls[0] ?? "",
-    images: urls,
-    sizes: p.sizes,
-    colors: p.colors,
-    stock: p.stock,
-    isNew: p.isNew,
-    isSale: p.isSale,
-  };
-}
+import type { Product } from "@/lib/types";
 
 export default function ProductDetailClient({ id }: { id: string }) {
   const { addItem } = useCart();
-  const staticProduct = getProductById(Number(id)) || getFlashDesignById(Number(id));
+  const allLive = useLiveProducts();
 
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
@@ -44,21 +21,21 @@ export default function ProductDetailClient({ id }: { id: string }) {
   const [notFound, setNotFound] = useState(false);
   const [seller, setSeller] = useState<{ name?: string; avatar?: string } | null>(null);
 
-  // If the product isn't part of the bundled catalogue, load it from the
-  // database (e.g. products added through the admin panel / by a seller).
+  // Load the product from the database every time the URL id changes.
   useEffect(() => {
-    if (staticProduct) {
-      setDbProduct(null);
-      setSeller(null);
-      setNotFound(false);
-      return;
-    }
     let cancelled = false;
-    setNotFound(false);
     (async () => {
       try {
         const res = await fetch(`/api/shop/products/${encodeURIComponent(id)}`);
         if (cancelled) return;
+        // Reset transient state once we have a fresh response.
+        setNotFound(false);
+        setDbProduct(null);
+        setSeller(null);
+        setSelectedSize("");
+        setSelectedColor("");
+        setSelectedImage(0);
+        setQuantity(1);
         if (res.ok) {
           const data = await res.json();
           const dto = data.product;
@@ -75,9 +52,9 @@ export default function ProductDetailClient({ id }: { id: string }) {
     return () => {
       cancelled = true;
     };
-  }, [id, staticProduct]);
+  }, [id]);
 
-  const product = staticProduct || dbProduct;
+  const product = dbProduct;
 
   if (!product) {
     return (
@@ -109,8 +86,8 @@ export default function ProductDetailClient({ id }: { id: string }) {
     setTimeout(() => setAddedToCart(false), 2000);
   };
 
-  const isFlashDesign = product.id >= 100;
-  const relatedProducts = (isFlashDesign ? flashDesigns : products)
+  // Related items: same category from the live catalogue.
+  const relatedProducts = allLive
     .filter((p) => p.category === product.category && p.id !== product.id)
     .slice(0, 4);
 
