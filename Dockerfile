@@ -2,7 +2,10 @@
 FROM node:22-alpine AS deps
 WORKDIR /app
 COPY package.json package-lock.json ./
-RUN npm ci
+# --ignore-scripts: don't run the "postinstall: prisma generate" here (no .env /
+# DATABASE_URL at build time). prisma client is generated explicitly in the
+# builder stage below. Native deps (sharp/esbuild) use prebuilt binaries.
+RUN npm ci --ignore-scripts
 
 # ---- builder (generate prisma client + build next) ----
 FROM node:22-alpine AS builder
