@@ -38,6 +38,10 @@ services:
       MAIL_FROM: ${MAIL_FROM:-OAMS <no-reply@oams.shop>}
       ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@oams.shop}
       ADMIN_PASSWORD: ${ADMIN_PASSWORD:-change-me-now}
+      SESSION_COOKIE: ${SESSION_COOKIE:-oams_session}
+      # Google "Sign in with Google" OAuth (client id + secret from .env)
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
     depends_on:
       db:
         condition: service_healthy
