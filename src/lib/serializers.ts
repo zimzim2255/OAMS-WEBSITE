@@ -56,6 +56,7 @@ export function toProductDto(p: ProductWithImages, seller?: SellerRef | null): P
 }
 
 export function toOrderDto(o: OrderWithItems): OrderDto {
+  const cust = (o.customer ?? {}) as { name?: string; email?: string };
   const items: OrderItemDto[] = o.items.map((i) => ({
     id: i.id,
     productId: i.productId ?? undefined,
@@ -79,6 +80,8 @@ export function toOrderDto(o: OrderWithItems): OrderDto {
     currency: o.currency,
     createdAt: o.createdAt.toISOString(),
     trackingNumber: o.trackingNumber ?? undefined,
+    customerName: cust.name ?? "",
+    customerEmail: cust.email ?? "",
     items,
   };
 }

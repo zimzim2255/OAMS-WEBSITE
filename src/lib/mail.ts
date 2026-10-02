@@ -58,6 +58,23 @@ export async function sendOrderConfirmation(
  * Notify a seller (or the platform admin) that an order contains their item(s).
  * `lines` are the human-readable line items that belong to this recipient.
  */
+export async function sendPasswordReset(
+  to: string,
+  name: string,
+  resetUrl: string
+): Promise<void> {
+  await sendMail(
+    to,
+    "OAMS — Reset your password",
+    `<h1>Reset your password</h1>
+     <p>Hi ${name || "there"},</p>
+     <p>We received a request to reset your OAMS password. Click the button below — the link is valid for 1 hour.</p>
+     <p><a href="${resetUrl}" style="display:inline-block;background:#111;color:#fff;padding:10px 18px;border-radius:20px;text-decoration:none;">Reset my password</a></p>
+     <p>Or copy this link: <a href="${resetUrl}">${resetUrl}</a></p>
+     <p>If you didn't request this, you can safely ignore this email.</p>`
+  );
+}
+
 export async function sendShippedNotification(
   to: string,
   orderNumber: string,

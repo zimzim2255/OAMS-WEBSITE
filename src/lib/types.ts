@@ -115,6 +115,8 @@ export interface OrderDto {
   currency: string;
   createdAt: string;
   trackingNumber?: string;
+  customerName?: string;
+  customerEmail?: string;
   items: OrderItemDto[];
 }
 

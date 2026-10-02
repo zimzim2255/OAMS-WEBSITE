@@ -142,6 +142,19 @@ function LoginForm() {
           required
         />
 
+        <div className="flex items-center justify-between mb-4">
+          <button
+            type="button"
+            onClick={() => switchMode("login")}
+            className="text-xs text-white/60 hover:text-white transition-colors"
+          >
+            &nbsp;
+          </button>
+          <Link href="/forgot-password" className="text-xs font-semibold text-white/70 hover:text-white transition-colors">
+            Forgot password?
+          </Link>
+        </div>
+
         {error && <div className="text-red-300 text-sm font-medium mb-4">{error}</div>}
 
         <button

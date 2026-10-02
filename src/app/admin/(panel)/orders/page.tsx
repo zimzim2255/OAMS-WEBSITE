@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { OrderDto, OrderStatus } from "@/lib/types";
 
 const STATUSES: OrderStatus[] = [
@@ -28,6 +28,8 @@ export default function AdminOrdersPage() {
   const [loading, setLoading] = useState(true);
   const [tracking, setTracking] = useState<Record<string, string>>({});
   const [saving, setSaving] = useState<Record<string, boolean>>({});
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState<"" | OrderStatus>("");
 
   async function load() {
     const res = await fetch("/api/admin/orders");
@@ -44,32 +46,91 @@ export default function AdminOrdersPage() {
     })();
   }, []);
 
-  async function setStatus(order: OrderDto, status: OrderStatus) {
-    setSaving({ ...saving, [order.id]: true });
+  async function patch(id: string, payload: { status?: OrderStatus; trackingNumber?: string }) {
+    setSaving((s) => ({ ...s, [id]: true }));
     try {
-      const track = tracking[order.id] ?? order.trackingNumber ?? "";
-      const res = await fetch(`/api/admin/orders/${order.id}`, {
+      const res = await fetch(`/api/admin/orders/${id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status, trackingNumber: track }),
+        body: JSON.stringify(payload),
       });
-      if (res.ok) await load();
+      if (res.ok) {
+        const data = await res.json();
+        const updated = data?.order as OrderDto | undefined;
+        if (updated) {
+          // Reflect the (possibly auto-generated) tracking number right away.
+          setOrders((prev) => prev.map((o) => (o.id === updated.id ? updated : o)));
+          if (updated.trackingNumber) {
+            setTracking((t) => ({ ...t, [updated.id]: updated.trackingNumber ?? "" }));
+          }
+        } else {
+          await load();
+        }
+      }
     } finally {
-      setSaving({ ...saving, [order.id]: false });
+      setSaving((s) => ({ ...s, [id]: false }));
     }
   }
 
+  const trackOf = (o: OrderDto) => (tracking[o.id] ?? o.trackingNumber ?? "").trim();
+  const setStatus = (order: OrderDto, status: OrderStatus) =>
+    patch(order.id, { status, trackingNumber: trackOf(order) || undefined });
+
+  const filtered = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    return orders.filter((o) => {
+      if (statusFilter && o.status !== statusFilter) return false;
+      if (!q) return true;
+      const hay = [
+        o.orderNumber,
+        o.customerName ?? "",
+        o.customerEmail ?? "",
+        o.id,
+        ...o.items.map((i) => i.name),
+      ]
+        .join(" ")
+        .toLowerCase();
+      return hay.includes(q);
+    });
+  }, [orders, search, statusFilter]);
+
   if (loading) return <div className="p-10 text-center">Loading orders…</div>;
+
+  const inputCls = "border border-neutral-300 rounded-lg px-3 py-2 text-sm";
 
   return (
     <div>
       <h1 className="text-2xl font-bold mb-6">Orders</h1>
 
-      {orders.length === 0 ? (
-        <p className="text-neutral-500">No orders yet.</p>
+      <div className="flex flex-wrap gap-3 mb-6">
+        <input
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Search by order #, customer, email, item…"
+          className={`${inputCls} flex-1 min-w-[220px]`}
+        />
+        <select
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value as "" | OrderStatus)}
+          className={`${inputCls} bg-white`}
+        >
+          <option value="">All statuses</option>
+          {STATUSES.map((s) => (
+            <option key={s} value={s}>
+              {s}
+            </option>
+          ))}
+        </select>
+        <span className="text-sm text-neutral-500 self-center">
+          {filtered.length} of {orders.length} order(s)
+        </span>
+      </div>
+
+      {filtered.length === 0 ? (
+        <p className="text-neutral-500">No orders match.</p>
       ) : (
         <div className="space-y-3">
-          {orders.map((o) => (
+          {filtered.map((o) => (
             <div key={o.id} className="bg-white rounded-xl shadow p-5">
               <div className="flex items-center justify-between mb-3 flex-wrap">
                 <div>
@@ -98,6 +159,12 @@ export default function AdminOrdersPage() {
               </div>
 
               <div className="text-sm text-neutral-600 mb-2">
+                {(o.customerName || o.customerEmail) && (
+                  <div className="text-neutral-700 mb-1">
+                    {o.customerName}
+                    {o.customerEmail ? ` <${o.customerEmail}>` : ""}
+                  </div>
+                )}
                 {o.items.map((i, idx) => (
                   <div key={idx} className="flex justify-between">
                     <span>
@@ -119,11 +186,11 @@ export default function AdminOrdersPage() {
                   className="border border-neutral-300 rounded-lg px-2 py-1 text-sm w-56"
                 />
                 <button
-                  onClick={() => setStatus(o, o.status)}
+                  onClick={() => patch(o.id, { trackingNumber: trackOf(o) || undefined })}
                   disabled={saving[o.id]}
                   className="text-xs bg-neutral-100 hover:bg-neutral-200 rounded-lg px-2.5 py-1.5 border border-neutral-300"
                 >
-                  Set #
+                  Save #
                 </button>
               </div>
 
