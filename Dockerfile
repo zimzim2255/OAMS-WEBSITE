@@ -13,6 +13,9 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
+# prisma.config.ts reads env("DATABASE_URL"); provide a placeholder so
+# `prisma generate` (no DB connection needed) works without a real/.env URL.
+ENV DATABASE_URL="postgresql://oams:oams@localhost:5432/oams?schema=public"
 RUN npx prisma generate
 RUN npm run build
 
@@ -25,6 +28,8 @@ COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/package.json ./
 COPY --from=builder /app/prisma ./prisma
+# required by `prisma migrate deploy` at runtime (datasource.url)
+COPY --from=builder /app/prisma.config.ts ./
 COPY --from=builder /app/next.config.ts ./
 EXPOSE 3000
 # apply migrations then boot the Next.js node server
